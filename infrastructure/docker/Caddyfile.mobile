@@ -1,0 +1,8 @@
+{
+	admin off
+	auto_https disable_redirects
+}
+https://{$MOBILE_BIND_IP} {
+	tls internal
+	reverse_proxy web:3000
+}

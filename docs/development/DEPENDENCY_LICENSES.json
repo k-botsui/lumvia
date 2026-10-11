@@ -1,0 +1,1684 @@
+{
+  "generated": "2026-10-10",
+  "scope": "Web installed lockfile dependencies and Python verification environment; third-party licenses remain separate from project license",
+  "web": [
+    {
+      "name": "@alloc/quick-lru",
+      "versions": [
+        "5.3.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/aleclarson/quick-lru#readme"
+    },
+    {
+      "name": "@babel/code-frame",
+      "versions": [
+        "7.29.7"
+      ],
+      "license": "MIT",
+      "homepage": "https://babel.dev/docs/en/next/babel-code-frame"
+    },
+    {
+      "name": "@babel/compat-data",
+      "versions": [
+        "7.29.7"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/babel/babel#readme"
+    },
+    {
+      "name": "@babel/core",
+      "versions": [
+        "7.29.7"
+      ],
+      "license": "MIT",
+      "homepage": "https://babel.dev/docs/en/next/babel-core"
+    },
+    {
+      "name": "@babel/generator",
+      "versions": [
+        "7.29.8"
+      ],
+      "license": "MIT",
+      "homepage": "https://babel.dev/docs/en/next/babel-generator"
+    },
+    {
+      "name": "@babel/helper-compilation-targets",
+      "versions": [
+        "7.29.7"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/babel/babel#readme"
+    },
+    {
+      "name": "@babel/helper-globals",
+      "versions": [
+        "7.29.7"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/babel/babel#readme"
+    },
+    {
+      "name": "@babel/helper-module-imports",
+      "versions": [
+        "7.29.7"
+      ],
+      "license": "MIT",
+      "homepage": "https://babel.dev/docs/en/next/babel-helper-module-imports"
+    },
+    {
+      "name": "@babel/helper-module-transforms",
+      "versions": [
+        "7.29.7"
+      ],
+      "license": "MIT",
+      "homepage": "https://babel.dev/docs/en/next/babel-helper-module-transforms"
+    },
+    {
+      "name": "@babel/helper-string-parser",
+      "versions": [
+        "7.29.7"
+      ],
+      "license": "MIT",
+      "homepage": "https://babel.dev/docs/en/next/babel-helper-string-parser"
+    },
+    {
+      "name": "@babel/helper-validator-identifier",
+      "versions": [
+        "7.29.7"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/babel/babel#readme"
+    },
+    {
+      "name": "@babel/helper-validator-option",
+      "versions": [
+        "7.29.7"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/babel/babel#readme"
+    },
+    {
+      "name": "@babel/helpers",
+      "versions": [
+        "7.29.10"
+      ],
+      "license": "MIT",
+      "homepage": "https://babel.dev/docs/en/next/babel-helpers"
+    },
+    {
+      "name": "@babel/parser",
+      "versions": [
+        "7.29.9"
+      ],
+      "license": "MIT",
+      "homepage": "https://babel.dev/docs/en/next/babel-parser"
+    },
+    {
+      "name": "@babel/template",
+      "versions": [
+        "7.29.7"
+      ],
+      "license": "MIT",
+      "homepage": "https://babel.dev/docs/en/next/babel-template"
+    },
+    {
+      "name": "@babel/traverse",
+      "versions": [
+        "7.29.10"
+      ],
+      "license": "MIT",
+      "homepage": "https://babel.dev/docs/en/next/babel-traverse"
+    },
+    {
+      "name": "@babel/types",
+      "versions": [
+        "7.29.8"
+      ],
+      "license": "MIT",
+      "homepage": "https://babel.dev/docs/en/next/babel-types"
+    },
+    {
+      "name": "@dimforge/rapier3d-compat",
+      "versions": [
+        "0.12.0"
+      ],
+      "license": "Apache-2.0",
+      "homepage": "https://rapier.rs"
+    },
+    {
+      "name": "@floating-ui/core",
+      "versions": [
+        "1.8.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://floating-ui.com"
+    },
+    {
+      "name": "@floating-ui/dom",
+      "versions": [
+        "1.8.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://floating-ui.com"
+    },
+    {
+      "name": "@floating-ui/react-dom",
+      "versions": [
+        "2.1.9"
+      ],
+      "license": "MIT",
+      "homepage": "https://floating-ui.com/docs/react-dom"
+    },
+    {
+      "name": "@floating-ui/utils",
+      "versions": [
+        "0.2.12"
+      ],
+      "license": "MIT",
+      "homepage": "https://floating-ui.com"
+    },
+    {
+      "name": "@hookform/resolvers",
+      "versions": [
+        "5.9.1"
+      ],
+      "license": "MIT",
+      "homepage": "https://react-hook-form.com"
+    },
+    {
+      "name": "@img/colour",
+      "versions": [
+        "1.1.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/lovell/colour#readme"
+    },
+    {
+      "name": "@img/sharp-darwin-arm64",
+      "versions": [
+        "0.35.5"
+      ],
+      "license": "Apache-2.0",
+      "homepage": "https://sharp.pixelplumbing.com"
+    },
+    {
+      "name": "@img/sharp-libvips-darwin-arm64",
+      "versions": [
+        "1.3.4"
+      ],
+      "license": "LGPL-3.0-or-later",
+      "homepage": "https://sharp.pixelplumbing.com"
+    },
+    {
+      "name": "@jridgewell/gen-mapping",
+      "versions": [
+        "0.3.13"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/jridgewell/sourcemaps/tree/main/packages/gen-mapping"
+    },
+    {
+      "name": "@jridgewell/remapping",
+      "versions": [
+        "2.3.5"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/jridgewell/sourcemaps/tree/main/packages/remapping"
+    },
+    {
+      "name": "@jridgewell/resolve-uri",
+      "versions": [
+        "3.1.2"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/jridgewell/resolve-uri#readme"
+    },
+    {
+      "name": "@jridgewell/sourcemap-codec",
+      "versions": [
+        "1.6.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/jridgewell/sourcemaps/tree/main/packages/sourcemap-codec"
+    },
+    {
+      "name": "@jridgewell/trace-mapping",
+      "versions": [
+        "0.3.31"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/jridgewell/sourcemaps/tree/main/packages/trace-mapping"
+    },
+    {
+      "name": "@next/env",
+      "versions": [
+        "16.4.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/vercel/next.js#readme"
+    },
+    {
+      "name": "@next/swc-darwin-arm64",
+      "versions": [
+        "16.4.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/vercel/next.js#readme"
+    },
+    {
+      "name": "@oxlint/binding-darwin-arm64",
+      "versions": [
+        "1.87.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://oxc.rs/docs/guide/usage/linter"
+    },
+    {
+      "name": "@playwright/test",
+      "versions": [
+        "1.63.0"
+      ],
+      "license": "Apache-2.0",
+      "homepage": "https://playwright.dev"
+    },
+    {
+      "name": "@radix-ui/primitive",
+      "versions": [
+        "1.1.7"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-alert-dialog",
+      "versions": [
+        "1.1.24"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-arrow",
+      "versions": [
+        "1.1.16"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-collection",
+      "versions": [
+        "1.1.16"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-compose-refs",
+      "versions": [
+        "1.1.5"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-context",
+      "versions": [
+        "1.2.2"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-dialog",
+      "versions": [
+        "1.2.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-direction",
+      "versions": [
+        "1.1.5"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-dismissable-layer",
+      "versions": [
+        "1.1.20"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-dropdown-menu",
+      "versions": [
+        "2.1.25"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-focus-guards",
+      "versions": [
+        "1.1.6"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-focus-scope",
+      "versions": [
+        "1.2.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-id",
+      "versions": [
+        "1.1.4"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-menu",
+      "versions": [
+        "2.1.25"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-popper",
+      "versions": [
+        "1.3.8"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-portal",
+      "versions": [
+        "1.1.18"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-presence",
+      "versions": [
+        "1.1.11"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-primitive",
+      "versions": [
+        "2.1.11"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-roving-focus",
+      "versions": [
+        "1.1.20"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-slot",
+      "versions": [
+        "1.4.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-use-callback-ref",
+      "versions": [
+        "1.1.4"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-use-controllable-state",
+      "versions": [
+        "1.2.6"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-use-effect-event",
+      "versions": [
+        "0.0.5"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-use-is-hydrated",
+      "versions": [
+        "0.1.3"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-use-layout-effect",
+      "versions": [
+        "1.1.4"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-use-rect",
+      "versions": [
+        "1.1.4"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/react-use-size",
+      "versions": [
+        "1.1.5"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@radix-ui/rect",
+      "versions": [
+        "1.1.3"
+      ],
+      "license": "MIT",
+      "homepage": "https://radix-ui.com/primitives"
+    },
+    {
+      "name": "@standard-schema/utils",
+      "versions": [
+        "0.3.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/standard-schema/standard-schema#readme"
+    },
+    {
+      "name": "@swc/helpers",
+      "versions": [
+        "0.5.23"
+      ],
+      "license": "Apache-2.0",
+      "homepage": "https://swc.rs"
+    },
+    {
+      "name": "@tailwindcss/node",
+      "versions": [
+        "4.3.3"
+      ],
+      "license": "MIT",
+      "homepage": "https://tailwindcss.com"
+    },
+    {
+      "name": "@tailwindcss/oxide",
+      "versions": [
+        "4.3.3"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/tailwindlabs/tailwindcss#readme"
+    },
+    {
+      "name": "@tailwindcss/oxide-darwin-arm64",
+      "versions": [
+        "4.3.3"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/tailwindlabs/tailwindcss#readme"
+    },
+    {
+      "name": "@tailwindcss/postcss",
+      "versions": [
+        "4.3.3"
+      ],
+      "license": "MIT",
+      "homepage": "https://tailwindcss.com"
+    },
+    {
+      "name": "@tanstack/query-core",
+      "versions": [
+        "5.104.1"
+      ],
+      "license": "MIT",
+      "homepage": "https://tanstack.com/query"
+    },
+    {
+      "name": "@tanstack/react-query",
+      "versions": [
+        "5.104.1"
+      ],
+      "license": "MIT",
+      "homepage": "https://tanstack.com/query"
+    },
+    {
+      "name": "@tweenjs/tween.js",
+      "versions": [
+        "23.1.3"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/tweenjs/tween.js"
+    },
+    {
+      "name": "@types/node",
+      "versions": [
+        "24.19.1"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/node"
+    },
+    {
+      "name": "@types/react",
+      "versions": [
+        "19.3.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react"
+    },
+    {
+      "name": "@types/react-dom",
+      "versions": [
+        "19.3.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react-dom"
+    },
+    {
+      "name": "@types/stats.js",
+      "versions": [
+        "0.17.4"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/stats.js"
+    },
+    {
+      "name": "@types/three",
+      "versions": [
+        "0.186.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/three"
+    },
+    {
+      "name": "@types/webxr",
+      "versions": [
+        "0.5.24"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/webxr"
+    },
+    {
+      "name": "aria-hidden",
+      "versions": [
+        "1.2.6"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/theKashey/aria-hidden#readme"
+    },
+    {
+      "name": "baseline-browser-mapping",
+      "versions": [
+        "2.11.27"
+      ],
+      "license": "Apache-2.0",
+      "homepage": "https://github.com/web-platform-dx/baseline-browser-mapping#readme"
+    },
+    {
+      "name": "browserslist",
+      "versions": [
+        "4.29.3"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/browserslist/browserslist#readme"
+    },
+    {
+      "name": "caniuse-lite",
+      "versions": [
+        "1.0.30001815"
+      ],
+      "license": "CC-BY-4.0",
+      "homepage": "https://github.com/browserslist/caniuse-lite#readme"
+    },
+    {
+      "name": "client-only",
+      "versions": [
+        "0.0.1"
+      ],
+      "license": "MIT",
+      "homepage": "https://reactjs.org/"
+    },
+    {
+      "name": "clsx",
+      "versions": [
+        "2.1.1"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/lukeed/clsx#readme"
+    },
+    {
+      "name": "convert-source-map",
+      "versions": [
+        "2.0.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/thlorenz/convert-source-map"
+    },
+    {
+      "name": "csstype",
+      "versions": [
+        "3.2.3"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/frenic/csstype#readme"
+    },
+    {
+      "name": "debug",
+      "versions": [
+        "4.4.3"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/debug-js/debug#readme"
+    },
+    {
+      "name": "detect-libc",
+      "versions": [
+        "2.1.2"
+      ],
+      "license": "Apache-2.0",
+      "homepage": "https://github.com/lovell/detect-libc#readme"
+    },
+    {
+      "name": "detect-node-es",
+      "versions": [
+        "1.1.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/thekashey/detect-node"
+    },
+    {
+      "name": "electron-to-chromium",
+      "versions": [
+        "1.5.449"
+      ],
+      "license": "ISC",
+      "homepage": "https://github.com/Kilian/electron-to-chromium#readme"
+    },
+    {
+      "name": "enhanced-resolve",
+      "versions": [
+        "5.26.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/webpack/enhanced-resolve#readme"
+    },
+    {
+      "name": "escalade",
+      "versions": [
+        "3.2.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/lukeed/escalade#readme"
+    },
+    {
+      "name": "fflate",
+      "versions": [
+        "0.8.3"
+      ],
+      "license": "MIT",
+      "homepage": "https://101arrowz.github.io/fflate"
+    },
+    {
+      "name": "gensync",
+      "versions": [
+        "1.0.0-beta.2"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/loganfsmyth/gensync"
+    },
+    {
+      "name": "get-nonce",
+      "versions": [
+        "1.0.1"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/theKashey/get-nonce"
+    },
+    {
+      "name": "graceful-fs",
+      "versions": [
+        "4.2.11"
+      ],
+      "license": "ISC",
+      "homepage": "https://github.com/isaacs/node-graceful-fs#readme"
+    },
+    {
+      "name": "has-flag",
+      "versions": [
+        "4.0.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/sindresorhus/has-flag#readme"
+    },
+    {
+      "name": "jiti",
+      "versions": [
+        "2.7.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/unjs/jiti#readme"
+    },
+    {
+      "name": "js-tokens",
+      "versions": [
+        "4.0.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/lydell/js-tokens#readme"
+    },
+    {
+      "name": "jsesc",
+      "versions": [
+        "3.1.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://mths.be/jsesc"
+    },
+    {
+      "name": "json5",
+      "versions": [
+        "2.2.3"
+      ],
+      "license": "MIT",
+      "homepage": "http://json5.org/"
+    },
+    {
+      "name": "lightningcss",
+      "versions": [
+        "1.32.0"
+      ],
+      "license": "MPL-2.0",
+      "homepage": "https://github.com/parcel-bundler/lightningcss#readme"
+    },
+    {
+      "name": "lightningcss-darwin-arm64",
+      "versions": [
+        "1.32.0"
+      ],
+      "license": "MPL-2.0",
+      "homepage": "https://github.com/parcel-bundler/lightningcss#readme"
+    },
+    {
+      "name": "lru-cache",
+      "versions": [
+        "5.1.1"
+      ],
+      "license": "ISC",
+      "homepage": "https://github.com/isaacs/node-lru-cache#readme"
+    },
+    {
+      "name": "lucide-react",
+      "versions": [
+        "0.468.0"
+      ],
+      "license": "ISC",
+      "homepage": "https://lucide.dev"
+    },
+    {
+      "name": "magic-string",
+      "versions": [
+        "0.30.21"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/Rich-Harris/magic-string#readme"
+    },
+    {
+      "name": "meshoptimizer",
+      "versions": [
+        "1.1.1"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/zeux/meshoptimizer"
+    },
+    {
+      "name": "ms",
+      "versions": [
+        "2.1.3"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/vercel/ms#readme"
+    },
+    {
+      "name": "nanoid",
+      "versions": [
+        "3.3.20"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/ai/nanoid#readme"
+    },
+    {
+      "name": "next",
+      "versions": [
+        "16.4.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://nextjs.org"
+    },
+    {
+      "name": "node-releases",
+      "versions": [
+        "2.0.57"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/chicoxyzzy/node-releases#readme"
+    },
+    {
+      "name": "oxlint",
+      "versions": [
+        "1.87.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://oxc.rs/docs/guide/usage/linter"
+    },
+    {
+      "name": "picocolors",
+      "versions": [
+        "1.1.1"
+      ],
+      "license": "ISC",
+      "homepage": "https://github.com/alexeyraspopov/picocolors#readme"
+    },
+    {
+      "name": "playwright",
+      "versions": [
+        "1.63.0"
+      ],
+      "license": "Apache-2.0",
+      "homepage": "https://playwright.dev"
+    },
+    {
+      "name": "playwright-core",
+      "versions": [
+        "1.63.0"
+      ],
+      "license": "Apache-2.0",
+      "homepage": "https://playwright.dev"
+    },
+    {
+      "name": "postcss",
+      "versions": [
+        "8.5.23",
+        "8.5.29"
+      ],
+      "license": "MIT",
+      "homepage": "https://postcss.org/"
+    },
+    {
+      "name": "prettier",
+      "versions": [
+        "3.9.9"
+      ],
+      "license": "MIT",
+      "homepage": "https://prettier.io"
+    },
+    {
+      "name": "react",
+      "versions": [
+        "19.3.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://react.dev/"
+    },
+    {
+      "name": "react-dom",
+      "versions": [
+        "19.3.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://react.dev/"
+    },
+    {
+      "name": "react-hook-form",
+      "versions": [
+        "7.89.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://react-hook-form.com"
+    },
+    {
+      "name": "react-remove-scroll",
+      "versions": [
+        "2.7.2"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/theKashey/react-remove-scroll#readme"
+    },
+    {
+      "name": "react-remove-scroll-bar",
+      "versions": [
+        "2.3.8"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/theKashey/react-remove-scroll-bar#readme"
+    },
+    {
+      "name": "react-style-singleton",
+      "versions": [
+        "2.2.3"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/theKashey/react-style-singleton#readme"
+    },
+    {
+      "name": "scheduler",
+      "versions": [
+        "0.28.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://react.dev/"
+    },
+    {
+      "name": "semver",
+      "versions": [
+        "6.3.1",
+        "7.8.5"
+      ],
+      "license": "ISC",
+      "homepage": "https://github.com/npm/node-semver#readme"
+    },
+    {
+      "name": "sharp",
+      "versions": [
+        "0.35.5"
+      ],
+      "license": "Apache-2.0",
+      "homepage": "https://sharp.pixelplumbing.com"
+    },
+    {
+      "name": "source-map-js",
+      "versions": [
+        "1.2.2"
+      ],
+      "license": "BSD-3-Clause",
+      "homepage": "https://github.com/7rulnik/source-map-js"
+    },
+    {
+      "name": "styled-jsx",
+      "versions": [
+        "5.1.6"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/vercel/styled-jsx#readme"
+    },
+    {
+      "name": "supports-color",
+      "versions": [
+        "7.2.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/chalk/supports-color#readme"
+    },
+    {
+      "name": "tailwind-merge",
+      "versions": [
+        "3.7.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/dcastil/tailwind-merge"
+    },
+    {
+      "name": "tailwindcss",
+      "versions": [
+        "4.3.3"
+      ],
+      "license": "MIT",
+      "homepage": "https://tailwindcss.com"
+    },
+    {
+      "name": "tapable",
+      "versions": [
+        "2.3.3"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/webpack/tapable"
+    },
+    {
+      "name": "three",
+      "versions": [
+        "0.186.1"
+      ],
+      "license": "MIT",
+      "homepage": "https://threejs.org/"
+    },
+    {
+      "name": "tslib",
+      "versions": [
+        "2.8.1"
+      ],
+      "license": "0BSD",
+      "homepage": "https://www.typescriptlang.org/"
+    },
+    {
+      "name": "typescript",
+      "versions": [
+        "5.9.3"
+      ],
+      "license": "Apache-2.0",
+      "homepage": "https://www.typescriptlang.org/"
+    },
+    {
+      "name": "undici-types",
+      "versions": [
+        "7.24.6"
+      ],
+      "license": "MIT",
+      "homepage": "https://undici.nodejs.org"
+    },
+    {
+      "name": "update-browserslist-db",
+      "versions": [
+        "1.3.3"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/browserslist/update-db#readme"
+    },
+    {
+      "name": "use-callback-ref",
+      "versions": [
+        "1.3.3"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/theKashey/use-callback-ref#readme"
+    },
+    {
+      "name": "use-sidecar",
+      "versions": [
+        "1.1.3"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/theKashey/use-sidecar"
+    },
+    {
+      "name": "yallist",
+      "versions": [
+        "3.1.1"
+      ],
+      "license": "ISC",
+      "homepage": "https://github.com/isaacs/yallist#readme"
+    },
+    {
+      "name": "zod",
+      "versions": [
+        "4.6.5"
+      ],
+      "license": "MIT",
+      "homepage": "https://zod.dev"
+    }
+  ],
+  "python": [
+    {
+      "name": "alembic",
+      "version": "1.20.0",
+      "license": "MIT",
+      "homepage": "Homepage, https://alembic.sqlalchemy.org"
+    },
+    {
+      "name": "amqp",
+      "version": "5.4.1",
+      "license": "BSD",
+      "homepage": "http://github.com/celery/py-amqp"
+    },
+    {
+      "name": "annotated-doc",
+      "version": "0.0.5",
+      "license": "MIT",
+      "homepage": "Homepage, https://github.com/fastapi/annotated-doc"
+    },
+    {
+      "name": "annotated-types",
+      "version": "0.8.0",
+      "license": "MIT",
+      "homepage": "Homepage, https://github.com/annotated-types/annotated-types"
+    },
+    {
+      "name": "anyio",
+      "version": "4.15.1",
+      "license": "MIT",
+      "homepage": "Documentation, https://anyio.readthedocs.io/en/latest/"
+    },
+    {
+      "name": "argon2-cffi",
+      "version": "25.1.0",
+      "license": "MIT",
+      "homepage": "Documentation, https://argon2-cffi.readthedocs.io/"
+    },
+    {
+      "name": "argon2-cffi-bindings",
+      "version": "26.1.0",
+      "license": "MIT",
+      "homepage": "Tidelift, https://tidelift.com/?utm_source=lifter&utm_medium=referral&utm_campaign=hynek"
+    },
+    {
+      "name": "Authlib",
+      "version": "1.8.0",
+      "license": "BSD-3-Clause",
+      "homepage": "Documentation, https://docs.authlib.org/"
+    },
+    {
+      "name": "billiard",
+      "version": "4.3.1",
+      "license": "BSD",
+      "homepage": "https://github.com/celery/billiard"
+    },
+    {
+      "name": "boolean.py",
+      "version": "5.0",
+      "license": "BSD-2-Clause",
+      "homepage": "https://github.com/bastikr/boolean.py"
+    },
+    {
+      "name": "boto3",
+      "version": "1.43.109",
+      "license": "Apache-2.0",
+      "homepage": "https://github.com/boto/boto3"
+    },
+    {
+      "name": "botocore",
+      "version": "1.43.109",
+      "license": "Apache-2.0",
+      "homepage": "https://github.com/boto/botocore"
+    },
+    {
+      "name": "CacheControl",
+      "version": "0.14.4",
+      "license": "Apache-2.0",
+      "homepage": "Homepage, https://pypi.org/project/CacheControl/"
+    },
+    {
+      "name": "celery",
+      "version": "5.6.3",
+      "license": "BSD-3-Clause",
+      "homepage": "https://docs.celeryq.dev/"
+    },
+    {
+      "name": "certifi",
+      "version": "2026.7.22",
+      "license": "MPL-2.0",
+      "homepage": "https://github.com/certifi/python-certifi"
+    },
+    {
+      "name": "cffi",
+      "version": "2.1.1",
+      "license": "MIT-0",
+      "homepage": "Documentation, https://cffi.readthedocs.io/"
+    },
+    {
+      "name": "charset-normalizer",
+      "version": "3.5.2",
+      "license": "MIT",
+      "homepage": "Changelog, https://github.com/jawah/charset_normalizer/blob/master/CHANGELOG.md"
+    },
+    {
+      "name": "click",
+      "version": "8.5.0",
+      "license": "BSD-3-Clause",
+      "homepage": "Changes, https://click.palletsprojects.com/page/changes/"
+    },
+    {
+      "name": "click-didyoumean",
+      "version": "0.3.1",
+      "license": "MIT",
+      "homepage": "https://github.com/click-contrib/click-didyoumean"
+    },
+    {
+      "name": "click-plugins",
+      "version": "1.1.1.2",
+      "license": "New BSD",
+      "homepage": "https://github.com/click-contrib/click-plugins"
+    },
+    {
+      "name": "click-repl",
+      "version": "0.4.1",
+      "license": "MIT",
+      "homepage": "https://github.com/click-contrib/click-repl"
+    },
+    {
+      "name": "cryptography",
+      "version": "50.0.2",
+      "license": "Apache-2.0 OR BSD-3-Clause",
+      "homepage": "changelog, https://cryptography.io/en/latest/changelog/"
+    },
+    {
+      "name": "cyclonedx-python-lib",
+      "version": "11.12.0",
+      "license": "Apache-2.0",
+      "homepage": "Bug Tracker, https://github.com/CycloneDX/cyclonedx-python-lib/issues"
+    },
+    {
+      "name": "defusedxml",
+      "version": "0.7.1",
+      "license": "PSFL",
+      "homepage": "https://github.com/tiran/defusedxml"
+    },
+    {
+      "name": "fastapi",
+      "version": "0.143.0",
+      "license": "MIT",
+      "homepage": "Homepage, https://github.com/fastapi/fastapi"
+    },
+    {
+      "name": "filelock",
+      "version": "4.0.12",
+      "license": "MIT",
+      "homepage": "Documentation, https://py-filelock.readthedocs.io"
+    },
+    {
+      "name": "h11",
+      "version": "0.16.0",
+      "license": "MIT",
+      "homepage": "https://github.com/python-hyper/h11"
+    },
+    {
+      "name": "httpcore",
+      "version": "1.0.9",
+      "license": "BSD-3-Clause",
+      "homepage": "Documentation, https://www.encode.io/httpcore"
+    },
+    {
+      "name": "httptools",
+      "version": "0.8.0",
+      "license": "MIT",
+      "homepage": "Homepage, https://github.com/MagicStack/httptools"
+    },
+    {
+      "name": "httpx",
+      "version": "0.28.1",
+      "license": "BSD-3-Clause",
+      "homepage": "Changelog, https://github.com/encode/httpx/blob/master/CHANGELOG.md"
+    },
+    {
+      "name": "idna",
+      "version": "3.20",
+      "license": "BSD-3-Clause",
+      "homepage": "Changelog, https://github.com/kjd/idna/blob/master/HISTORY.md"
+    },
+    {
+      "name": "iniconfig",
+      "version": "2.3.1",
+      "license": "MIT",
+      "homepage": "Homepage, https://github.com/pytest-dev/iniconfig"
+    },
+    {
+      "name": "itsdangerous",
+      "version": "2.2.0",
+      "license": "BSD License",
+      "homepage": "Changes, https://itsdangerous.palletsprojects.com/changes/"
+    },
+    {
+      "name": "jmespath",
+      "version": "1.1.0",
+      "license": "MIT",
+      "homepage": "https://github.com/jmespath/jmespath.py"
+    },
+    {
+      "name": "joserfc",
+      "version": "1.7.5",
+      "license": "BSD-3-Clause",
+      "homepage": "Documentation, https://jose.authlib.org/"
+    },
+    {
+      "name": "kombu",
+      "version": "5.6.2",
+      "license": "BSD-3-Clause",
+      "homepage": "https://kombu.readthedocs.io"
+    },
+    {
+      "name": "license-expression",
+      "version": "30.4.4",
+      "license": "Apache-2.0",
+      "homepage": "https://github.com/aboutcode-org/license-expression"
+    },
+    {
+      "name": "Mako",
+      "version": "1.4.3",
+      "license": "MIT",
+      "homepage": "Homepage, https://www.makotemplates.org/"
+    },
+    {
+      "name": "markdown-it-py",
+      "version": "4.2.0",
+      "license": "MIT License",
+      "homepage": "Documentation, https://markdown-it-py.readthedocs.io"
+    },
+    {
+      "name": "MarkupSafe",
+      "version": "3.0.4",
+      "license": "BSD-3-Clause",
+      "homepage": "Donate, https://palletsprojects.com/donate"
+    },
+    {
+      "name": "mdurl",
+      "version": "0.1.2",
+      "license": "MIT License",
+      "homepage": "Homepage, https://github.com/executablebooks/mdurl"
+    },
+    {
+      "name": "msgpack",
+      "version": "1.2.3",
+      "license": "Apache-2.0",
+      "homepage": "Homepage, https://msgpack.org/"
+    },
+    {
+      "name": "opentelemetry-api",
+      "version": "1.45.1",
+      "license": "Apache-2.0",
+      "homepage": "Homepage, https://github.com/open-telemetry/opentelemetry-python/tree/main/opentelemetry-api"
+    },
+    {
+      "name": "packageurl-python",
+      "version": "0.17.6",
+      "license": "MIT",
+      "homepage": "https://github.com/package-url/packageurl-python"
+    },
+    {
+      "name": "packaging",
+      "version": "26.3",
+      "license": "Apache-2.0 OR BSD-2-Clause",
+      "homepage": "Documentation, https://packaging.pypa.io/"
+    },
+    {
+      "name": "pillow",
+      "version": "12.3.0",
+      "license": "MIT-CMU",
+      "homepage": "Release notes, https://pillow.readthedocs.io/en/stable/releasenotes/index.html"
+    },
+    {
+      "name": "pip",
+      "version": "26.2.1",
+      "license": "MIT",
+      "homepage": "Changelog, https://pip.pypa.io/en/stable/news/"
+    },
+    {
+      "name": "pip-requirements-parser",
+      "version": "32.0.1",
+      "license": "MIT",
+      "homepage": "https://github.com/nexB/pip-requirements-parser"
+    },
+    {
+      "name": "pip_api",
+      "version": "0.0.35",
+      "license": "Apache Software License",
+      "homepage": "Homepage, https://pypi.org/project/pip-api/"
+    },
+    {
+      "name": "pip_audit",
+      "version": "2.10.1",
+      "license": "Apache Software License",
+      "homepage": "Homepage, https://pypi.org/project/pip-audit/"
+    },
+    {
+      "name": "platformdirs",
+      "version": "4.12.4",
+      "license": "MIT",
+      "homepage": "Changelog, https://platformdirs.readthedocs.io/en/latest/changelog.html"
+    },
+    {
+      "name": "pluggy",
+      "version": "1.6.0",
+      "license": "MIT",
+      "homepage": ""
+    },
+    {
+      "name": "prompt_toolkit",
+      "version": "3.0.53",
+      "license": "BSD License",
+      "homepage": "Homepage, https://github.com/prompt-toolkit/python-prompt-toolkit"
+    },
+    {
+      "name": "psycopg",
+      "version": "3.3.6",
+      "license": "LGPL-3.0-only",
+      "homepage": "Homepage, https://psycopg.org/"
+    },
+    {
+      "name": "psycopg-binary",
+      "version": "3.3.6",
+      "license": "LGPL-3.0-only",
+      "homepage": "Homepage, https://psycopg.org/"
+    },
+    {
+      "name": "pwdlib",
+      "version": "0.3.1",
+      "license": "MIT License",
+      "homepage": "Documentation, https://frankie567.github.io/pwdlib/"
+    },
+    {
+      "name": "py-serializable",
+      "version": "2.1.0",
+      "license": "Apache-2.0",
+      "homepage": "Bug Tracker, https://github.com/madpah/serializable/issues"
+    },
+    {
+      "name": "pycparser",
+      "version": "3.1",
+      "license": "BSD-3-Clause",
+      "homepage": "Homepage, https://github.com/eliben/pycparser"
+    },
+    {
+      "name": "pydantic",
+      "version": "2.13.5",
+      "license": "MIT",
+      "homepage": "Homepage, https://github.com/pydantic/pydantic"
+    },
+    {
+      "name": "pydantic-settings",
+      "version": "2.15.0",
+      "license": "MIT",
+      "homepage": "Homepage, https://github.com/pydantic/pydantic-settings"
+    },
+    {
+      "name": "pydantic_core",
+      "version": "2.46.5",
+      "license": "MIT",
+      "homepage": "https://github.com/pydantic/pydantic"
+    },
+    {
+      "name": "Pygments",
+      "version": "2.21.0",
+      "license": "BSD-2-Clause",
+      "homepage": "Homepage, https://pygments.org"
+    },
+    {
+      "name": "pyparsing",
+      "version": "3.3.3",
+      "license": "MIT",
+      "homepage": "Documentation, https://pyparsing-docs.readthedocs.io/en/latest/"
+    },
+    {
+      "name": "pytest",
+      "version": "9.1.1",
+      "license": "MIT",
+      "homepage": "Changelog, https://docs.pytest.org/en/stable/changelog.html"
+    },
+    {
+      "name": "python-dateutil",
+      "version": "2.9.0.post0",
+      "license": "Dual License",
+      "homepage": "https://github.com/dateutil/dateutil"
+    },
+    {
+      "name": "python-dotenv",
+      "version": "1.2.4",
+      "license": "BSD-3-Clause",
+      "homepage": "Source, https://github.com/theskumar/python-dotenv"
+    },
+    {
+      "name": "python-multipart",
+      "version": "0.0.32",
+      "license": "Apache-2.0",
+      "homepage": "Homepage, https://github.com/Kludex/python-multipart"
+    },
+    {
+      "name": "PyYAML",
+      "version": "6.0.3",
+      "license": "MIT",
+      "homepage": "https://pyyaml.org/"
+    },
+    {
+      "name": "redis",
+      "version": "7.4.1",
+      "license": "MIT",
+      "homepage": "Changes, https://github.com/redis/redis-py/releases"
+    },
+    {
+      "name": "requests",
+      "version": "2.34.2",
+      "license": "Apache-2.0",
+      "homepage": "Documentation, https://requests.readthedocs.io"
+    },
+    {
+      "name": "rich",
+      "version": "15.0.0",
+      "license": "MIT",
+      "homepage": "Documentation, https://rich.readthedocs.io/en/latest/"
+    },
+    {
+      "name": "ruff",
+      "version": "0.16.10",
+      "license": "MIT",
+      "homepage": "https://docs.astral.sh/ruff"
+    },
+    {
+      "name": "s3transfer",
+      "version": "0.19.2",
+      "license": "Apache License 2.0",
+      "homepage": "https://github.com/boto/s3transfer"
+    },
+    {
+      "name": "six",
+      "version": "1.17.0",
+      "license": "MIT",
+      "homepage": "https://github.com/benjaminp/six"
+    },
+    {
+      "name": "sortedcontainers",
+      "version": "2.4.0",
+      "license": "Apache 2.0",
+      "homepage": "http://www.grantjenks.com/docs/sortedcontainers/"
+    },
+    {
+      "name": "SQLAlchemy",
+      "version": "2.0.54",
+      "license": "MIT",
+      "homepage": "https://www.sqlalchemy.org"
+    },
+    {
+      "name": "starlette",
+      "version": "1.7.0",
+      "license": "BSD-3-Clause",
+      "homepage": "Homepage, https://github.com/Kludex/starlette"
+    },
+    {
+      "name": "tomli",
+      "version": "2.5.0",
+      "license": "MIT",
+      "homepage": "Homepage, https://github.com/hukkin/tomli"
+    },
+    {
+      "name": "tomli_w",
+      "version": "1.2.0",
+      "license": "MIT License",
+      "homepage": "Changelog, https://github.com/hukkin/tomli-w/blob/master/CHANGELOG.md"
+    },
+    {
+      "name": "typing-inspection",
+      "version": "0.4.4",
+      "license": "MIT",
+      "homepage": "Homepage, https://github.com/pydantic/typing-inspection"
+    },
+    {
+      "name": "typing_extensions",
+      "version": "4.16.0",
+      "license": "PSF-2.0",
+      "homepage": "Bug Tracker, https://github.com/python/typing_extensions/issues"
+    },
+    {
+      "name": "tzdata",
+      "version": "2026.5",
+      "license": "Apache-2.0",
+      "homepage": "https://github.com/python/tzdata"
+    },
+    {
+      "name": "tzlocal",
+      "version": "5.4.4",
+      "license": "MIT",
+      "homepage": "Source code, https://github.com/regebro/tzlocal"
+    },
+    {
+      "name": "urllib3",
+      "version": "2.8.0",
+      "license": "MIT",
+      "homepage": "Changelog, https://github.com/urllib3/urllib3/blob/main/CHANGES.rst"
+    },
+    {
+      "name": "uvicorn",
+      "version": "0.54.0",
+      "license": "BSD-3-Clause",
+      "homepage": "Changelog, https://uvicorn.dev/release-notes"
+    },
+    {
+      "name": "uvloop",
+      "version": "0.23.0",
+      "license": "MIT License",
+      "homepage": "github, https://github.com/MagicStack/uvloop"
+    },
+    {
+      "name": "vine",
+      "version": "5.1.0",
+      "license": "BSD",
+      "homepage": "https://github.com/celery/vine"
+    },
+    {
+      "name": "watchfiles",
+      "version": "1.3.0",
+      "license": "MIT",
+      "homepage": "https://github.com/samuelcolvin/watchfiles"
+    },
+    {
+      "name": "wcwidth",
+      "version": "0.9.2",
+      "license": "MIT License",
+      "homepage": "Homepage, https://github.com/jquast/wcwidth"
+    },
+    {
+      "name": "websockets",
+      "version": "17.2",
+      "license": "BSD-3-Clause",
+      "homepage": "Homepage, https://github.com/python-websockets/websockets"
+    },
+    {
+      "name": "yt-dlp",
+      "version": "2026.8.19",
+      "license": "Unlicense",
+      "homepage": "Documentation, https://github.com/yt-dlp/yt-dlp#readme"
+    }
+  ]
+}

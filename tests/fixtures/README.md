@@ -1,0 +1,1 @@
+reference-person.jpg: cropped NASA photograph of astronaut Eileen Collins, from the public-domain scikit-image astronaut sample. Used only for local face matching tests. Source: https://scikit-image.org/docs/stable/api/skimage.data.html#skimage.data.astronaut

@@ -1,0 +1,137 @@
+name: lumvia
+
+x-api: &api
+  build:
+    context: .
+    dockerfile: infrastructure/docker/api.Dockerfile
+  environment: &environment
+    DATABASE_URL: postgresql+psycopg://lumvia:${POSTGRES_PASSWORD:?Run scripts/configure_compose.py}@postgres:5432/lumvia
+    SECRET_KEY: ${SECRET_KEY:?Run scripts/configure_compose.py}
+    APP_URL: http://127.0.0.1:3000
+    ENVIRONMENT: development
+    BROKER_URL: amqp://lumvia:${RABBITMQ_PASSWORD:?Run scripts/configure_compose.py}@rabbitmq:5672//
+    REDIS_URL: redis://redis:6379/0
+    STORAGE_ROOT: /data/storage
+    REFERENCE_PREVIEW_ROOT: /data/previews
+    FFMPEG_BIN: /usr/bin/ffmpeg
+    FFPROBE_BIN: /usr/bin/ffprobe
+  volumes:
+    - assets:/data/storage
+    - previews:/data/previews
+  networks: [backend]
+  read_only: true
+  tmpfs:
+    - /tmp:size=1200m,mode=1777
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  mem_limit: 3g
+  cpus: 2
+  pids_limit: 256
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: lumvia
+      POSTGRES_USER: lumvia
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run scripts/configure_compose.py}
+    volumes: [database:/var/lib/postgresql/data]
+    networks: [backend]
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U lumvia -d lumvia']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:4-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: lumvia
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:?Run scripts/configure_compose.py}
+    volumes: [queue:/var/lib/rabbitmq]
+    networks: [backend]
+    healthcheck:
+      test: [CMD, rabbitmq-diagnostics, -q, ping]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: [redis-server, --save, '', --appendonly, 'no']
+    networks: [backend]
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  initialize:
+    <<: *api
+    environment:
+      <<: *environment
+      ADMIN_EMAIL: ${ADMIN_EMAIL:?Run scripts/configure_compose.py}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Run scripts/configure_compose.py}
+    command: [sh, -c, 'alembic -c apps/api/alembic.ini upgrade head && python scripts/bootstrap.py']
+    depends_on:
+      postgres: {condition: service_healthy}
+
+  api:
+    <<: *api
+    networks: [backend, egress]
+    depends_on:
+      initialize: {condition: service_completed_successfully}
+      rabbitmq: {condition: service_healthy}
+      redis: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  worker:
+    <<: *api
+    networks: [backend, egress]
+    command: [celery, -A, app.jobs.worker, worker, --pool=threads, --concurrency=2, --without-mingle, --without-gossip, --loglevel=WARNING]
+    depends_on:
+      api: {condition: service_healthy}
+    mem_limit: 5g
+    restart: unless-stopped
+
+  beat:
+    <<: *api
+    command: [celery, -A, app.jobs.worker, beat, --schedule=/tmp/celerybeat, --loglevel=WARNING]
+    depends_on:
+      api: {condition: service_healthy}
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/web.Dockerfile
+    environment:
+      API_INTERNAL_URL: http://api:8000
+    ports: ['127.0.0.1:3000:3000']
+    networks: [frontend, backend]
+    depends_on:
+      api: {condition: service_healthy}
+    read_only: true
+    tmpfs: ['/tmp:size=64m,mode=1777']
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 1g
+    restart: unless-stopped
+
+networks:
+  frontend: {}
+  egress: {}
+  backend: {internal: true}
+volumes:
+  database: {}
+  queue: {}
+  assets: {}
+  previews: {}

@@ -1,0 +1,60 @@
+name: checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate public file boundary
+        run: python3 scripts/check_publication.py
+      - name: Scan current published source
+        run: docker run --rm -v "$PWD:/repo" -w /repo zricethezav/gitleaks:v8.30.1 dir /repo --redact
+      - name: Scan all Git history
+        run: docker run --rm -v "$PWD:/repo" -w /repo -e GIT_CONFIG_COUNT=1 -e GIT_CONFIG_KEY_0=safe.directory -e GIT_CONFIG_VALUE_0=/repo zricethezav/gitleaks:v8.30.1 git /repo --log-opts="--all" --redact
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: lumvia
+          POSTGRES_PASSWORD: ci-test-password
+          POSTGRES_DB: lumvia
+        ports: ['5432:5432']
+        options: --health-cmd 'pg_isready -U lumvia' --health-interval 5s --health-timeout 3s --health-retries 20
+      redis:
+        image: redis:7-alpine
+        ports: ['6379:6379']
+    env:
+      DATABASE_URL: postgresql+psycopg://lumvia:ci-test-password@127.0.0.1:5432/lumvia
+      SECRET_KEY: ci-tests-only-not-a-real-secret-000000000000
+      REDIS_URL: redis://127.0.0.1:6379/0
+      NEXT_TELEMETRY_DISABLED: '1'
+      PYTHONPATH: apps/api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.13'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '24'}
+      - uses: pnpm/action-setup@v4
+        with: {version: '11.25.0'}
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: python -m venv .venv && .venv/bin/pip install --upgrade pip && .venv/bin/pip install -r apps/api/requirements.txt
+      - run: .venv/bin/ruff check apps/api scripts tests && .venv/bin/ruff format --check apps/api scripts tests
+      - run: .venv/bin/python scripts/test.py -q
+      - run: .venv/bin/alembic -c apps/api/alembic.ini upgrade head && .venv/bin/alembic -c apps/api/alembic.ini check
+      - run: .venv/bin/pip-audit
+      - run: pnpm install --frozen-lockfile && pnpm typecheck && pnpm lint && pnpm exec prettier --check app components lib proxy.ts next.config.ts .oxlintrc.json && pnpm build && pnpm audit
+        working-directory: apps/web
+      - name: Validate compose file
+        env:
+          POSTGRES_PASSWORD: ci-test-password
+          RABBITMQ_PASSWORD: ci-test-password
+          ADMIN_EMAIL: ci@example.test
+          ADMIN_PASSWORD: ci-test-password
+        run: docker compose config --quiet

@@ -1,0 +1,38 @@
+# Explicit opt-in: this file is not read by ordinary startup.
+x-mobile: &mobile
+  APP_URL: https://${MOBILE_BIND_IP:?Configure the private Wi-Fi IP first}:8443
+  LOCAL_NETWORK: 'true'
+  ENVIRONMENT: production
+
+services:
+  initialize:
+    environment: *mobile
+  api:
+    environment: *mobile
+  worker:
+    environment: *mobile
+  beat:
+    environment: *mobile
+  mobile:
+    image: caddy:2-alpine
+    environment:
+      MOBILE_BIND_IP: ${MOBILE_BIND_IP:?Configure the private Wi-Fi IP first}
+    ports: ['${MOBILE_BIND_IP}:8443:443']
+    networks: [backend]
+    volumes:
+      - ./infrastructure/docker/Caddyfile.mobile:/etc/caddy/Caddyfile:ro
+      - mobile_tls:/data
+      - mobile_config:/config
+    read_only: true
+    tmpfs: ['/tmp:size=16m,mode=1777']
+    cap_drop: [ALL]
+    cap_add: [NET_BIND_SERVICE]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 192m
+    depends_on:
+      web: {condition: service_started}
+    restart: unless-stopped
+
+volumes:
+  mobile_tls: {}
+  mobile_config: {}
