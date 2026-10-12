@@ -55,3 +55,6 @@ out/
 .hypothesis/
 htmlcov/
 .coverage*
+
+# Finished promotional demo only; source footage remains private.
+!demo/lumvia-trailer-v5-2-preview.mp4

@@ -25,7 +25,7 @@ jobs:
           POSTGRES_PASSWORD: ci-test-password
           POSTGRES_DB: lumvia
         ports: ['5432:5432']
-        options: --health-cmd 'pg_isready -U lumvia' --health-interval 5s --health-timeout 3s --health-retries 20
+        options: --health-cmd "pg_isready -U lumvia" --health-interval 5s --health-timeout 3s --health-retries 20
       redis:
         image: redis:7-alpine
         ports: ['6379:6379']
