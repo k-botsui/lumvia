@@ -215,6 +215,31 @@ def get_media(media_id: str, p: Principal = Depends(require_user), db: Session =
     return media_list(db, [owned(db, Media, media_id, p)])[0]
 
 
+@router.post("/{media_id}/repair-preview", status_code=202)
+def repair_preview(media_id: str, p: Principal = Depends(require_user), db: Session = Depends(get_db)):
+    rate_limit(f"preview-repair:{p.user.id}", 10, 3600)
+    media = owned(db, Media, media_id, p)
+    db.scalar(select(Media).where(Media.id == media.id).with_for_update())
+    if media.storage_mode != "MANAGED":
+        problem(409, "NOT_MANAGED", "保存した動画で利用できます。")
+    existing = db.scalar(
+        select(Job).where(Job.media_id == media.id, Job.kind == "ingest", Job.state.in_(ACTIVE))
+    )
+    if not existing:
+        ensure_capacity(db, p.library.id)
+        if not db.scalar(select(Asset.id).where(Asset.media_id == media.id, Asset.role == "original")):
+            problem(409, "ORIGINAL_UNAVAILABLE", "元動画を確認できませんでした。")
+        existing = Job(library_id=p.library.id, media_id=media.id, kind="ingest", request_id=request_id.get())
+        source = db.get(Source, media.source_id)
+        source.metadata_json = {**source.metadata_json, "force_compatible_preview": True}
+        db.add(existing)
+        media.status = "PROCESSING"
+        audit(db, p.user.id, "media.preview_repair", media.id)
+        db.commit()
+        dispatch(existing.id)
+    return {"job_id": existing.id}
+
+
 @router.patch("/{media_id}")
 def update_media(
     media_id: str, data: MediaPatch, p: Principal = Depends(require_user), db: Session = Depends(get_db)

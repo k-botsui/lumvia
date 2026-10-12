@@ -24,7 +24,18 @@ class Cancelled(Exception):
 def video_encoding(quality=24):
     if settings.video_encoder == "h264_videotoolbox":
         # Apple's encoder permits an LGPL-only FFmpeg build, including older Intel Macs.
-        return ["-c:v", "h264_videotoolbox", "-allow_sw", "1", "-b:v", "3000k"]
+        return [
+            "-c:v",
+            "h264_videotoolbox",
+            "-require_sw",
+            "1",
+            "-profile:v",
+            "baseline",
+            "-coder",
+            "cavlc",
+            "-b:v",
+            "2500k",
+        ]
     return ["-c:v", "libx264", "-preset", "veryfast", "-crf", str(quality)]
 
 
@@ -155,7 +166,7 @@ def can_remux(path, cancelled):
             "-format_whitelist",
             "mov,matroska,webm,avi",
             "-show_entries",
-            "stream=codec_type,codec_name,pix_fmt,width,height",
+            "stream=codec_type,codec_name,pix_fmt,width,height,profile,level",
             "-of",
             "json",
             path,
@@ -170,6 +181,8 @@ def can_remux(path, cancelled):
         len(video) == 1
         and video[0].get("codec_name") == "h264"
         and video[0].get("pix_fmt") == "yuv420p"
+        and video[0].get("profile") in {"Baseline", "Constrained Baseline"}
+        and video[0].get("level", 999) <= 31
         and video[0].get("width", 99999) <= 1280
         and video[0].get("height", 99999) <= 1920
         and all(s.get("codec_name") == "aac" for s in audio)

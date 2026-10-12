@@ -514,6 +514,19 @@ export function MediaDetail({
             </div>
             <aside className="detail-aside">
               <CoverPicker media={m} onChanged={refresh} />
+              <button
+                className="text-button"
+                disabled={busy || m.status === 'PROCESSING'}
+                onClick={() =>
+                  void act(
+                    () => api(`/media/${m.id}/repair-preview`, { method: 'POST' }),
+                    '再生用動画を作り直しています。元動画・Cell・Shelfは維持します。',
+                  )
+                }
+              >
+                再生用動画を作り直す
+              </button>
+
               <div className="section-heading">
                 <h3>動画について</h3>
                 <button

@@ -104,6 +104,7 @@ test("add → save Cell → organize → search → reopen range", async ({
     await page.getByRole("button", { name: "Shelf", exact: true }).click();
     await page
       .getByRole("button", { name: "Shelfを作成", exact: true })
+      .filter({ hasText: "Shelfを作成" })
       .click();
     await page
       .getByRole("textbox", { name: "名前", exact: true })

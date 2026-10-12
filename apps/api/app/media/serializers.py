@@ -68,7 +68,7 @@ def media_list(db, items):
     assets = {}
     for asset in db.scalars(select(Asset).where(Asset.media_id.in_(ids))):
         url = "/api/v1/assets/" + asset.id
-        if asset.role == "thumbnail":
+        if asset.role in {"thumbnail", "preview"}:
             url += "?v=" + sha256(asset.key.encode()).hexdigest()[:16]
         assets.setdefault(asset.media_id, {})[asset.role] = url
     counts = dict(

@@ -155,7 +155,7 @@ def test_auth_csrf_ownership_validation_and_atomic_limits(client, other, account
     assert client.post(PREFIX + "/import", json={"bundle": bundle(), "confirmed": True}).status_code == 403
     client.headers["X-CSRF-Token"] = csrf
     for mutate in [
-        lambda b: b.update(version=2),
+        lambda b: b.update(version=3),
         lambda b: b.update(secret="x"),
         lambda b: b["links"][0].update(url="https://127.0.0.1/private"),
         lambda b: b["cells"][0].update(link="missing"),
@@ -201,3 +201,53 @@ def test_portable_key_changes_and_order_do_not_duplicate_list(client):
     assert result.status_code == 200 and result.json()["duplicate"]
     assert client.get("/api/v1/media").json()["total"] == 2
     assert len(client.get("/api/v1/shelves").json()["items"]) == 1
+
+
+def test_image_bundle_roundtrip_metadata_strip_and_no_overwrite(client, other, monkeypatch):
+    import base64
+    from io import BytesIO
+
+    from PIL import Image
+
+    monkeypatch.setattr(
+        "app.sources.network.request",
+        lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("Import must not fetch images")),
+    )
+    image = Image.new("RGB", (160, 90), "#1279c4")
+    exif = Image.Exif()
+    exif[271] = "private camera metadata"
+    stream = BytesIO()
+    image.save(stream, format="JPEG", exif=exif)
+    data = bundle()
+    data["version"] = 2
+    data["links"][0]["cover_jpeg"] = base64.b64encode(stream.getvalue()).decode()
+    data["groups"][0].update(
+        header_jpeg=data["links"][0]["cover_jpeg"], header_frame={"x": 30, "y": 60, "zoom": 1.2}
+    )
+    imported = client.post(PREFIX + "/import", json={"bundle": data, "confirmed": True})
+    assert imported.status_code == 200, imported.text
+    media = client.get("/api/v1/media").json()["items"][0]
+    thumbnail = client.get(media["assets"]["thumbnail"])
+    with Image.open(BytesIO(thumbnail.content)) as decoded:
+        assert not decoded.getexif()
+    assert other.get(media["assets"]["thumbnail"]).status_code == 404
+    exported = client.post(PREFIX + "/export-preview", json={"include_images": True}).json()["bundle"]
+    assert exported["version"] == 2 and exported["links"][0]["cover_jpeg"]
+    with Image.open(BytesIO(base64.b64decode(exported["links"][0]["cover_jpeg"]))) as decoded:
+        assert not decoded.getexif()
+    assert exported["groups"][0]["header_frame"] == {"x": 30.0, "y": 60.0, "zoom": 1.2}
+    second = other.post(PREFIX + "/import", json={"bundle": exported, "confirmed": True})
+    assert second.status_code == 200, second.text
+    assert other.get("/api/v1/media").json()["items"][0]["assets"]["thumbnail"]
+    invalid = copy.deepcopy(data)
+    invalid["links"][0]["cover_jpeg"] = "not-an-image"
+    assert client.post(PREFIX + "/import-preview", json=invalid).status_code == 422
+    old_format = copy.deepcopy(data)
+    old_format["version"] = 1
+    assert client.post(PREFIX + "/import-preview", json=old_format).status_code == 422
+    replacement = Image.new("RGB", (160, 90), "#fb1111")
+    newer = BytesIO()
+    replacement.save(newer, format="JPEG")
+    data["links"][0]["cover_jpeg"] = base64.b64encode(newer.getvalue()).decode()
+    assert client.post(PREFIX + "/import", json={"bundle": data, "confirmed": True}).status_code == 200
+    assert client.get(media["assets"]["thumbnail"]).content == thumbnail.content

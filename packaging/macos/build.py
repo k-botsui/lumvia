@@ -234,6 +234,7 @@ def build(arch, resume=False):
         src,
         environment,
     )
+    command([py, "-m", "pip", "uninstall", "-y", "ruff", "pytest", "pip-audit"], src, environment)
     source_archives = work / "corresponding-source"
     source_archives.mkdir(exist_ok=True)
     for name in ("postgresql-17.9.tar.bz2", "valkey-9.1.2.tar.gz", "ffmpeg-8.1.tar.xz"):
@@ -442,7 +443,7 @@ def build(arch, resume=False):
         "CFBundleIconFile": "Lumvia.icns",
         "CFBundlePackageType": "APPL",
         "CFBundleShortVersionString": "0.2.0",
-        "CFBundleVersion": "3",
+        "CFBundleVersion": "4",
         "LSMinimumSystemVersion": "12.0",
         "NSHighResolutionCapable": True,
         "NSAppTransportSecurity": {"NSAllowsArbitraryLoads": True},

@@ -241,6 +241,7 @@ def ingest(job_id, media_id, check):
     with SessionLocal() as db:
         asset = db.scalar(select(Asset).where(Asset.media_id == media_id, Asset.role == "original"))
         media = db.get(Media, media_id)
+        compatible = db.get(Source, media.source_id).metadata_json.get("force_compatible_preview", False)
         prefix = f"{media.library_id}/{media.id}"
         key = asset.key
     with storage.materialize(key) as source, TemporaryDirectory(prefix="lumvia-ingest-") as directory:
@@ -266,7 +267,7 @@ def ingest(job_id, media_id, check):
             60,
         )
         progress(job_id, 35)
-        if can_remux(source, check):
+        if not compatible and settings.video_encoder != "h264_videotoolbox" and can_remux(source, check):
             run_command(
                 ffmpeg(
                     source,
@@ -301,10 +302,14 @@ def ingest(job_id, media_id, check):
                     "-map_metadata",
                     "-1",
                     "-vf",
-                    r"scale=trunc(min(1280\,iw)/2)*2:-2",
+                    "scale=1280:720:force_original_aspect_ratio=decrease:force_divisible_by=2,fps=30",
                     *video_encoding(),
+                    "-profile:v",
+                    "baseline",
+                    "-level:v",
+                    "3.1",
                     "-pix_fmt",
-                    "yuv420p",
+                    "nv12" if settings.video_encoder == "h264_videotoolbox" else "yuv420p",
                     "-threads",
                     "2",
                     "-c:a",
@@ -335,7 +340,7 @@ def ingest(job_id, media_id, check):
             source_record = db.get(Source, media.source_id)
             if not source_record.metadata_json.get("custom_cover"):
                 save_asset(db, media_id, "thumbnail", prefix + "/thumbnail.jpg", thumbnail, "image/jpeg")
-            save_asset(db, media_id, "preview", prefix + "/preview.mp4", preview, "video/mp4")
+            save_asset(db, media_id, "preview", prefix + f"/preview-{job_id}.mp4", preview, "video/mp4")
             db.commit()
 
 
