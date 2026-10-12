@@ -20,6 +20,9 @@ test("add → save Cell → organize → search → reopen range", async ({
       .getByLabel("パスワード", { exact: true })
       .fill(process.env.LUMVIA_E2E_PASSWORD!);
     await page.getByRole("button", { name: "ログイン", exact: true }).click();
+    await expect(
+      page.getByRole("button", { name: "追加する", exact: true }),
+    ).toBeVisible();
     // A local library must not pause requests when WebKit reports no Internet.
     await page.addInitScript(() =>
       Object.defineProperty(navigator, "onLine", { get: () => false }),
@@ -59,7 +62,7 @@ test("add → save Cell → organize → search → reopen range", async ({
     ).toBeEnabled();
     await coverDialog
       .getByRole("slider", { name: "カバーに使う場面" })
-      .fill("5");
+      .press("End");
     await expect(
       coverDialog.getByRole("button", { name: "この場面をカバーにする" }),
     ).toBeEnabled();
@@ -110,7 +113,7 @@ test("add → save Cell → organize → search → reopen range", async ({
     await page
       .getByRole("button", { name: cellName + "を整理", exact: true })
       .click();
-    await page.getByRole("checkbox", { name: shelfName, exact: true }).check();
+    await page.getByRole("checkbox", { name: shelfName, exact: true }).click();
     await expect(
       page.getByRole("checkbox", { name: shelfName, exact: true }),
     ).toBeChecked();
