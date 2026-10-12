@@ -19,8 +19,11 @@ class Settings(BaseSettings):
     storage_root: Path = STATE_ROOT / "storage"
     reference_preview_root: Path = STATE_ROOT / "reference-previews"
     support_github_repository: str = Field(
-        default="", pattern=r"^$|^[A-Za-z0-9][A-Za-z0-9-]{0,38}/[A-Za-z0-9][A-Za-z0-9_.-]{0,99}$"
+        default="k-botsui/lumvia",
+        pattern=r"^$|^[A-Za-z0-9][A-Za-z0-9-]{0,38}/[A-Za-z0-9][A-Za-z0-9_.-]{0,99}$",
     )
+    support_gateway_url: str = "https://lumvia-support.lumvia-support-worker.workers.dev"
+    support_operator_delivery: bool = False
     broker_url: str = "amqp://guest:guest@127.0.0.1:5679//"
     redis_url: str = "redis://127.0.0.1:6381/0"
     max_upload_bytes: int = 256 * 1024 * 1024
@@ -51,6 +54,18 @@ class Settings(BaseSettings):
     def secure_configuration(self):
         if self.environment not in {"development", "production", "test"}:
             raise ValueError("Unsupported environment")
+        if self.support_gateway_url:
+            gateway = urlsplit(self.support_gateway_url)
+            if (
+                gateway.scheme != "https"
+                or not gateway.hostname
+                or gateway.username
+                or gateway.password
+                or gateway.query
+                or gateway.fragment
+                or gateway.path not in {"", "/"}
+            ):
+                raise ValueError("Support gateway must be a fixed HTTPS origin")
         if len(self.secret_key) < 32:
             raise ValueError("SECRET_KEY must contain at least 32 characters")
         if not self.database_url.startswith("postgresql"):

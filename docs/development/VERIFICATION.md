@@ -37,3 +37,9 @@ OxlintのReact Hooks検査は有効です。独自のスクロール領域、二
 - Authlib/Starletteのhttpx非推奨警告が2件あります。テストは通過しています。互換性を確認した上で将来の依存更新へ対応します。
 - 公開準備時点でGitは初回コミット前。存在するblobは検査しましたが、別フォルダーのコピー元・削除済み別履歴は対象外です。
 - GitHubのリポジトリ作成、Public化、push、デプロイは実施していません。作成後はPrivate vulnerability reporting、secret scanning、push protectionを有効化し、CI結果を確認してください。
+
+## 2026-10-12 お問い合わせの共通窓口
+
+バックエンド全151テスト、Workerの7テスト、Ruff、Web型検査・Oxlint、本番ビルド、Wranglerのdry-runが成功。Worker依存監査の検出は0。匿名投稿、内容限定、認証・CSRF・Origin、重複防止、IP別・日別制限、本文変更、未接続、結果不明を検証しました。
+
+運営者のMacは既存のGitHub認証を使う非公開の運営用設定で動作確認します。配布用はこの経路を無効とし、Cloudflareの共通窓口を使います。Cloudflareアカウントが未作成のため、共通窓口の本番公開・Secret設定・配布URLは未完了です。公開テストIssueは自動作成していません。

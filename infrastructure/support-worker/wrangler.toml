@@ -1,0 +1,22 @@
+name = "lumvia-support"
+main = "src/worker.mjs"
+compatibility_date = "2026-10-12"
+workers_dev = true
+send_metrics = false
+
+[vars]
+GITHUB_REPOSITORY = "k-botsui/lumvia"
+
+[observability]
+enabled = false
+
+[[durable_objects.bindings]]
+name = "INBOX"
+class_name = "SupportInbox"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["SupportInbox"]
+
+# Secret: GITHUB_TOKEN (fine-grained, this repository only, Issues: Read and write).
+# Use Workers Free. Exceeding free quotas must fail rather than enabling a paid plan.

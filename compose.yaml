@@ -9,6 +9,9 @@ x-api: &api
     SECRET_KEY: ${SECRET_KEY:?Run scripts/configure_compose.py}
     APP_URL: http://127.0.0.1:3000
     ENVIRONMENT: development
+    SUPPORT_GITHUB_REPOSITORY: ${SUPPORT_GITHUB_REPOSITORY-k-botsui/lumvia}
+    SUPPORT_GATEWAY_URL: ${SUPPORT_GATEWAY_URL-https://lumvia-support.lumvia-support-worker.workers.dev}
+    SUPPORT_OPERATOR_DELIVERY: "false"
     BROKER_URL: amqp://lumvia:${RABBITMQ_PASSWORD:?Run scripts/configure_compose.py}@rabbitmq:5672//
     REDIS_URL: redis://redis:6379/0
     STORAGE_ROOT: /data/storage

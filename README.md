@@ -88,7 +88,8 @@ Macの「写真」からJPEGだけが渡る場合は、未編集のオリジナ�
 | `FFMPEG_BIN` / `FFPROBE_BIN` | 既定 `ffmpeg` / `ffprobe` |
 | `POSTGRES_PASSWORD` / `RABBITMQ_PASSWORD` | Docker必須。設定スクリプトが生成 |
 | `ADMIN_EMAIL` / `ADMIN_PASSWORD` | 初期アカウント作成時のみ必要。起動スクリプトが設定 |
-| `SUPPORT_GITHUB_REPOSITORY` | 任意の `owner/repository`。空なら問い合わせ窓口は無効 |
+| `SUPPORT_GATEWAY_URL` | 運営側のCloudflare窓口のHTTPS URL。トークンはアプリに設定しない |
+| `SUPPORT_GITHUB_REPOSITORY` | 既定 `k-botsui/lumvia`。共通窓口からIssue投稿。明示的に空へ設定すると無効 |
 
 容量・件数・タイムアウト・セッション期間の変数は [.env.example](.env.example) と [Settings](apps/api/app/config.py) を参照してください。S3・OIDC・外部DB/キューは現行設定で拒否します。秘密値をREADME、Issue、ログ添付へ書かないでください。
 
@@ -141,3 +142,7 @@ python3 scripts/scan_secrets.py
 テストは専用の `lumvia_test` DBと `test-storage` を使用し、通常DBへの破壊的fixtureを拒否します。E2Eは明示的な使い捨てアカウントの `LUMVIA_E2E_EMAIL` / `LUMVIA_E2E_PASSWORD` を設定して `pnpm --dir apps/web test:e2e` を実行します。
 
 現在の検証結果・未検証範囲は[検証記録](docs/development/VERIFICATION.md)へ記載します。設計は[アーキテクチャ](docs/architecture/OVERVIEW.md)、[API](docs/api/README.md)、[ADR](docs/adr/)、開発手順は[CONTRIBUTING](CONTRIBUTING.md)、脆弱性報告は[SECURITY](SECURITY.md)を参照してください。
+
+## お問い合わせ
+
+設定の「お問い合わせ」で件名と内容を入力し、「送信」でGitHub Issueを作成します。利用者のGitHubログインは不要です。送信する文章は公開され、動画・写真・ログ・ライブラリは添付しません。運営側の無料Cloudflare窓口の準備・公開が必要です。[作成・接続・保存の範囲と現在の準備状況](docs/development/SUPPORT.md)を参照してください。

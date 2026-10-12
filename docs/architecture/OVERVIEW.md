@@ -23,4 +23,4 @@ UI進捗は実行中2秒間隔のpollingを使用します。候補はAnalysisEv
 
 Storage契約には旧S3実装を残しますが、現在の設定検証はLocalStorageだけを許可し、S3・OIDC・外部DB/キューの設定を拒否します。`sources` のアダプターはYouTube・X・Instagram・TikTokのURLを正規化し、メタデータと参照を保存します。REFERENCEにはカバーAssetを保存できますが、リンク追加だけでは動画AssetやJobを作りません。切り取り時だけ公開動画を一時取得し、認可付きで配信します。このキャッシュは永続Media/Assetやバックアップの対象外です。[ADR 0005](../adr/0005-local-only-contact-and-public-previews.md)を参照してください。
 
-APIはローカルの構造化JSONログ、request ID、DB監査イベントを持ちます。外部テレメトリーやトレース送信を行いません。お問い合わせ用GETは設定されたGitHub窓口のURLだけを返し、文章・ログ・ライブラリデータを送信するAPIは設けません。
+APIはローカルの構造化JSONログ、request ID、DB監査イベントを持ちます。外部テレメトリーやトレース送信を行いません。お問い合わせは明示的なPOSTで、Cloudflare Workersの共通窓口を経由し、入力した件名・本文だけを設定済みリポジトリのIssueへ送ります。送信記録は重複防止用のID・HMAC・状態・Issue URLのみをDBへ保存し、本文・ログ・ライブラリデータを保存・自動添付しません。[ADR 0007](../adr/0007-github-support-submission.md)を参照してください。

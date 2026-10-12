@@ -264,3 +264,14 @@ class Deletion(Record, Base):
     __tablename__ = "asset_deletions"
     key: Mapped[str] = mapped_column(String(500), unique=True)
     attempts: Mapped[int] = mapped_column(Integer, default=0)
+
+
+class SupportSubmission(Record, Base):
+    __tablename__ = "support_submissions"
+    __table_args__ = (UniqueConstraint("user_id", "request_id"),)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
+    request_id: Mapped[str] = mapped_column(String(36))
+    payload_hash: Mapped[str] = mapped_column(String(64))
+    state: Mapped[str] = mapped_column(String(20))
+    issue_url: Mapped[str | None] = mapped_column(String(300))
+    issue_number: Mapped[int | None] = mapped_column(Integer)
