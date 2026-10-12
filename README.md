@@ -10,11 +10,18 @@ https://github.com/user-attachments/assets/2b9f4993-6cd7-4633-8270-f13d134ee5a6
 
 このリポジトリは **個人の私的・非商用利用を無料で許可**しています。オープンソースではありません。自分が所有・管理する端末へのダウンロード、インストール、未改変ソースのビルド・実行、私的バックアップができます。設定変更や初期認証情報の生成も可能です。**プログラムの改変・再配布、商用利用、勤務先・組織での利用、他者へのサービス提供には別途許可が必要**です。[LICENSE](LICENSE)と[第三者の依存・素材](THIRD_PARTY_NOTICES.md)を確認してください。自分の動画・写真・メモや、それらから作成した出力の権利は、このライセンスでは制限しません。
 
-入手は、このページ上部の **Code → Download ZIP** でダウンロードして解凍するか、`git clone https://github.com/k-botsui/lumvia.git` を実行します。現行版はソースからセットアップする形式で、インストーラーはまだありません。
+## ダウンロードして使う（Mac）
 
-## Macで使う
+**アプリは[Releasesのダウンロード画面](https://github.com/k-botsui/lumvia/releases)から入手します。** Code → Download ZIPは開発用ソースです。
 
-開発用ソフトを入れていない方向けに、Intel／Apple Silicon用のMacアプリを準備しています。macOS 12以降をビルド対象にしていますが、実機確認とAppleの署名・公証が完了するまでは一般向けの完成版として案内しません。ReleasesのTEST版は検証用です。Code → Download ZIPは開発用のソースで、そのまま開けるアプリではありません。配布・初回起動・データ保存については[Macアプリの説明](docs/development/MAC_APP.md)を参照してください。
+| Mac | ダウンロードするファイル |
+| --- | --- |
+| Intel（古いMac、Monterey検証機など） | `Lumvia-Mac-Intel-TEST.dmg` |
+| Apple Silicon（M1・M2・M3・M4など） | `Lumvia-Mac-AppleSilicon-TEST.dmg` |
+
+DMGを開き、LumviaをApplicationsへドラッグして、アプリケーションのLumviaを開きます。Python・Node・Homebrew・Dockerのインストール、URLの入力、初回アカウントの登録は不要です。ZIP版も用意します。対応する版は →「このMacについて」のチップ／プロセッサで確認できます。
+
+**現在はTEST版です。AppleのDeveloper ID署名・公証は未完了で、ダウンロード後にmacOSが起動を拒否することがあります。一般向けの完成版ではありません。** macOS 12以降をビルド対象にしています。Monterey 12.7.6のIntel実機では、ブラウザー経由で動画追加・再生、Cell、Shelf、再起動後のデータ保持を確認しました。アプリ内画面の修正は再検証が必要です。配布と保存先は[Macアプリの説明](docs/development/MAC_APP.md)を参照してください。
 
 ## 主な機能
 

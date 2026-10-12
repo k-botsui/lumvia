@@ -72,7 +72,10 @@ export function Lumvia() {
     () =>
       new QueryClient({
         defaultOptions: {
+          mutations: { networkMode: 'always' },
           queries: {
+            // The local library is reachable even when macOS reports no Internet connection.
+            networkMode: 'always',
             retry: (count, error) =>
               !(error instanceof ApiError && [401, 403, 404].includes(error.status)) && count < 1,
             refetchOnWindowFocus: true,

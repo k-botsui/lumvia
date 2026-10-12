@@ -139,20 +139,6 @@ export function LinkSharing({
     window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     setResult('共有ファイルを保存しました。受け取った人はLumviaの「リンク集を読み込む」で追加できます。');
   }
-  async function share() {
-    if (!agreed || !preview?.bundle.links.length) return;
-    const files = [file()];
-    if (!navigator.canShare?.({ files })) {
-      download();
-      return;
-    }
-    try {
-      await navigator.share({ files, title: 'Lumviaリンク集' });
-    } catch (failure) {
-      if (!(failure instanceof DOMException && failure.name === 'AbortError'))
-        setError('この送信先ではファイルを共有できません。「ファイルを保存」から添付してください。');
-    }
-  }
   async function copy() {
     if (!agreed || !preview?.bundle.links.length) return;
     try {
@@ -398,14 +384,7 @@ export function LinkSharing({
                       <Download size={16} />
                       ファイルを保存
                     </button>
-                    <button
-                      className="button secondary"
-                      disabled={!agreed || !bundle.links.length}
-                      onClick={share}
-                    >
-                      <Share2 size={16} />
-                      送信先を選ぶ
-                    </button>
+
                     <button
                       className="button secondary"
                       disabled={!agreed || !bundle.links.length}

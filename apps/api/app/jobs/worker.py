@@ -251,7 +251,7 @@ def ingest(job_id, media_id, check):
             ffmpeg(
                 source,
                 "-ss",
-                min(1, info["duration_ms"] / 3000),
+                min(10, info["duration_ms"] / 3000),
                 "-map",
                 "0:v:0",
                 "-frames:v",

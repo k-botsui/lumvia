@@ -226,6 +226,7 @@ def build(arch, resume=False):
         "NEXT_TELEMETRY_DISABLED": "1",
         "LUMVIA_DESKTOP_BUILD": "1",
         "PYTHONNOUSERSITE": "1",
+        "OPENSSL_STATIC": "1",
     }
     command(
         [py, "-m", "pip", "install", "--no-cache-dir", "-r", str(src / "apps/api/requirements.txt")],
@@ -356,7 +357,34 @@ def build(arch, resume=False):
         work,
     )
     shutil.copytree(license_dir / "python/licenses", notices / "Python", dirs_exist_ok=True)
-    shutil.copy2(license_dir / "python/PYTHON.json", notices / "Python-build-metadata.json")
+    metadata = json.loads((license_dir / "python/PYTHON.json").read_text())
+    # Keep licensing declarations, not upstream compiler configuration and build-machine paths.
+    declarations = []
+
+    def licenses(value, component="python"):
+        if isinstance(value, dict):
+            fields = {key: item for key, item in value.items() if key.startswith("license")}
+            if fields:
+                declarations.append({"component": component, **fields})
+            for key, item in value.items():
+                if isinstance(item, (dict, list)) and not key.startswith("license"):
+                    licenses(item, component + "/" + key)
+        elif isinstance(value, list):
+            for index, item in enumerate(value):
+                licenses(item, component + "/" + str(index))
+
+    licenses(metadata)
+    (notices / "Python-build-metadata.json").write_text(
+        json.dumps(
+            {
+                "python_version": metadata["python_version"],
+                "target_triple": metadata["target_triple"],
+                "license_declarations": declarations,
+            },
+            indent=2,
+        )
+        + "\n"
+    )
     iconset = work / "Lumvia.iconset"
     iconset.mkdir(exist_ok=True)
     icon = src / "apps/web/public/brand/app-icon-512.png"
@@ -405,7 +433,7 @@ def build(arch, resume=False):
         "CFBundleIconFile": "Lumvia.icns",
         "CFBundlePackageType": "APPL",
         "CFBundleShortVersionString": "0.2.0",
-        "CFBundleVersion": "1",
+        "CFBundleVersion": "2",
         "LSMinimumSystemVersion": "12.0",
         "NSHighResolutionCapable": True,
         "NSAppTransportSecurity": {"NSAllowsArbitraryLoads": True},
@@ -443,6 +471,39 @@ def build(arch, resume=False):
     label = "Intel" if arch == "x86_64" else "AppleSilicon"
     command(
         ["ditto", "-c", "-k", "--keepParent", str(app), str(output / f"Lumvia-Mac-{label}-TEST.zip")], ROOT
+    )
+    installer = work / "installer"
+    installer.mkdir(exist_ok=True)
+    installed_app = installer / "Lumvia.app"
+    if installed_app.exists():
+        shutil.rmtree(installed_app)
+    command(["ditto", str(app), str(installed_app)], ROOT)
+    applications = installer / "Applications"
+    if not applications.is_symlink():
+        applications.symlink_to("/Applications", target_is_directory=True)
+    (installer / "最初にお読みください.txt").write_text(
+        "Lumvia TEST版\n\nLumviaをApplicationsへドラッグしてから、アプリケーションのLumviaを開いてください。\n"
+        "Python等の追加インストール、URLの入力、新規登録は不要です。\n"
+        "現在はAppleの署名・公証が未完了の検証版です。macOSが起動を拒否することがあります。\n"
+        "一般向けの完成版ではありません。\n\n"
+        "データはアプリとは別に保存されます。アプリを交換しても削除されません。\n"
+        "https://github.com/k-botsui/lumvia/releases\n",
+        encoding="utf-8",
+    )
+    command(
+        [
+            "hdiutil",
+            "create",
+            "-ov",
+            "-format",
+            "UDZO",
+            "-volname",
+            f"Lumvia {label} TEST",
+            "-srcfolder",
+            str(installer),
+            str(output / f"Lumvia-Mac-{label}-TEST.dmg"),
+        ],
+        ROOT,
     )
     command(
         [

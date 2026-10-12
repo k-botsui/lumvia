@@ -49,7 +49,7 @@ def available_ports():
 
 
 def start(name, command, env, cwd=APP):
-    with (STATE / (name + ".log")).open("ab") as log:
+    with (STATE / (name + ".log")).open("wb") as log:
         process = subprocess.Popen(
             command,
             cwd=cwd,

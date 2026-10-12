@@ -10,6 +10,8 @@ final class Lumvia: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKUID
     var origin: URL?
     var readyData = Data()
     var terminating = false
+    var login: [String: String]?
+    var attemptedLogin = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let menu = NSMenu()
@@ -25,6 +27,11 @@ final class Lumvia: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKUID
         for (title, action, key) in [("コピー", "copy:", "c"), ("貼り付け", "paste:", "v"), ("切り取り", "cut:", "x"), ("すべて選択", "selectAll:", "a")] {
             edit.addItem(withTitle: title, action: Selector(action), keyEquivalent: key)
         }
+        let viewItem = NSMenuItem()
+        menu.addItem(viewItem)
+        let view = NSMenu(title: "表示")
+        viewItem.submenu = view
+        view.addItem(withTitle: "画面を再読み込み", action: #selector(reload), keyEquivalent: "r")
         NSApp.mainMenu = menu
         let visible = NSScreen.main?.visibleFrame ?? NSRect(x: 0, y: 0, width: 1280, height: 900)
         window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: min(1180, visible.width - 40), height: min(800, visible.height - 60)), styleMask: [.titled, .closable, .miniaturizable, .resizable], backing: .buffered, defer: false)
@@ -32,6 +39,7 @@ final class Lumvia: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKUID
         window.minSize = NSSize(width: 760, height: 540)
         window.center()
         let configuration = WKWebViewConfiguration()
+        configuration.websiteDataStore = .nonPersistent()
         web = WKWebView(frame: window.contentView!.bounds, configuration: configuration)
         web.autoresizingMask = [.width, .height]
         web.navigationDelegate = self
@@ -79,32 +87,39 @@ final class Lumvia: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKUID
               let value = message["url"], let url = URL(string: value), url.host == "127.0.0.1", url.scheme == "http",
               let credentialsPath = message["credentials_path"] else { fail(); return }
         origin = url
-        // Authenticate locally without exposing an initial password in the UI or logs.
-        guard let credentialsData = FileManager.default.contents(atPath: credentialsPath),
-              let credentials = try? JSONSerialization.jsonObject(with: credentialsData) as? [String: String] else { show(); return }
-        var request = URLRequest(url: url.appendingPathComponent("api/v1/auth/login"))
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue(value, forHTTPHeaderField: "Origin")
-        request.httpBody = try? JSONSerialization.data(withJSONObject: ["email": credentials["admin_email"] ?? "", "password": credentials["admin_password"] ?? ""])
-        let session = URLSession(configuration: .ephemeral)
-        session.dataTask(with: request) { [weak self] _, response, _ in
-            guard let self = self else { return }
-            let http = response as? HTTPURLResponse
-            var headers: [String: String] = [:]
-            http?.allHeaderFields.forEach { key, value in headers[String(describing: key)] = String(describing: value) }
-            let cookies = http?.statusCode == 200 ? HTTPCookie.cookies(withResponseHeaderFields: headers, for: url) : []
-            DispatchQueue.main.async {
-                let group = DispatchGroup()
-                for cookie in cookies {
-                    group.enter()
-                    self.web.configuration.websiteDataStore.httpCookieStore.setCookie(cookie) { group.leave() }
-                }
-                group.notify(queue: .main) { self.show() }
-            }
-            session.finishTasksAndInvalidate()
-        }.resume()
+        // Let WebKit receive both session and CSRF cookies itself. Transferring
+        // flattened Set-Cookie headers from URLSession is unreliable on older macOS.
+        if let data = FileManager.default.contents(atPath: credentialsPath),
+           let credentials = try? JSONSerialization.jsonObject(with: data) as? [String: String] {
+            login = ["email": credentials["admin_email"] ?? "", "password": credentials["admin_password"] ?? ""]
+        }
+        show()
     }
+
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        guard !attemptedLogin, let login = login,
+              webView.url?.host == origin?.host, webView.url?.port == origin?.port else { return }
+        attemptedLogin = true
+        self.login = nil
+        webView.callAsyncJavaScript("""
+            const response = await fetch('/api/v1/auth/login', {
+                method: 'POST', credentials: 'same-origin', cache: 'no-store',
+                headers: {'Content-Type': 'application/json'}, body: JSON.stringify(account)
+            });
+            if (!response.ok) return false;
+            const me = await fetch('/api/v1/auth/me', {credentials: 'same-origin', cache: 'no-store'});
+            return me.ok;
+            """, arguments: ["account": login], in: nil, in: .page) { [weak self] result in
+                guard let self = self else { return }
+                if case .success(let value) = result, (value as? Bool) == true {
+                    self.web.reloadFromOrigin()
+                }
+            }
+    }
+
+    @objc func reload() { web.reloadFromOrigin() }
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) { fail() }
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) { fail() }
 
     func show() {
         status.isHidden = true
