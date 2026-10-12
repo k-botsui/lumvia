@@ -2,7 +2,9 @@
 
 ## Demo
 
-https://github.com/user-attachments/assets/32ab17c6-3491-46d2-b1f0-f88aa04ec1f1
+https://github.com/user-attachments/assets/2b9f4993-6cd7-4633-8270-f13d134ee5a6
+
+[Demoの素材クレジット](demo/README.md)
 
 **思い出を、あなただけに。** 動画を集め、残したい区間を **Cell** として保存し、あとからその瞬間へ戻れるローカル映像ライブラリです。動画・Cellは **Shelf** へまとめられます。
 
