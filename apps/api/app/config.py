@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     support_operator_delivery: bool = False
     broker_url: str = "amqp://guest:guest@127.0.0.1:5679//"
     redis_url: str = "redis://127.0.0.1:6381/0"
-    max_upload_bytes: int = 256 * 1024 * 1024
+    max_upload_bytes: int = Field(default=2 * 1024**3, ge=1024**2, le=20 * 1024**3)
     max_library_bytes: int = 10 * 1024 * 1024 * 1024
     max_duration_ms: int = 3600000
     max_concurrent_jobs: int = 20

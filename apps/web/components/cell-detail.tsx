@@ -1,4 +1,5 @@
 'use client';
+import { useUploadLimits } from '@/lib/upload-limits';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Download, ExternalLink, FolderPlus, Link2, Pencil, Trash2, UploadCloud } from 'lucide-react';
@@ -25,6 +26,7 @@ export function CellDetail({
   onOrganize: (cell: Cell) => void;
   onOpenMedia: (id: string) => void;
 }) {
+  const uploadLimits = useUploadLimits();
   const cell = useQuery({ queryKey: ['cell-detail', id], queryFn: () => api<Cell>('/cells/' + id) });
   const media = useQuery({
     queryKey: ['cell-media', cell.data?.media_id],
@@ -79,8 +81,10 @@ export function CellDetail({
   }
   async function attach(file?: File) {
     if (!file || !m || busy) return;
-    if (file.size > 256 * 1024 ** 2 || !/\.(mp4|mov|m4v|webm|mkv|avi)$/i.test(file.name)) {
-      setError('256 MB以下のMOV・MP4などの動画ファイルを選んでください。');
+    if (file.size > uploadLimits.max_upload_bytes || !/\.(mp4|mov|m4v|webm|mkv|avi)$/i.test(file.name)) {
+      setError(
+        `${Math.round(uploadLimits.max_upload_bytes / 1024 ** 2)} MB以下のMOV・MP4などの動画ファイルを選んでください。`,
+      );
       return;
     }
     const body = new FormData();

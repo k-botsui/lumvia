@@ -4480,3 +4480,37 @@ summary {
   flex-wrap: wrap;
   gap: 10px;
 }
+
+.item-context-menu {
+  position: fixed;
+  z-index: 200;
+  min-width: 210px;
+  max-width: min(320px, calc(100vw - 16px));
+  padding: 8px;
+  border: 1px solid #dfe5ef;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 12px 36px #12233b29;
+}
+.item-context-menu small {
+  display: block;
+  padding: 6px 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #66758a;
+}
+.item-context-menu button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  text-align: left;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+}
+.item-context-menu button:hover,
+.item-context-menu button:focus-visible {
+  background: #eef3ff;
+  outline: 2px solid #92aeff;
+}

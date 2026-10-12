@@ -45,6 +45,17 @@ test("add → save Cell → organize → search → reopen range", async ({
         exact: true,
       })
       .first()
+      .click({ button: "right" });
+    await expect(
+      page.getByRole("menuitem", { name: "Shelfに追加", exact: true }),
+    ).toBeVisible();
+    await page.getByRole("menu").press("Escape");
+    await page
+      .getByRole("button", {
+        name: "Lumvia サンプル — 3つのシーンを開く",
+        exact: true,
+      })
+      .first()
       .click();
     await expect(
       page.getByRole("button", { name: "Cellを作成", exact: true }),
@@ -68,8 +79,8 @@ test("add → save Cell → organize → search → reopen range", async ({
     ).toBeEnabled();
     const coverResponse = page.waitForResponse(
       (response) =>
-        response.url().includes(`/media/${mediaId}/cover`) &&
-        response.request().method() === "PUT",
+        response.url().includes(`/media/${mediaId}/frame-cover`) &&
+        response.request().method() === "POST",
     );
     await coverDialog
       .getByRole("button", { name: "この場面をカバーにする" })

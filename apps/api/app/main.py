@@ -86,7 +86,7 @@ class UploadLimitMiddleware:
                         "code": "UPLOAD_TOO_LARGE",
                         "message": "画像は2 MB以下で選んでください。"
                         if limit == 3 * 1024 * 1024
-                        else "動画は256 MB以下で追加してください。",
+                        else f"動画は{settings.max_upload_bytes // 1024**2} MB以下で追加してください。",
                     }
                 },
                 status_code=413,
@@ -104,7 +104,7 @@ class UploadLimitMiddleware:
                         "code": "UPLOAD_TOO_LARGE",
                         "message": "画像は2 MB以下で選んでください。"
                         if limit == 3 * 1024 * 1024
-                        else "動画は256 MB以下で追加してください。",
+                        else f"動画は{settings.max_upload_bytes // 1024**2} MB以下で追加してください。",
                     },
                 )
             return message

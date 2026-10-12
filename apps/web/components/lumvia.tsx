@@ -63,6 +63,7 @@ import { ShelfHeaderImage } from './shelf-header-image';
 import { AccountMenu } from './account-menu';
 import { ColorPicker } from './ui/color-picker';
 import { LinkSharing } from './link-sharing';
+import { ItemContextMenu, ContextAction } from './ui/context-menu';
 import { allShelves } from '@/lib/groups';
 import { HomeSculpture } from './home-sculpture';
 import { ContentRail } from './content-rail';
@@ -135,6 +136,13 @@ function App() {
   const [addDestination, setAddDestination] = useState(
     shelfId ? `shelves:${shelfId}` : collectionId ? `collections:${collectionId}` : '',
   );
+  const [context, setContext] = useState<{
+    x: number;
+    y: number;
+    title: string;
+    actions: ContextAction[];
+  } | null>(null);
+  const closeContext = useCallback(() => setContext(null), []);
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedItems, setSelectedItems] = useState<Map<string, Media | Cell>>(() => new Map());
   const [batchOpen, setBatchOpen] = useState(false);
@@ -197,6 +205,76 @@ function App() {
     else next.set(key, item);
     setSelectionAnchor({ key, selected: next.has(key) });
     setSelectedItems(next);
+  }
+  function itemContext(event: React.MouseEvent, item: Media | Cell) {
+    event.preventDefault();
+    event.stopPropagation();
+    const multiple = selectedItems.has(itemKey(item)) ? [...selectedItems.values()] : [item];
+    const chooseItems = () => {
+      if (view !== 'library' || search)
+        navigate({ view: 'library', tab: 'media_id' in item ? 'cells' : 'videos' });
+      setSelectionMode(true);
+      setSelectedItems(new Map(multiple.map((value) => [itemKey(value), value])));
+    };
+    const rect = event.currentTarget.getBoundingClientRect();
+    const isCell = 'media_id' in item;
+    setContext({
+      x: event.clientX || rect.left,
+      y: event.clientY || rect.top,
+      title: multiple.length > 1 ? `${multiple.length}件を選択` : item.title,
+      actions: [
+        { label: '開く', run: () => (isCell ? openCell(item as Cell) : openMedia(item.id)) },
+        ...(!isCell && multiple.length === 1
+          ? [
+              {
+                label: (item as Media).favorite ? 'お気に入りを解除' : 'お気に入りに追加',
+                run: () =>
+                  void act(() =>
+                    api('/media/' + item.id, {
+                      method: 'PATCH',
+                      body: JSON.stringify({ favorite: !(item as Media).favorite }),
+                    }),
+                  ),
+              },
+            ]
+          : []),
+        {
+          label: multiple.length > 1 ? '選択した項目をShelfに追加' : 'Shelfに追加',
+          run: () => {
+            chooseItems();
+            setBatchOpen(true);
+          },
+        },
+        { label: '選択・複数選択を開始', run: chooseItems },
+        {
+          label: multiple.length > 1 ? '選択した項目を削除…' : '削除…',
+          danger: true,
+          run: () => {
+            chooseItems();
+            setBatchDeleteOpen(true);
+          },
+        },
+      ],
+    });
+  }
+  function shelfContext(event: React.MouseEvent, group: Group & { kind: 'shelves' | 'collections' }) {
+    event.preventDefault();
+    event.stopPropagation();
+    const rect = event.currentTarget.getBoundingClientRect();
+    setContext({
+      x: event.clientX || rect.left,
+      y: event.clientY || rect.top,
+      title: group.name,
+      actions: [
+        {
+          label: '開く',
+          run: () =>
+            navigate({ view: 'library', [group.kind === 'shelves' ? 'shelf' : 'collection']: group.id }),
+        },
+        { label: '名前・色・ヘッダーを編集', run: () => setGroupEditor({ kind: group.kind, group }) },
+        { label: 'Shelfを削除…', danger: true, run: () => setGroupDelete({ kind: group.kind, group }) },
+      ],
+    });
   }
   const me = useQuery({ queryKey: ['me'], queryFn: () => api<User>('/auth/me'), retry: false });
   const enabled = !!me.data;
@@ -388,6 +466,7 @@ function App() {
             onOpen={() => openMedia(m.id)}
             selecting={selecting}
             selected={selectedItems.has(itemKey(m))}
+            onContextMenu={(event) => itemContext(event, m)}
             onSelect={(shift) => toggleSelection(m, shift)}
             onFavorite={() =>
               act(() =>
@@ -412,7 +491,10 @@ function App() {
                 onChange={(e) => toggleSelection(m, (e.nativeEvent as MouseEvent).shiftKey)}
               />
             )}
-            <button onClick={(e) => (selecting ? toggleSelection(m, e.shiftKey) : openMedia(m.id))}>
+            <button
+              onContextMenu={(event) => itemContext(event, m)}
+              onClick={(e) => (selecting ? toggleSelection(m, e.shiftKey) : openMedia(m.id))}
+            >
               {m.assets.thumbnail || m.source.thumbnail_url ? (
                 <img
                   src={m.assets.thumbnail || m.source.thumbnail_url!}
@@ -460,6 +542,7 @@ function App() {
         )}
         <button
           className="saved-cell-main"
+          onContextMenu={(event) => itemContext(event, c)}
           aria-label={c.title + (selecting ? 'を選択' : 'を開く')}
           aria-pressed={selecting ? selectedItems.has(itemKey(c)) : undefined}
           onClick={(e) => (selecting ? toggleSelection(c, e.shiftKey) : openCell(c))}
@@ -601,6 +684,7 @@ function App() {
           {groups.map((g) => (
             <button
               key={g.id}
+              onContextMenu={(event) => shelfContext(event, g)}
               className={`nav-item ${(shelfId || collectionId) === g.id ? 'active' : ''}`}
               onClick={() =>
                 navigate({ view: 'library', [g.kind === 'shelves' ? 'shelf' : 'collection']: g.id })
@@ -837,6 +921,7 @@ function App() {
                     <MediaCard
                       key={m.id}
                       media={m}
+                      onContextMenu={(event) => itemContext(event, m)}
                       onOpen={() => openMedia(m.id)}
                       onFavorite={() =>
                         act(() =>
@@ -895,6 +980,7 @@ function App() {
                   groups.slice(0, 12).map((group) => (
                     <button
                       className="home-shelf"
+                      onContextMenu={(event) => shelfContext(event, group)}
                       key={group.id}
                       onClick={() =>
                         navigate({
@@ -1125,6 +1211,7 @@ function App() {
               {groups.map((g) => (
                 <article key={g.id} className="collection-card">
                   <button
+                    onContextMenu={(event) => shelfContext(event, g)}
                     onClick={() =>
                       navigate({ view: 'library', [g.kind === 'shelves' ? 'shelf' : 'collection']: g.id })
                     }
@@ -1253,6 +1340,7 @@ function App() {
           </button>
         </div>
       )}
+      {context && <ItemContextMenu {...context} onClose={closeContext} />}
       {mediaId && !cellId && (
         <MediaDetail
           key={mediaId}

@@ -43,10 +43,20 @@ def run_command(arguments, cancelled=lambda: False, timeout=None):
                 start_new_session=True,
                 cwd=directory,
                 env={
-                    k: v
-                    for k, v in os.environ.items()
-                    if k
-                    in {"PATH", "LANG", "LC_ALL", "SYSTEMROOT", "PYTHONDONTWRITEBYTECODE", "PYTHONNOUSERSITE"}
+                    "LUMVIA_PROCESS_MAX_BYTES": str(settings.max_upload_bytes * 2),
+                    **{
+                        k: v
+                        for k, v in os.environ.items()
+                        if k
+                        in {
+                            "PATH",
+                            "LANG",
+                            "LC_ALL",
+                            "SYSTEMROOT",
+                            "PYTHONDONTWRITEBYTECODE",
+                            "PYTHONNOUSERSITE",
+                        }
+                    },
                 },
             )
             start = time.monotonic()

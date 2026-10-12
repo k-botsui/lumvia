@@ -219,6 +219,7 @@ def build(arch, resume=False):
         "MACOSX_DEPLOYMENT_TARGET": "12.0",
         "CFLAGS": f"-O2 -arch {arch} -mmacosx-version-min=12.0",
         "LDFLAGS": f"-arch {arch} -mmacosx-version-min=12.0",
+        "CPPFLAGS": "",
         "CC": f"clang -arch {arch}",
         "CXX": f"clang++ -arch {arch}",
         "RUSTFLAGS": f"--remap-path-prefix={Path.home()}=/build-home --remap-path-prefix={work}=/lumvia-build",
@@ -252,6 +253,14 @@ def build(arch, resume=False):
         pg,
         environment,
     )
+    pg_config = pg / "src/include/pg_config.h"
+    configuration = pg_config.read_text()
+    configuration = re.sub(
+        r"(?m)^#define CONFIGURE_ARGS .*",
+        lambda match: match.group().replace(str(Path.home()), "/build-home"),
+        configuration,
+    )
+    pg_config.write_text(configuration)
     command(["make", "-j4"], pg, environment)
     command(["make", "install"], pg, environment)
     shutil.copy2(pg / "COPYRIGHT", notices / "PostgreSQL-LICENSE.txt")
@@ -433,7 +442,7 @@ def build(arch, resume=False):
         "CFBundleIconFile": "Lumvia.icns",
         "CFBundlePackageType": "APPL",
         "CFBundleShortVersionString": "0.2.0",
-        "CFBundleVersion": "2",
+        "CFBundleVersion": "3",
         "LSMinimumSystemVersion": "12.0",
         "NSHighResolutionCapable": True,
         "NSAppTransportSecurity": {"NSAllowsArbitraryLoads": True},

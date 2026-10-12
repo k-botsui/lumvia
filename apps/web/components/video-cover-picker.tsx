@@ -24,23 +24,10 @@ export function VideoCoverPicker({
     setError('');
     try {
       el.pause();
-      const canvas = document.createElement('canvas');
-      const scale = Math.min(1, 1280 / el.videoWidth, 720 / el.videoHeight);
-      canvas.width = Math.max(1, Math.round(el.videoWidth * scale));
-      canvas.height = Math.max(1, Math.round(el.videoHeight * scale));
-      const context = canvas.getContext('2d');
-      if (!context) throw new Error('画像を作成できませんでした。');
-      context.drawImage(el, 0, 0, canvas.width, canvas.height);
-      const blob = await new Promise<Blob>((resolve, reject) =>
-        canvas.toBlob(
-          (value) => (value ? resolve(value) : reject(new Error('画像を作成できませんでした。'))),
-          'image/jpeg',
-          0.9,
-        ),
-      );
-      const data = new FormData();
-      data.append('file', blob, 'video-cover.jpg');
-      await api(`/media/${media.id}/cover`, { method: 'PUT', body: data });
+      await api(`/media/${media.id}/frame-cover`, {
+        method: 'POST',
+        body: JSON.stringify({ position_ms: Math.round(position * 1000) }),
+      });
       onChanged();
       onClose();
     } catch (failure) {

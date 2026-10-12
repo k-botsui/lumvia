@@ -98,3 +98,36 @@ def test_media_and_analysis_limits(client, sample, monkeypatch):
     run = client.get(endpoint).json()["runs"][0]
     assert client.delete(endpoint + "/" + run["id"]).status_code == 204
     assert client.post(endpoint, json={"analyzer": "scenes"}).status_code == 202
+
+
+def test_selected_frame_cover_is_server_decoded_and_private(client, other, sample):
+    media = ready_video(client, sample)
+    endpoint = f"/api/v1/media/{media['id']}/frame-cover"
+    assert other.post(endpoint, json={"position_ms": 2000}).status_code == 404
+    assert client.post(endpoint, json={"position_ms": -1}).status_code == 422
+    assert client.post(endpoint, json={"position_ms": 12000}).status_code == 422
+    colors = []
+    urls = []
+    for position in (2000, 6000):
+        response = client.post(endpoint, json={"position_ms": position})
+        assert response.status_code == 200, response.text
+        urls.append(response.json()["assets"]["thumbnail"])
+        content = client.get(response.json()["assets"]["thumbnail"]).content
+        with Image.open(BytesIO(content)) as image:
+            assert image.mode == "RGB" and not image.getexif()
+            colors.append(image.resize((1, 1)).getpixel((0, 0)))
+        assert other.get(response.json()["assets"]["thumbnail"]).status_code == 404
+    assert sum(abs(a - b) for a, b in zip(*colors)) > 80
+    assert urls[0] != urls[1]
+
+
+def test_upload_larger_than_old_256mb_limit(client, sample, tmp_path):
+    assert client.get("/api/v1/media/upload-limits").json()["max_upload_bytes"] == 2 * 1024**3
+    large = tmp_path / "large.mp4"
+    with large.open("wb") as file:
+        file.write(sample.read_bytes())
+        file.truncate(257 * 1024**2)
+    with large.open("rb") as file:
+        response = client.post("/api/v1/media", files={"file": ("large.mp4", file, "video/mp4")})
+    assert response.status_code == 201, response.text
+    assert response.json()["size_bytes"] == 257 * 1024**2

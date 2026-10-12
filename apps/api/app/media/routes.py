@@ -37,6 +37,11 @@ def validate_header(name: str, header: bytes):
     )
 
 
+@router.get("/upload-limits")
+def upload_limits(p: Principal = Depends(require_user)):
+    return {"max_upload_bytes": settings.max_upload_bytes, "max_duration_ms": settings.max_duration_ms}
+
+
 @router.get("")
 def list_media(
     q: str = Query("", max_length=200),
@@ -110,7 +115,11 @@ def upload(
             while chunk := file.file.read(1024 * 1024):
                 size += len(chunk)
                 if size > settings.max_upload_bytes:
-                    problem(413, "UPLOAD_TOO_LARGE", "動画は256 MB以下で追加してください。")
+                    problem(
+                        413,
+                        "UPLOAD_TOO_LARGE",
+                        f"動画は{settings.max_upload_bytes // 1024**2} MB以下で追加してください。",
+                    )
                 checksum.update(chunk)
                 output.write(chunk)
         if size < 16:
