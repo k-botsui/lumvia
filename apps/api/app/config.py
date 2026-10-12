@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Literal
 from urllib.parse import urlsplit
 
 from pydantic import Field, model_validator
@@ -40,6 +41,8 @@ class Settings(BaseSettings):
     session_hours: int = 24 * 7
     ffmpeg_bin: str = "ffmpeg"
     ffprobe_bin: str = "ffprobe"
+    job_executor: Literal["celery", "desktop"] = "celery"
+    video_encoder: Literal["libx264", "h264_videotoolbox"] = "libx264"
     s3_endpoint: str | None = None
     s3_bucket: str = "lumvia"
     s3_region: str = "us-east-1"

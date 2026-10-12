@@ -40,6 +40,9 @@ def ensure_capacity(db, library_id):
 
 def dispatch(job_id):
     # The committed PostgreSQL row is the outbox. Beat retries delivery if the broker is unavailable.
+    if settings.job_executor == "desktop":
+        # The app's bounded worker polls the same durable rows without a separate broker.
+        return
     from app.jobs.worker import celery
 
     try:

@@ -45,6 +45,9 @@ compose.env
 *.sql.gz
 *.tar.gz
 *.zip
+*.app/
+*.dmg
+*.pkg
 venv/
 env/
 dist/

@@ -1,0 +1,38 @@
+{
+  "postgresql-17.9.tar.bz2": {
+    "url": "https://ftp.postgresql.org/pub/source/v17.9/postgresql-17.9.tar.bz2",
+    "sha256": "3b9a62538a8da151e807a3ddb1198e8605f2032544d78f403ae883d27ecf1ee4"
+  },
+  "ffmpeg-8.1.tar.xz": {
+    "url": "https://ffmpeg.org/releases/ffmpeg-8.1.tar.xz",
+    "sha256": "b072aed6871998cce9b36e7774033105ca29e33632be5b6347f3206898e0756a"
+  },
+  "valkey-9.1.2.tar.gz": {
+    "url": "https://github.com/valkey-io/valkey/archive/refs/tags/9.1.2.tar.gz",
+    "sha256": "19c23908e7d57e8d91ef85b41f5646307582f10f4f0fb999bbf89ed24ec9c983"
+  },
+  "node-v22.23.3-darwin-arm64.tar.gz": {
+    "url": "https://nodejs.org/dist/v22.23.3/node-v22.23.3-darwin-arm64.tar.gz",
+    "sha256": "23b25245dcfb9af7262f8ff142e9e2e0af025368117329e7a7458a51e5922f53"
+  },
+  "node-v22.23.3-darwin-x64.tar.gz": {
+    "url": "https://nodejs.org/dist/v22.23.3/node-v22.23.3-darwin-x64.tar.gz",
+    "sha256": "8a677b0219178efd6eb0e475457c4afb452b521a92f6e67845a73bd85727f2a8"
+  },
+  "cpython-3.13.16+20261009-aarch64-apple-darwin-install_only_stripped.tar.gz": {
+    "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261009/cpython-3.13.16%2B20261009-aarch64-apple-darwin-install_only_stripped.tar.gz",
+    "sha256": "11785155d0f70e634178219c20925d8f20be00a3da4684fc4f5019dd15602ef7"
+  },
+  "cpython-3.13.16+20261009-x86_64-apple-darwin-install_only_stripped.tar.gz": {
+    "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261009/cpython-3.13.16%2B20261009-x86_64-apple-darwin-install_only_stripped.tar.gz",
+    "sha256": "bd085c51e960f00ee33b630e2b13ac90fe90cdc3da25a0f0bc0719b1294920bf"
+  },
+  "cpython-3.13.16+20261009-aarch64-apple-darwin-pgo+lto-full.tar.zst": {
+    "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261009/cpython-3.13.16%2B20261009-aarch64-apple-darwin-pgo%2Blto-full.tar.zst",
+    "sha256": "70025edd2ed4bf0a333677928ded047368726954253b6e428732e71e9c5a163e"
+  },
+  "cpython-3.13.16+20261009-x86_64-apple-darwin-pgo+lto-full.tar.zst": {
+    "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261009/cpython-3.13.16%2B20261009-x86_64-apple-darwin-pgo%2Blto-full.tar.zst",
+    "sha256": "5a3c0ee09e7c1250bcbc6a3b2709fdd639f40c78e3424670aa7817dd9d9b7446"
+  }
+}

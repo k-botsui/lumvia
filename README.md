@@ -12,6 +12,10 @@ https://github.com/user-attachments/assets/2b9f4993-6cd7-4633-8270-f13d134ee5a6
 
 入手は、このページ上部の **Code → Download ZIP** でダウンロードして解凍するか、`git clone https://github.com/k-botsui/lumvia.git` を実行します。現行版はソースからセットアップする形式で、インストーラーはまだありません。
 
+## Macで使う
+
+開発用ソフトを入れていない方向けに、Intel／Apple Silicon用のMacアプリを準備しています。macOS 12以降をビルド対象にしていますが、実機確認とAppleの署名・公証が完了するまでは一般向けの完成版として案内しません。ReleasesのTEST版は検証用です。Code → Download ZIPは開発用のソースで、そのまま開けるアプリではありません。配布・初回起動・データ保存については[Macアプリの説明](docs/development/MAC_APP.md)を参照してください。
+
 ## 主な機能
 
 - MP4/MOVなどの複数動画追加、FFmpegによるプレビュー・サムネイル生成、認証付き再生。

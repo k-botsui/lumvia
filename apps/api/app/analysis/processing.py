@@ -21,6 +21,13 @@ class Cancelled(Exception):
     pass
 
 
+def video_encoding(quality=24):
+    if settings.video_encoder == "h264_videotoolbox":
+        # Apple's encoder permits an LGPL-only FFmpeg build, including older Intel Macs.
+        return ["-c:v", "h264_videotoolbox", "-allow_sw", "1", "-b:v", "3000k"]
+    return ["-c:v", "libx264", "-preset", "veryfast", "-crf", str(quality)]
+
+
 def run_command(arguments, cancelled=lambda: False, timeout=None):
     """Bound CPU time, output size, memory (Linux), elapsed time, and process descendants."""
     timeout = timeout or settings.processing_timeout_seconds
@@ -35,7 +42,12 @@ def run_command(arguments, cancelled=lambda: False, timeout=None):
                 stderr=stderr,
                 start_new_session=True,
                 cwd=directory,
-                env={k: v for k, v in os.environ.items() if k in {"PATH", "LANG", "LC_ALL", "SYSTEMROOT"}},
+                env={
+                    k: v
+                    for k, v in os.environ.items()
+                    if k
+                    in {"PATH", "LANG", "LC_ALL", "SYSTEMROOT", "PYTHONDONTWRITEBYTECODE", "PYTHONNOUSERSITE"}
+                },
             )
             start = time.monotonic()
             try:

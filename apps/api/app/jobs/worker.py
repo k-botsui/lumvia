@@ -6,7 +6,15 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from app.analysis.analyzers import SceneAnalyzer
-from app.analysis.processing import Cancelled, ProcessingError, can_remux, ffmpeg, probe, run_command
+from app.analysis.processing import (
+    Cancelled,
+    ProcessingError,
+    can_remux,
+    ffmpeg,
+    probe,
+    run_command,
+    video_encoding,
+)
 from app.config import settings
 from app.db import SessionLocal
 from app.jobs.service import transition
@@ -65,7 +73,7 @@ celery.conf.update(
 
 
 @celery.task(name="lumvia.dispatch")
-def dispatch_pending():
+def dispatch_pending(deliver=None, limit=50):
     with SessionLocal() as db:
         # A lease timeout recovers workers killed between durable state and broker acknowledgement.
         stale = list(
@@ -94,7 +102,7 @@ def dispatch_pending():
                     Job.state.in_(["PENDING", "RETRYING", "QUEUED"]),
                     Job.updated_at < now() - timedelta(seconds=10),
                 )
-                .limit(50)
+                .limit(limit)
                 .with_for_update(skip_locked=True)
             )
         )
@@ -105,7 +113,10 @@ def dispatch_pending():
         ids = [j.id for j in pending]
         db.commit()
     for identifier in ids:
-        celery.send_task("lumvia.process", args=[identifier], retry=False)
+        if deliver is None:
+            celery.send_task("lumvia.process", args=[identifier], retry=False)
+        else:
+            deliver(identifier)
     purge_assets()
     from app.sources.previews import purge_previews
 
@@ -291,12 +302,7 @@ def ingest(job_id, media_id, check):
                     "-1",
                     "-vf",
                     r"scale=trunc(min(1280\,iw)/2)*2:-2",
-                    "-c:v",
-                    "libx264",
-                    "-preset",
-                    "veryfast",
-                    "-crf",
-                    "24",
+                    *video_encoding(),
                     "-pix_fmt",
                     "yuv420p",
                     "-threads",
