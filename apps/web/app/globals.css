@@ -4423,3 +4423,60 @@ summary {
     stroke-dashoffset: 0;
   }
 }
+
+.modal.link-share-modal {
+  width: min(760px, calc(100vw - 32px));
+}
+.link-sharing {
+  padding: 24px;
+  display: grid;
+  gap: 16px;
+}
+.link-sharing p {
+  margin: 0;
+  line-height: 1.7;
+}
+.share-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.share-check input {
+  margin-top: 5px;
+  flex: 0 0 auto;
+}
+.share-preview {
+  max-height: 280px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+.share-preview ul {
+  padding-left: 20px;
+  margin: 0;
+}
+.share-preview li {
+  margin: 0 0 14px;
+  overflow-wrap: anywhere;
+}
+.share-preview span {
+  display: block;
+  font-size: 13px;
+}
+.share-preview p {
+  white-space: pre-wrap;
+}
+.link-sharing textarea {
+  width: 100%;
+  resize: vertical;
+}
+.heading-actions {
+  flex-wrap: wrap;
+}
+
+.link-sharing .modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}

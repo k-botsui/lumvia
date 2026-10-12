@@ -205,3 +205,27 @@ test("GitHub permission denial is reported without leaking upstream details", as
     globalThis.fetch = previous;
   }
 });
+
+test("public link list page contains no credentials and disallows external connections", async () => {
+  const { env } = setup();
+  const response = await worker.fetch(
+    new Request("https://worker/link-list"),
+    env,
+  );
+  assert.equal(response.status, 200);
+  assert.ok(
+    response.headers
+      .get("Content-Security-Policy")
+      .includes("connect-src 'none'"),
+  );
+  const html = await response.text();
+  assert.ok(!html.includes(env.GITHUB_TOKEN));
+  assert.ok(html.includes("/link-list.js"));
+  const js = await worker.fetch(
+    new Request("https://worker/link-list.js"),
+    env,
+  );
+  const source = await js.text();
+  assert.ok(source.includes("textContent"));
+  assert.ok(!source.includes("innerHTML") && !source.includes("fetch("));
+});

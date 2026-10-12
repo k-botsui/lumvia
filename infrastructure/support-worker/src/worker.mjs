@@ -1,3 +1,5 @@
+import { linkPage } from "./link-list-page.mjs";
+
 const MAX_BYTES = 45000;
 const TTL = 7 * 86400000;
 export const reply = (status, value) =>
@@ -105,6 +107,10 @@ async function digest(secret, value) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (request.method === "GET") {
+      const asset = linkPage(url.pathname);
+      if (asset) return asset;
+    }
     if (!repositoryValid(env.GITHUB_REPOSITORY))
       return error(503, "SUPPORT_DISABLED", "問い合わせ窓口は準備中です。");
     if (request.method === "GET" && url.pathname === "/status") {
