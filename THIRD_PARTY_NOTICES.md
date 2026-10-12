@@ -1,6 +1,6 @@
 # 第三者のライブラリと素材
 
-Lumviaのソースは閲覧目的で公開します。依存ライブラリの許諾は各ライブラリのライセンスに従い、ルートのLICENSEによって変更しません。依存はパッケージマネージャーから取得し、node_modules、Python環境、モデル、実行バイナリはリポジトリへ同梱しません。
+Lumviaのオリジナル部分には個人の私的・非商用利用を許可するLICENSEを適用します。依存ライブラリの許諾は各ライブラリのライセンスに従い、ルートのLICENSEによって変更しません。依存はパッケージマネージャーから取得し、node_modules、Python環境、モデル、実行バイナリはリポジトリへ同梱しません。
 
 主要な依存はNext.js/React/TypeScript/Three.js/FastAPI/SQLAlchemy/Alembic/Celeryなどです。バージョンは `apps/web/pnpm-lock.yaml` と `apps/api/requirements.txt` に記録します。全推移依存の名称・バージョン・ライセンスは `docs/development/DEPENDENCY_LICENSES.json` を参照してください。
 
