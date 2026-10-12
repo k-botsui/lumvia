@@ -62,6 +62,7 @@ import { ShelfHeaderPicker } from './shelf-header-picker';
 import { ShelfHeaderImage } from './shelf-header-image';
 import { AccountMenu } from './account-menu';
 import { ColorPicker } from './ui/color-picker';
+import { LinkSharing } from './link-sharing';
 import { allShelves } from '@/lib/groups';
 import { HomeSculpture } from './home-sculpture';
 import { ContentRail } from './content-rail';
@@ -715,6 +716,33 @@ function App() {
               </p>
             </div>
             <div className="heading-actions">
+              {(view === 'library' || view === 'collections') && !search && (
+                <LinkSharing
+                  scope={{
+                    kind: focusedGroup ? (shelfId ? 'shelves' : 'collections') : 'library',
+                    ...(focusedGroup ? { group_id: focusedGroup.id } : {}),
+                    ...(selectedItems.size
+                      ? {
+                          media_ids: [...selectedItems.values()]
+                            .filter((item) => !('media_id' in item))
+                            .map((item) => item.id),
+                          cell_ids: [...selectedItems.values()]
+                            .filter((item) => 'media_id' in item)
+                            .map((item) => item.id),
+                        }
+                      : {}),
+                  }}
+                  label={
+                    selectedItems.size
+                      ? '選んだ項目を共有'
+                      : focusedGroup
+                        ? 'このShelfを共有'
+                        : 'リンク集を共有'
+                  }
+                  onChanged={refresh}
+                  notify={setToast}
+                />
+              )}
               {focusedGroup && (
                 <>
                   <button

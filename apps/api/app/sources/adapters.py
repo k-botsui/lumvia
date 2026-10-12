@@ -260,7 +260,7 @@ def describe_source(source):
         "author": source.metadata_json.get("author", ""),
         "start_ms": source.metadata_json.get("start_ms", 0),
         "thumbnail_url": f"https://i.ytimg.com/vi/{source.external_id}/hqdefault.jpg"
-        if source.kind == "youtube"
+        if source.kind == "youtube" and not source.metadata_json.get("shared_import")
         else None,
         "capabilities": {
             "embed": reference,

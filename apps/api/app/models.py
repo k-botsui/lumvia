@@ -275,3 +275,11 @@ class SupportSubmission(Record, Base):
     state: Mapped[str] = mapped_column(String(20))
     issue_url: Mapped[str | None] = mapped_column(String(300))
     issue_number: Mapped[int | None] = mapped_column(Integer)
+
+
+class LinkShareImport(Record, Base):
+    __tablename__ = "link_share_imports"
+    library_id: Mapped[str] = mapped_column(ForeignKey("libraries.id", ondelete="CASCADE"))
+    fingerprint: Mapped[str] = mapped_column(String(64))
+    summary: Mapped[dict] = mapped_column(JSONB)
+    __table_args__ = (UniqueConstraint("library_id", "fingerprint"),)

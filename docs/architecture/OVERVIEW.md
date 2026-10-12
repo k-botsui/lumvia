@@ -15,7 +15,7 @@ APIとworkerは同じドメインモデルを共有するモジュラーモノ�
 
 Webのサーバー状態はTanStack Query、フォームはReact Hook Form/Zod、ページ・検索・開く動画・区間はURLです。Next.jsの同一Originプロキシは動画をストリーム転送し、巨大なアップロード全体をWebメモリーへ読み込みません。共有型は `packages/shared-types`、通信は `packages/api-client` です。
 
-Sourceは元の出所、Mediaは論理的な動画、Assetは元動画等の物理オブジェクトを表します。CellはMediaへの区間参照で、動画を複製しません。整理先は多対多です。Library境界は所有者認可に使用します。共有・共同利用へ拡張する計画はありません。
+Sourceは元の出所、Mediaは論理的な動画、Assetは元動画等の物理オブジェクトを表します。CellはMediaへの区間参照で、動画を複製しません。整理先は多対多です。Library境界は所有者認可に使用します。同じLibraryの共同利用は行いません。外部リンクだけを明示的な確認の後にファイルへ書き出し、別のLibraryへ追加できます。[ADR 0008](../adr/0008-portable-link-lists.md)を参照してください。
 
 Jobと解析履歴はPostgreSQLが正本です。コミット後にRabbitMQへ通知し、通知漏れはBeatがJob行をoutboxとして再配信します。行ロックと状態遷移で重複処理を防ぎ、長時間更新されない実行状態をタイムアウトにします。ユーザー操作で最大3回まで再実行できます。取り込みと解析は同じworkerを使用し、重いサブプロセスを2つまで並行実行します。
 
