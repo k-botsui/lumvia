@@ -22,7 +22,7 @@ class Settings(BaseSettings):
         default="k-botsui/lumvia",
         pattern=r"^$|^[A-Za-z0-9][A-Za-z0-9-]{0,38}/[A-Za-z0-9][A-Za-z0-9_.-]{0,99}$",
     )
-    support_gateway_url: str = ""
+    support_gateway_url: str = "https://lumvia-support.lumvia-support-worker.workers.dev"
     support_operator_delivery: bool = False
     broker_url: str = "amqp://guest:guest@127.0.0.1:5679//"
     redis_url: str = "redis://127.0.0.1:6381/0"

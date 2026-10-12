@@ -144,7 +144,12 @@ test("extra fields, arbitrary repository and invalid input are rejected", () => 
 test("public endpoint returns status without login and rejects oversize bodies", async () => {
   const { env } = setup();
   assert.equal(
-    (await worker.fetch(new Request("https://worker/status"), env)).status,
+    (
+      await worker.fetch(new Request("https://worker/status"), {
+        ...env,
+        GITHUB_TOKEN: "",
+      })
+    ).status,
     200,
   );
   const req = new Request("https://worker/issues", {
@@ -165,4 +170,38 @@ test("alarm expires receipts and counters", async () => {
   await inbox.alarm();
   assert.equal(await storage.get("old"), undefined);
   assert.ok(await storage.get("new"));
+});
+
+test("status rejects invalid credentials without exposing upstream contents", async () => {
+  const { env } = setup();
+  const previous = globalThis.fetch;
+  globalThis.fetch = async () =>
+    Response.json({ message: "private upstream detail" }, { status: 401 });
+  try {
+    const response = await worker.fetch(
+      new Request("https://worker/status"),
+      env,
+    );
+    assert.deepEqual(await response.json(), {
+      repository: "example/lumvia",
+      can_submit: false,
+      availability: "invalid_token",
+    });
+  } finally {
+    globalThis.fetch = previous;
+  }
+});
+
+test("GitHub permission denial is reported without leaking upstream details", async () => {
+  const { inbox } = setup();
+  const previous = globalThis.fetch;
+  globalThis.fetch = async () =>
+    Response.json({ message: "private detail" }, { status: 403 });
+  try {
+    const response = await inbox.fetch(request(payload()));
+    assert.equal(response.status, 503);
+    assert.equal((await response.json()).error.code, "GITHUB_ACCESS_DENIED");
+  } finally {
+    globalThis.fetch = previous;
+  }
 });

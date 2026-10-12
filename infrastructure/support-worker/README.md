@@ -2,7 +2,7 @@
 
 See [operator setup](../../docs/development/SUPPORT.md). End users do not authenticate to GitHub.
 
-The worker is designed for **Workers Free** with SQLite-backed Durable Objects. It is not deployed yet. Never change the account to a paid plan as part of setup.
+The worker is designed for **Workers Free** with SQLite-backed Durable Objects. The production gateway is deployed at https://lumvia-support.lumvia-support-worker.workers.dev. Never change the account to a paid plan as part of setup.
 
 ```sh
 pnpm install --frozen-lockfile

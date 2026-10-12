@@ -44,11 +44,11 @@ Cloudflareアカウントが既にPaidの場合は、無料枠の説明だけで
 
 ### 4. Lumviaへ接続する
 
-公開されたHTTPSのWorker URLを、運営側の `SUPPORT_GATEWAY_URL` へ設定します。例は実際のURLに置き換えます。
+配布版の既定URLは以下です。利用者による設定は不要です。別の窓口を運営する場合は `SUPPORT_GATEWAY_URL` を変更します。
 
 ```dotenv
 SUPPORT_GITHUB_REPOSITORY=k-botsui/lumvia
-SUPPORT_GATEWAY_URL=https://lumvia-support.<account>.workers.dev
+SUPPORT_GATEWAY_URL=https://lumvia-support.lumvia-support-worker.workers.dev
 SUPPORT_OPERATOR_DELIVERY=false
 ```
 
@@ -66,4 +66,4 @@ GitHubへ送るのは入力した件名・本文だけです。動画、写真�
 
 ## 現在の状態
 
-共通窓口のコード・テスト・配布ビルドは準備済みです。Cloudflareアカウントはまだないため、Workerの本番公開、GitHub Secretの設定、配布用の既定URL、共通窓口での実投稿は未完了です。
+2026年10月12日、Workers Freeで本番窓口を公開し、GitHub Secretと配布用の既定URLを設定しました。Lumviaの問い合わせ画面からログイン不要の共通窓口を経由して[テストIssue #1](https://github.com/k-botsui/lumvia/issues/1)を作成し、件名・本文だけの投稿と成功表示を確認しました。テストIssueは確認後にClose済みです。初期検証時の受付とは別に、本番受付名 `lumvia-public-support-v1` を固定しています。トークンの有効期限前に運営者が更新します。

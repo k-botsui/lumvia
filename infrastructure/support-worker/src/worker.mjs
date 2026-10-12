@@ -107,11 +107,46 @@ export default {
     const url = new URL(request.url);
     if (!repositoryValid(env.GITHUB_REPOSITORY))
       return error(503, "SUPPORT_DISABLED", "問い合わせ窓口は準備中です。");
-    if (request.method === "GET" && url.pathname === "/status")
+    if (request.method === "GET" && url.pathname === "/status") {
+      let can_submit = false;
+      let availability = "not_configured";
+      if (env.GITHUB_TOKEN) {
+        try {
+          const response = await fetch(
+            `https://api.github.com/repos/${env.GITHUB_REPOSITORY}/issues?per_page=1`,
+            {
+              redirect: "manual",
+              signal: AbortSignal.timeout(8000),
+              headers: {
+                Authorization: `Bearer ${env.GITHUB_TOKEN.trim()}`,
+                Accept: "application/vnd.github+json",
+                "User-Agent": "Lumvia-Support",
+              },
+            },
+          );
+          can_submit = response.ok;
+          availability = response.ok
+            ? "ready"
+            : response.status === 401
+              ? "invalid_token"
+              : response.status === 403 || response.status === 404
+                ? "repository_access_denied"
+                : "github_unavailable";
+          await response.body?.cancel();
+        } catch (failure) {
+          availability =
+            failure instanceof TypeError
+              ? "invalid_token_or_request"
+              : "github_unavailable";
+          // Return availability only, never expose credentials or upstream data.
+        }
+      }
       return reply(200, {
         repository: env.GITHUB_REPOSITORY,
-        can_submit: !!env.GITHUB_TOKEN,
+        can_submit,
+        availability,
       });
+    }
     if (request.method !== "POST" || url.pathname !== "/issues")
       return error(404, "NOT_FOUND", "この窓口はお問い合わせ専用です。");
     if (!env.GITHUB_TOKEN)
@@ -119,7 +154,7 @@ export default {
     const data = parseMessage(await boundedJson(request));
     if (!data)
       return error(422, "INVALID_MESSAGE", "件名と内容を確認してください。");
-    const id = env.INBOX.idFromName("lumvia-public-support");
+    const id = env.INBOX.idFromName("lumvia-public-support-v1");
     // Preserve Cloudflare's connection IP only internally, never accept an app-supplied identity.
     const headers = {
       "Content-Type": "application/json",
@@ -207,10 +242,10 @@ export class SupportInbox {
         `https://api.github.com/repos/${this.env.GITHUB_REPOSITORY}/issues`,
         {
           method: "POST",
-          redirect: "error",
+          redirect: "manual",
           signal: AbortSignal.timeout(12000),
           headers: {
-            Authorization: `Bearer ${this.env.GITHUB_TOKEN}`,
+            Authorization: `Bearer ${this.env.GITHUB_TOKEN.trim()}`,
             Accept: "application/vnd.github+json",
             "Content-Type": "application/json",
             "User-Agent": "Lumvia-Support",
@@ -219,6 +254,19 @@ export class SupportInbox {
           body: JSON.stringify({ title: data.subject, body: data.body }),
         },
       );
+      if ([401, 403, 404].includes(response.status)) {
+        await response.body?.cancel();
+        await this.ctx.storage.put(key, {
+          fingerprint,
+          state: "rejected",
+          expires_at: now + TTL,
+        });
+        return error(
+          503,
+          "GITHUB_ACCESS_DENIED",
+          "GitHubの投稿権限を確認してください。",
+        );
+      }
       const result = await response.json();
       if (
         response.status === 201 &&
