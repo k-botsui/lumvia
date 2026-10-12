@@ -229,3 +229,13 @@ test("public link list page contains no credentials and disallows external conne
   assert.ok(source.includes("textContent"));
   assert.ok(!source.includes("innerHTML") && !source.includes("fetch("));
 });
+
+test("link list URL supports HEAD checks by social link crawlers", async () => {
+  const response = await worker.fetch(
+    new Request("https://worker/link-list", { method: "HEAD" }),
+    {},
+  );
+  assert.equal(response.status, 200);
+  assert.ok(response.headers.get("Content-Type").startsWith("text/html"));
+  assert.equal(await response.text(), "");
+});

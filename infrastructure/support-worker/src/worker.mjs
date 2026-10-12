@@ -107,9 +107,12 @@ async function digest(secret, value) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (request.method === "GET") {
+    if (request.method === "GET" || request.method === "HEAD") {
       const asset = linkPage(url.pathname);
-      if (asset) return asset;
+      if (asset)
+        return request.method === "HEAD"
+          ? new Response(null, { headers: asset.headers })
+          : asset;
     }
     if (!repositoryValid(env.GITHUB_REPOSITORY))
       return error(503, "SUPPORT_DISABLED", "問い合わせ窓口は準備中です。");
