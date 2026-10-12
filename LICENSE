@@ -1,20 +1,51 @@
 Copyright (c) 2026 Lumvia copyright holders. All rights reserved.
 
-SOURCE VIEWING ONLY — NOT AN OPEN-SOURCE LICENSE
+LUMVIA PERSONAL USE LICENSE 1.0 — NOT AN OPEN-SOURCE LICENSE
 
-This repository is made publicly available for viewing and evaluation of its
-source. No license to modify, distribute, sublicense, sell, or publish the code,
-documentation, or project assets is granted. Running or otherwise using the
-software requires separate permission from the copyright holders.
+1. Scope
+This license applies to Lumvia's original code, documentation, and project
+assets in this repository. Third-party materials are governed by their own
+licenses, as described in THIRD_PARTY_NOTICES.md.
 
-Rights necessarily provided by the hosting platform's terms of service,
-including viewing and platform-native forking where applicable, are unaffected.
-Public visibility does not grant any additional copyright or trademark rights.
+2. Personal use permission
+An individual may, free of charge, download, copy, install, build, and run an
+unmodified copy of Lumvia solely for their own private, non-commercial use on
+devices they own or control. Private backup copies are permitted. Copyright,
+license, and attribution notices must be retained.
 
-The Lumvia name, logos, and branding remain reserved. Third-party dependencies
-retain their own licenses; this notice does not restrict rights granted by their
-respective authors. See THIRD_PARTY_NOTICES.md.
+Using documented settings, generating local configuration and credentials,
+installing dependencies, building the unmodified source, and generating runtime
+data are permitted setup operations, not prohibited modifications under this
+license. These permissions do not authorize editing the program's source code
+or other project assets.
 
+3. Restrictions
+Except for the permissions in section 2, rights necessarily provided by the
+hosting platform's terms, and rights that cannot lawfully be restricted, you
+may not modify or create derivative works of Lumvia, redistribute or publish
+copies of its source or binaries, sublicense, sell, rent, or provide Lumvia to
+others as a hosted or shared service. Commercial use, use for an employer or
+organization, and use to provide paid services are not permitted. Such uses
+require separate permission from the copyright holders.
+
+Sharing a link to the official repository is permitted. Public visibility does
+not grant permission to redistribute Lumvia elsewhere. Rights necessarily
+provided by the hosting platform's terms of service, including viewing and
+platform-native forking where applicable, are unaffected.
+
+4. User content and third-party rights
+This license does not claim rights in users' own videos, photos, notes, or
+outputs containing their own content. Users may use and share their own content
+and outputs subject to any applicable third-party rights. It grants no rights
+in third-party videos, music, images, or other materials. Third-party
+dependencies retain their own licenses; this license does not restrict rights
+granted by their respective authors.
+
+The Lumvia name, logos, and branding remain reserved. Their display as part of
+normal use of the unmodified application is permitted; no other trademark or
+branding rights are granted.
+
+5. Warranty and liability
 THE MATERIALS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. TO THE EXTENT PERMITTED BY LAW, THE COPYRIGHT HOLDERS ARE NOT
