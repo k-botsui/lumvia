@@ -88,7 +88,10 @@ def test_preview_disallows_drm_live_manifests_and_size_overflow():
 def test_local_only_config_rejects_cloud_and_unsafe_support_links():
     base = {"database_url": "postgresql://localhost/test", "secret_key": "x" * 32, "_env_file": None}
     assert Settings(**base).support_github_repository == "k-botsui/lumvia"
-    assert Settings(**base).support_gateway_url == ""
+    assert Settings(**base).support_gateway_url == (
+        "https://lumvia-support.lumvia-support-worker.workers.dev"
+    )
+    assert Settings(**(base | {"support_gateway_url": ""})).support_gateway_url == ""
     assert Settings(**base).support_operator_delivery is False
     for values in [
         {"app_url": "https://example.com"},
