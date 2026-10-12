@@ -460,6 +460,9 @@ def build(arch, resume=False):
     for pattern in ("_dbm.*", "_gdbm.*"):
         for module in dynamic_modules.glob(pattern):
             module.unlink()
+    # This development helper embeds configure-time build paths and is never
+    # needed to run the database or the already installed Python driver.
+    (runtime / "postgres/bin/pg_config").unlink(missing_ok=True)
     fix_macho(contents, arch)
     for path in resources.rglob("*"):
         if path.is_file() and not path.is_symlink() and str(Path.home()).encode() in path.read_bytes():
