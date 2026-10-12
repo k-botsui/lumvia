@@ -87,7 +87,9 @@ def test_preview_disallows_drm_live_manifests_and_size_overflow():
 
 def test_local_only_config_rejects_cloud_and_unsafe_support_links():
     base = {"database_url": "postgresql://localhost/test", "secret_key": "x" * 32, "_env_file": None}
-    assert Settings(**base).support_github_repository == ""
+    assert Settings(**base).support_github_repository == "k-botsui/lumvia"
+    assert Settings(**base).support_gateway_url == ""
+    assert Settings(**base).support_operator_delivery is False
     for values in [
         {"app_url": "https://example.com"},
         {"storage_backend": "s3"},
@@ -100,3 +102,23 @@ def test_local_only_config_rejects_cloud_and_unsafe_support_links():
     ]:
         with pytest.raises(ValueError):
             Settings(**(base | values))
+
+
+@pytest.mark.parametrize(
+    "gateway",
+    [
+        "http://example.test",
+        "https://user:pass@example.test",
+        "https://example.test/path",
+        "https://example.test/?token=x",
+        "https://example.test/#x",
+    ],
+)
+def test_support_gateway_is_a_fixed_https_origin(gateway):
+    with pytest.raises(ValueError):
+        Settings(
+            database_url="postgresql://localhost/test",
+            secret_key="x" * 32,
+            _env_file=None,
+            support_gateway_url=gateway,
+        )

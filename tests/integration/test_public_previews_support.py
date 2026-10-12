@@ -78,9 +78,20 @@ def test_preview_failed_fetch_cleans_staging_and_capacity(client, monkeypatch):
 
 
 def test_support_configuration_contains_no_account_or_library_data(client, monkeypatch):
-    assert client.get("/api/v1/support").json() == {"github_url": None, "local_only": True}
-    monkeypatch.setattr(settings, "support_github_repository", "example/lumvia")
+    monkeypatch.setattr(settings, "support_github_repository", "")
     assert client.get("/api/v1/support").json() == {
-        "github_url": "https://github.com/example/lumvia/issues/new",
-        "local_only": True,
+        "github_url": None,
+        "repository": None,
+        "can_submit": False,
+        "local_only": False,
+    }
+    monkeypatch.setattr(settings, "support_github_repository", "example/lumvia")
+    monkeypatch.setattr(settings, "support_operator_delivery", True)
+    monkeypatch.setattr(settings, "support_gateway_url", "")
+    monkeypatch.setattr("app.support.github_account", lambda: "tester")
+    assert client.get("/api/v1/support").json() == {
+        "github_url": "https://github.com/example/lumvia/issues",
+        "repository": "example/lumvia",
+        "can_submit": True,
+        "local_only": False,
     }

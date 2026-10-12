@@ -6,8 +6,18 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-PRIVATE = {".env", "config.env", "compose.env", "credentials.json", ".DS_Store"}
-PRIVATE_PARTS = {"marketing", "private", ".local", ".venv", "venv", "node_modules", ".next", "__pycache__"}
+PRIVATE = {".env", "config.env", "compose.env", "credentials.json", ".DS_Store", ".dev.vars"}
+PRIVATE_PARTS = {
+    "marketing",
+    "private",
+    ".local",
+    ".venv",
+    "venv",
+    "node_modules",
+    ".next",
+    "__pycache__",
+    ".wrangler",
+}
 PRIVATE_SUFFIXES = {".log", ".key", ".pem", ".pfx", ".p12", ".dump", ".sqlite", ".sqlite3", ".zip"}
 TEXT = {".py", ".ts", ".tsx", ".js", ".mjs", ".json", ".md", ".yaml", ".yml", ".toml", ".txt"}
 

@@ -57,3 +57,8 @@ Cellは5分以内・動画ごと100件・Library全体2,000件。同じMedia・�
 `GET /support` は認証必須で `{ "github_url": null, "local_only": true }` を返します。管理者の `SUPPORT_GITHUB_REPOSITORY=owner/repository` 設定時だけ `https://github.com/owner/repository/issues/new` を返します。問い合わせ送信・添付・本文保存のAPIはありません。
 
 シーン検出は `{ "analyzer": "scenes" }` だけを受け付けます。人物登録APIは削除し、旧モデルの解析要求は422、再試行は409で拒否します。過去の解析・文字起こしは検索結果に表示せず、保存済みCellと由来のDB記録は維持します。
+
+| 問い合わせAPI | 用途 |
+| --- | --- |
+| `GET /support` | 投稿先・共通窓口の接続状態 |
+| `POST /support` | 件名・本文をIssueへ送信。request_idも必須。成功201、未接続503、重複中409、結果不明502 |

@@ -19,3 +19,7 @@ docs/private
 **/credentials.json
 **/*.pem
 **/*.key
+
+**/.wrangler
+**/.dev.vars
+**/.dev.vars.*

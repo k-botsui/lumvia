@@ -58,3 +58,6 @@ htmlcov/
 
 # Finished promotional demo only; source footage remains private.
 !demo/lumvia-trailer-v5-2-preview.mp4
+.wrangler/
+.dev.vars
+.dev.vars.*
