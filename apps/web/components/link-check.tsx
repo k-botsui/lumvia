@@ -162,7 +162,7 @@ export function LinkCheck({
               <ul className="link-check-results">
                 {results.map((item) => (
                   <li key={item.id}>
-                    <label>
+                    <label aria-label={`${item.title}を選択`}>
                       <input
                         type="checkbox"
                         disabled={!online || !done || busy || item.status !== 'broken' || !item.proof}
