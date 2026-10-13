@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Lumvia',
     short_name: 'Lumvia',
-    description: '思い出を、あなただけに。',
+    description: '動画・リンクの管理、区間保存、Shelfの共有。',
     start_url: '/?view=home',
     scope: '/',
     display: 'standalone',

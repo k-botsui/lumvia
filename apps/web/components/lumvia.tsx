@@ -579,7 +579,7 @@ function App() {
       )}
       <h2>
         {kind === 'cells'
-          ? '大切な瞬間を、ここに集めよう。'
+          ? 'まだCellがありません'
           : kind === 'search'
             ? '一致する項目がありません'
             : 'まだ動画がありません'}
@@ -589,7 +589,7 @@ function App() {
           ? '動画を開いて「Cellを作成」から、好きな区間を保存できます。'
           : kind === 'search'
             ? '別の言葉やタグで検索してみてください。'
-            : '動画を追加すると、あなたのライブラリが育っていきます。'}
+            : '動画ファイルやリンクを追加できます。'}
       </p>
       {kind !== 'search' && (
         <button
@@ -789,18 +789,7 @@ function App() {
           <div className={`page-heading ${view === 'home' && !search ? 'home-page-heading' : ''}`}>
             <div>
               <h1>{title}</h1>
-              <p>
-                {search
-                  ? '動画の名前だけでなく、メモや保存した瞬間からも。'
-                  : (focusedGroup?.description ??
-                    {
-                      home: '動画を、もっと身近に。',
-                      add: '集めた動画から、まだ見ぬ瞬間を見つけよう。',
-                      library: 'あなたが集めた動画と、大切な瞬間。',
-                      collections: '動画もCellも、自分のShelfへ。',
-                      settings: '自分のデータを、自分の手で。',
-                    }[view])}
-              </p>
+              {focusedGroup?.description && !search && <p>{focusedGroup.description}</p>}
             </div>
             <div className="heading-actions">
               {(view === 'library' || view === 'collections') && !search && (
@@ -883,14 +872,21 @@ function App() {
             <>
               <section className="home-intro">
                 <div className="home-intro-copy">
-                  <span className="privacy-caption">
-                    <ShieldCheck size={15} /> あなただけのライブラリ
-                  </span>
-                  <h1>
-                    <span>思い出を、</span>
-                    <span>あなただけに。</span>
-                  </h1>
-                  <p>好きな動画も、大切な瞬間も。</p>
+                  <h1>ライブラリ</h1>
+                  <div className="home-library-counts" aria-label="ライブラリの件数">
+                    <button onClick={() => navigate({ view: 'library', tab: 'videos' })}>
+                      <strong>{stats.data?.media_count ?? '—'}</strong>
+                      <span>動画</span>
+                    </button>
+                    <button onClick={() => navigate({ view: 'library', tab: 'cells' })}>
+                      <strong>{stats.data?.cell_count ?? '—'}</strong>
+                      <span>Cells</span>
+                    </button>
+                    <button onClick={() => navigate({ view: 'collections' })}>
+                      <strong>{stats.data?.shelf_count ?? '—'}</strong>
+                      <span>Shelf</span>
+                    </button>
+                  </div>
                   <div className="home-intro-actions">
                     <button className="button primary" onClick={() => navigate({ view: 'add' })}>
                       <Plus size={16} /> 動画を追加
@@ -937,7 +933,7 @@ function App() {
                   <div className="welcome-empty">
                     <Film size={27} />
                     <div>
-                      <h3>最初の動画を、ここに。</h3>
+                      <h3>動画を追加</h3>
                       <p>リンクや動画ファイルを追加できます。</p>
                     </div>
                     <button className="text-button" onClick={() => navigate({ view: 'add' })}>
@@ -947,7 +943,7 @@ function App() {
                 )}
               </ContentRail>
               <ContentRail
-                title="保存した瞬間"
+                title="保存したCells"
                 kind="cells"
                 more={
                   <button className="text-button" onClick={() => navigate({ view: 'library', tab: 'cells' })}>
@@ -961,8 +957,8 @@ function App() {
                   <div className="moment-tip">
                     <BookmarkPlus size={24} />
                     <div>
-                      <h3>好きな場面を、Cellに。</h3>
-                      <p>動画の中から、残したい区間を選べます。</p>
+                      <h3>区間を保存</h3>
+                      <p>動画を開き、開始と終了を指定してCellを作成できます。</p>
                     </div>
                   </div>
                 )}
@@ -1323,7 +1319,6 @@ function App() {
           )}
           <footer className="page-footer">
             <span>Lumvia</span>
-            <small>動画を、もっと身近に。</small>
             <span className="private-label">
               <ShieldCheck size={13} />
               所有者だけが利用できます

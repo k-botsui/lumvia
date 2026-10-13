@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 export const metadata: Metadata = {
-  title: 'Lumvia — あなたの映像ライブラリ',
-  description: '動画を集めて、大切な瞬間を保存。あなたの映像ライブラリ。',
+  title: 'Lumvia — 動画とリンクのライブラリ',
+  description: '動画・リンクの管理、区間保存、Shelfの共有。',
   icons: { icon: '/favicon.svg', apple: '/brand/app-icon-192.png' },
   appleWebApp: { capable: true, title: 'Lumvia', statusBarStyle: 'default' },
 };

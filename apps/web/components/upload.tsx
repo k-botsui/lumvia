@@ -128,7 +128,7 @@ export function Uploader({
         <div className="upload-symbol">
           <UploadCloud size={32} />
         </div>
-        <h2>動画を、ここに。</h2>
+        <h2>動画ファイルを追加</h2>
         <p>ファイルをドラッグ＆ドロップして追加</p>
         <button className="button primary" disabled={busy} onClick={() => input.current?.click()}>
           <UploadCloud size={17} />

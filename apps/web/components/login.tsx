@@ -23,19 +23,13 @@ export function Login({ onLogin }: { onLogin: () => void }) {
             <HomeSculpture />
           </div>
           <div className="login-story">
-            <p className="privacy-caption">あなただけのライブラリ</p>
-            <h1 id="login-title">
-              思い出を、
-              <br />
-              あなただけに。
-            </h1>
-            <p className="login-tagline">好きな動画も、大切な瞬間も。</p>
+            <h1 id="login-title">Lumvia</h1>
+            <p className="login-tagline">動画・リンク・Cells</p>
           </div>
         </section>
         <section className="login-panel" aria-labelledby="login-form-title">
           <div className="login-form">
             <h2 id="login-form-title">ライブラリを開く</h2>
-            <p className="muted">あなたの動画と、保存した瞬間へ。</p>
             {options.data?.oidc && (
               <button
                 className="button primary full"
@@ -104,7 +98,7 @@ export function Login({ onLogin }: { onLogin: () => void }) {
             {options.isError && <p className="error-message">{options.error.message}</p>}
             <div className="privacy-note">
               <ShieldCheck size={17} aria-hidden="true" />
-              <span>あなたのPCに保存する、非公開のライブラリ。</span>
+              <span>このPCにデータを保存します。</span>
             </div>
           </div>
         </section>

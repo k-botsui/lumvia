@@ -395,7 +395,7 @@ export function MediaDetail({
                   ) : (
                     <div className="inline-empty">
                       <BookmarkPlus size={28} />
-                      <h3>残しておきたい瞬間を、Cellに。</h3>
+                      <h3>まだCellがありません</h3>
                       <p>開始と終了を選んで、動画の好きな部分を保存できます。</p>
                       <button
                         className="button secondary"
@@ -638,7 +638,7 @@ export function MediaDetail({
               />
               <label>
                 タイトル
-                <input {...form.register('title')} placeholder="どんな瞬間ですか？" maxLength={200} />
+                <input {...form.register('title')} placeholder="Cellの名前" maxLength={200} />
               </label>
               {form.formState.errors.title && (
                 <p className="error-message">{form.formState.errors.title.message}</p>
