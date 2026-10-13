@@ -58,7 +58,7 @@ def main():
             or (name.startswith("docs/") and path.suffix in {".png", ".jpg"})
             or (
                 path.suffix in {".mp4", ".mov", ".webm", ".wav", ".mp3", ".sf2"}
-                and name not in {"apps/web/public/sample.mp4", "demo/lumvia-trailer-v5-2-preview.mp4"}
+                and name not in {"apps/web/public/sample.mp4", "demo/lumvia-trailer-v6-preview.mp4"}
             )
         ):
             failures.append(f"Private/generated file in index: {name}")
