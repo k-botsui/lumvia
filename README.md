@@ -2,7 +2,7 @@
 
 ## Demo
 
-https://github.com/user-attachments/assets/fde49cd1-cf0c-487c-b153-0eab1a28fa4b
+https://github.com/user-attachments/assets/170dd366-b2b7-41fc-bb91-84974787f355
 
 [Demoの素材クレジット](demo/README.md)
 
