@@ -152,6 +152,30 @@ def license_inventory(packaged, source, notices):
     (notices / "JavaScript-dependencies.json").write_text(json.dumps(entries, ensure_ascii=False, indent=2))
 
 
+def normalize_wheel_build_paths(runtime):
+    """Remap public upstream CI source locations before signing third-party wheels.
+
+    Wheels embed compiler diagnostics (including Rust source-cache paths). Only
+    those two known upstream build prefixes are rewritten, with identical byte
+    lengths, so Mach-O offsets and executable instructions remain unchanged.
+    The final developer-home scan still checks the entire distribution.
+    """
+    upstream = b"/" + b"Users/runner"
+    prefixes = (upstream + b"/work/", upstream + b"/.cargo/registry/src/")
+    for site in (runtime / "python/lib").glob("python*/site-packages"):
+        for path in site.rglob("*"):
+            if path.suffix not in {".so", ".dylib"} or path.is_symlink() or not path.is_file():
+                continue
+            before = path.read_bytes()
+            after = before
+            for prefix in prefixes:
+                replacement = prefix.replace(upstream, b"/build/worker")
+                assert len(prefix) == len(replacement)
+                after = after.replace(prefix, replacement)
+            if after != before:
+                path.write_bytes(after)
+
+
 def build(arch, resume=False):
     if platform.system() != "Darwin":
         raise RuntimeError("Build on macOS")
@@ -242,6 +266,7 @@ def build(arch, resume=False):
         src,
         environment,
     )
+    normalize_wheel_build_paths(runtime)
     source_archives = work / "corresponding-source"
     source_archives.mkdir(exist_ok=True)
     for name in ("postgresql-17.9.tar.bz2", "valkey-9.1.2.tar.gz", "ffmpeg-8.1.tar.xz"):

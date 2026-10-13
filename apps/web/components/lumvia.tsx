@@ -64,6 +64,7 @@ import { ShelfHeaderImage } from './shelf-header-image';
 import { AccountMenu } from './account-menu';
 import { ColorPicker } from './ui/color-picker';
 import { LinkSharing } from './link-sharing';
+import { LinkCheck } from './link-check';
 import { ItemContextMenu, ContextAction } from './ui/context-menu';
 import { allShelves } from '@/lib/groups';
 import { ContentRail } from './content-rail';
@@ -792,6 +793,9 @@ function App() {
               {focusedGroup?.description && !search && <p>{focusedGroup.description}</p>}
             </div>
             <div className="heading-actions">
+              {(view === 'library' || view === 'collections') && !search && (
+                <LinkCheck onChanged={refresh} notify={setToast} />
+              )}
               {(view === 'library' || view === 'collections') && !search && (
                 <LinkSharing
                   scope={{

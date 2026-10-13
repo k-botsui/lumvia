@@ -344,3 +344,37 @@ body {
     transition: none;
   }
 }
+
+.link-check-results {
+  list-style: none;
+  padding: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-block: 16px;
+}
+.link-check-results li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.link-check-results label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.link-check-results input {
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+.link-check-results span {
+  min-width: 0;
+}
+.link-check-results strong {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.link-check-results small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 5px;
+}
