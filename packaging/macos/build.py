@@ -155,7 +155,7 @@ def license_inventory(packaged, source, notices):
 def normalize_wheel_build_paths(runtime):
     """Remap public upstream CI source locations before signing third-party wheels.
 
-    Wheels embed compiler diagnostics (including Rust source-cache paths). Only
+    Wheels embed compiler diagnostics and SBOM source-cache locations. Only
     those two known upstream build prefixes are rewritten, with identical byte
     lengths, so Mach-O offsets and executable instructions remain unchanged.
     The final developer-home scan still checks the entire distribution.
@@ -164,7 +164,13 @@ def normalize_wheel_build_paths(runtime):
     prefixes = (upstream + b"/work/", upstream + b"/.cargo/registry/src/")
     for site in (runtime / "python/lib").glob("python*/site-packages"):
         for path in site.rglob("*"):
-            if path.suffix not in {".so", ".dylib"} or path.is_symlink() or not path.is_file():
+            binary = path.suffix in {".so", ".dylib"}
+            sbom = (
+                path.suffix == ".json"
+                and path.parent.name == "sboms"
+                and path.parent.parent.name.endswith(".dist-info")
+            )
+            if not (binary or sbom) or path.is_symlink() or not path.is_file():
                 continue
             before = path.read_bytes()
             after = before

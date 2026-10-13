@@ -26,10 +26,14 @@ def test_wheel_path_remap_preserves_layout_and_leaves_other_paths_for_final_scan
     source.write_bytes(before)
     link = site / "linked.so"
     link.symlink_to(source)
+    sbom = site / "example.dist-info/sboms/example.json"
+    sbom.parent.mkdir(parents=True)
+    sbom.write_bytes(upstream + b"/work/source")
     module.normalize_wheel_build_paths(tmp_path)
     after = binary.read_bytes()
     assert len(after) == len(before)
     assert after.startswith(b"\x00instructions\x00") and after.endswith(b"\x00END")
     assert upstream not in after and b"/build/worker/work/pkg/source.c" in after
     assert other_home in after
+    assert sbom.read_bytes() == b"/build/worker/work/source"
     assert source.read_bytes() == before and link.read_bytes() == before
