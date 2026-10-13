@@ -48,6 +48,7 @@ import {
 } from '@/lib/api';
 import { Modal } from './ui/dialog';
 import { Logo } from './brand';
+import { HomeSculpture } from './home-sculpture';
 import { Login } from './login';
 import { Organize } from './organize';
 import { SettingsView } from './settings-view';
@@ -65,7 +66,6 @@ import { ColorPicker } from './ui/color-picker';
 import { LinkSharing } from './link-sharing';
 import { ItemContextMenu, ContextAction } from './ui/context-menu';
 import { allShelves } from '@/lib/groups';
-import { HomeSculpture } from './home-sculpture';
 import { ContentRail } from './content-rail';
 
 export function Lumvia() {
@@ -872,7 +872,9 @@ function App() {
             <>
               <section className="home-intro">
                 <div className="home-intro-copy">
-                  <h1>ライブラリ</h1>
+                  <h1 className="home-wordmark" aria-label="Lumvia">
+                    Lumvia
+                  </h1>
                   <div className="home-library-counts" aria-label="ライブラリの件数">
                     <button onClick={() => navigate({ view: 'library', tab: 'videos' })}>
                       <strong>{stats.data?.media_count ?? '—'}</strong>

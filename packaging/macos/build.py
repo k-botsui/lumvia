@@ -234,7 +234,14 @@ def build(arch, resume=False):
         src,
         environment,
     )
-    command([py, "-m", "pip", "uninstall", "-y", "ruff", "pytest", "pip-audit"], src, environment)
+    # The bundled Python is 3.13: runtime TOML readers use stdlib tomllib.
+    # tomli/tomli-w are audit-tool dependencies; the compiled tomli wheel can
+    # contain the upstream CI home path. Remove them with the development tools.
+    command(
+        [py, "-m", "pip", "uninstall", "-y", "ruff", "pytest", "pip-audit", "tomli", "tomli-w"],
+        src,
+        environment,
+    )
     source_archives = work / "corresponding-source"
     source_archives.mkdir(exist_ok=True)
     for name in ("postgresql-17.9.tar.bz2", "valkey-9.1.2.tar.gz", "ffmpeg-8.1.tar.xz"):
@@ -416,6 +423,9 @@ def build(arch, resume=False):
     command(["iconutil", "-c", "icns", str(iconset), "-o", str(resources / "Lumvia.icns")], work)
     for name in ("LICENSE", "THIRD_PARTY_NOTICES.md"):
         shutil.copy2(ROOT / name, resources / name)
+    font_notices = notices / "Fonts"
+    font_notices.mkdir(exist_ok=True)
+    shutil.copy2(src / "apps/web/public/fonts/quicksand-OFL.txt", font_notices / "Quicksand-OFL.txt")
     shutil.copy2(Path(__file__).parent / "supervisor.py", resources / "supervisor.py")
     shutil.copy2(Path(__file__).parent / "runtime-lock.json", notices / "runtime-lock.json")
     (contents / "MacOS").mkdir(exist_ok=True)
@@ -443,7 +453,7 @@ def build(arch, resume=False):
         "CFBundleIconFile": "Lumvia.icns",
         "CFBundlePackageType": "APPL",
         "CFBundleShortVersionString": "0.2.0",
-        "CFBundleVersion": "5",
+        "CFBundleVersion": "6",
         "LSMinimumSystemVersion": "12.0",
         "NSHighResolutionCapable": True,
         "NSAppTransportSecurity": {"NSAllowsArbitraryLoads": True},

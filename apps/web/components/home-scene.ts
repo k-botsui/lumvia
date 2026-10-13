@@ -52,11 +52,11 @@ export function mountSculpture(host: HTMLDivElement): () => void {
   front.closePath();
   function geometry(shape: T.Shape) {
     const g = new T.ExtrudeGeometry(shape, {
-      depth: 3.2,
+      depth: 4.0,
       bevelEnabled: true,
-      bevelSegments: 5,
-      bevelSize: 0.65,
-      bevelThickness: 0.6,
+      bevelSegments: 8,
+      bevelSize: 1.05,
+      bevelThickness: 0.95,
       curveSegments: 40,
       steps: 1,
     });
@@ -68,7 +68,7 @@ export function mountSculpture(host: HTMLDivElement): () => void {
     for (let i = 0; i < positions.count; i++) {
       const amount = T.MathUtils.clamp((positions.getX(i) + 1.4) / 3.5, 0, 1);
       positions.setZ(i, positions.getZ(i) + Math.sin(amount * Math.PI) * 0.24);
-      const colour = new T.Color('#4568ed').lerp(new T.Color('#ffedce'), amount * 0.82);
+      const colour = new T.Color('#426bf0').lerp(new T.Color('#fff0dc'), amount * 0.78);
       colours.push(colour.r, colour.g, colour.b);
     }
     g.setAttribute('color', new T.Float32BufferAttribute(colours, 3));
@@ -77,14 +77,17 @@ export function mountSculpture(host: HTMLDivElement): () => void {
   }
   const material = new T.MeshPhysicalMaterial({
     vertexColors: true,
-    roughness: 0.15,
-    metalness: 0.05,
-    transmission: 0.42,
-    thickness: 0.4,
+    roughness: 0.26,
+    metalness: 0,
+    transmission: 0.22,
+    thickness: 0.65,
+    sheen: 0.35,
+    sheenColor: new T.Color(0xdbe5ff),
+    sheenRoughness: 0.8,
     ior: 1.44,
-    clearcoat: 1,
-    clearcoatRoughness: 0.15,
-    envMapIntensity: 0.5,
+    clearcoat: 0.4,
+    clearcoatRoughness: 0.32,
+    envMapIntensity: 0.35,
     side: T.DoubleSide,
   });
   const back = new T.Mesh(geometry(rear), material);
@@ -124,7 +127,7 @@ export function mountSculpture(host: HTMLDivElement): () => void {
       : began === null
         ? 0
         : T.MathUtils.smoothstep((now - began) / 1200, 0, 1);
-    const targetYaw = -0.42 + (motion.matches ? 0 : px * 0.13 + progress * 0.24);
+    const targetYaw = -0.42 + (motion.matches ? 0 : px * 0.2 + progress * 0.24);
     const targetPitch = -0.04 + (motion.matches ? 0 : py * 0.08);
     yaw = T.MathUtils.lerp(yaw, targetYaw, 0.14);
     pitch = T.MathUtils.lerp(pitch, targetPitch, 0.14);

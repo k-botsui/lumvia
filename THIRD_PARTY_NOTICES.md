@@ -19,3 +19,7 @@ FFmpeg、PostgreSQL、RabbitMQ、Redis、Docker、Caddyは利用者が別途導�
 Mac版の依存はNode.js（MIT等）、Pythonとその依存（PSF等、各配布物の表示に従う）、PostgreSQL（PostgreSQL License）、Valkey（BSD等）、FFmpeg（LGPL 2.1以降、GPL・nonfreeを無効にした共有ライブラリ構成）です。アプリ内のThirdPartyおよび各パッケージのライセンス表示を保持します。FFmpeg等の対応ソースZIPをアプリと一緒に配布します。Mac版にはRabbitMQ、Erlang、Redisサーバーを含めません。
 
 Lumviaの改変・再配布の制限は、第三者のライブラリにそのライセンスが認める改変・交換・再配布・デバッグ等の権利には適用しません。LGPL対象ライブラリの交換・再リンク、その変更をデバッグするためのリバースエンジニアリングなど、LGPLが認める行為を制限しません。第三者ソースZIPのLumvia以外の部分にはそれぞれのライセンスが適用されます。
+
+## Quicksand font
+
+Lumvia bundles Quicksand by The Quicksand Project Authors, distributed under the SIL Open Font License 1.1. The complete license is included in `apps/web/public/fonts/quicksand-OFL.txt`. Source: https://github.com/google/fonts/tree/main/ofl/quicksand.
