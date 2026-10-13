@@ -6,7 +6,15 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from app.analysis.analyzers import SceneAnalyzer
-from app.analysis.processing import Cancelled, ProcessingError, can_remux, ffmpeg, probe, run_command
+from app.analysis.processing import (
+    Cancelled,
+    ProcessingError,
+    can_remux,
+    ffmpeg,
+    probe,
+    run_command,
+    video_encoding,
+)
 from app.config import settings
 from app.db import SessionLocal
 from app.jobs.service import transition
@@ -65,7 +73,7 @@ celery.conf.update(
 
 
 @celery.task(name="lumvia.dispatch")
-def dispatch_pending():
+def dispatch_pending(deliver=None, limit=50):
     with SessionLocal() as db:
         # A lease timeout recovers workers killed between durable state and broker acknowledgement.
         stale = list(
@@ -94,7 +102,7 @@ def dispatch_pending():
                     Job.state.in_(["PENDING", "RETRYING", "QUEUED"]),
                     Job.updated_at < now() - timedelta(seconds=10),
                 )
-                .limit(50)
+                .limit(limit)
                 .with_for_update(skip_locked=True)
             )
         )
@@ -105,7 +113,10 @@ def dispatch_pending():
         ids = [j.id for j in pending]
         db.commit()
     for identifier in ids:
-        celery.send_task("lumvia.process", args=[identifier], retry=False)
+        if deliver is None:
+            celery.send_task("lumvia.process", args=[identifier], retry=False)
+        else:
+            deliver(identifier)
     purge_assets()
     from app.sources.previews import purge_previews
 
@@ -230,6 +241,7 @@ def ingest(job_id, media_id, check):
     with SessionLocal() as db:
         asset = db.scalar(select(Asset).where(Asset.media_id == media_id, Asset.role == "original"))
         media = db.get(Media, media_id)
+        compatible = db.get(Source, media.source_id).metadata_json.get("force_compatible_preview", False)
         prefix = f"{media.library_id}/{media.id}"
         key = asset.key
     with storage.materialize(key) as source, TemporaryDirectory(prefix="lumvia-ingest-") as directory:
@@ -240,7 +252,7 @@ def ingest(job_id, media_id, check):
             ffmpeg(
                 source,
                 "-ss",
-                min(1, info["duration_ms"] / 3000),
+                min(10, info["duration_ms"] / 3000),
                 "-map",
                 "0:v:0",
                 "-frames:v",
@@ -255,7 +267,7 @@ def ingest(job_id, media_id, check):
             60,
         )
         progress(job_id, 35)
-        if can_remux(source, check):
+        if not compatible and settings.video_encoder != "h264_videotoolbox" and can_remux(source, check):
             run_command(
                 ffmpeg(
                     source,
@@ -290,15 +302,14 @@ def ingest(job_id, media_id, check):
                     "-map_metadata",
                     "-1",
                     "-vf",
-                    r"scale=trunc(min(1280\,iw)/2)*2:-2",
-                    "-c:v",
-                    "libx264",
-                    "-preset",
-                    "veryfast",
-                    "-crf",
-                    "24",
+                    "scale=1280:720:force_original_aspect_ratio=decrease:force_divisible_by=2,fps=30",
+                    *video_encoding(),
+                    "-profile:v",
+                    "baseline",
+                    "-level:v",
+                    "3.1",
                     "-pix_fmt",
-                    "yuv420p",
+                    "nv12" if settings.video_encoder == "h264_videotoolbox" else "yuv420p",
                     "-threads",
                     "2",
                     "-c:a",
@@ -329,7 +340,7 @@ def ingest(job_id, media_id, check):
             source_record = db.get(Source, media.source_id)
             if not source_record.metadata_json.get("custom_cover"):
                 save_asset(db, media_id, "thumbnail", prefix + "/thumbnail.jpg", thumbnail, "image/jpeg")
-            save_asset(db, media_id, "preview", prefix + "/preview.mp4", preview, "video/mp4")
+            save_asset(db, media_id, "preview", prefix + f"/preview-{job_id}.mp4", preview, "video/mp4")
             db.commit()
 
 

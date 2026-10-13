@@ -1,10 +1,12 @@
 'use client';
 import { useRef, useState } from 'react';
-import { ImagePlus, Loader2, RefreshCw } from 'lucide-react';
+import { ImagePlus, Loader2, RefreshCw, Film } from 'lucide-react';
 import { api, Media } from '@/lib/api';
+import { VideoCoverPicker } from './video-cover-picker';
 
 export function CoverPicker({ media, onChanged }: { media: Media; onChanged: () => void }) {
   const input = useRef<HTMLInputElement>(null);
+  const [choosingFrame, setChoosingFrame] = useState(false);
   const [busy, setBusy] = useState(false),
     [error, setError] = useState('');
   async function save(file?: File) {
@@ -43,8 +45,13 @@ export function CoverPicker({ media, onChanged }: { media: Media; onChanged: () 
         }}
       />
       <button className="button compact secondary" disabled={busy} onClick={() => input.current?.click()}>
-        {busy ? <Loader2 size={15} className="spin" /> : <ImagePlus size={15} />} カバーを選ぶ
+        {busy ? <Loader2 size={15} className="spin" /> : <ImagePlus size={15} />} 画像ファイルから選ぶ
       </button>
+      {media.storage_mode === 'MANAGED' && media.status === 'READY' && media.assets.preview && (
+        <button className="button compact secondary" disabled={busy} onClick={() => setChoosingFrame(true)}>
+          <Film size={15} /> 動画から選ぶ
+        </button>
+      )}
       {media.source.provider === 'tiktok' && !media.assets.thumbnail && (
         <button className="text-button" disabled={busy} onClick={() => void save()}>
           <RefreshCw size={14} /> 画像を取得
@@ -55,6 +62,9 @@ export function CoverPicker({ media, onChanged }: { media: Media; onChanged: () 
         <p className="error-message" role="alert">
           {error}
         </p>
+      )}
+      {choosingFrame && (
+        <VideoCoverPicker media={media} onChanged={onChanged} onClose={() => setChoosingFrame(false)} />
       )}
     </div>
   );

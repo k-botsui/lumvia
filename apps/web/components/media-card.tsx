@@ -8,6 +8,7 @@ export function MediaCard({
   selecting = false,
   selected = false,
   onSelect,
+  onContextMenu,
 }: {
   media: Media;
   onOpen: () => void;
@@ -15,12 +16,14 @@ export function MediaCard({
   selecting?: boolean;
   selected?: boolean;
   onSelect?: (shift?: boolean) => void;
+  onContextMenu?: (event: React.MouseEvent) => void;
 }) {
   return (
     <article className={`media-card ${selected && selecting ? 'item-selected' : ''}`}>
       <div className="thumbnail">
         <button
           className="thumbnail-open"
+          onContextMenu={onContextMenu}
           onClick={(e) => (selecting ? onSelect?.(e.shiftKey) : onOpen())}
           aria-label={`${media.title}${selecting ? 'を選択' : 'を開く'}`}
           aria-pressed={selecting ? selected : undefined}
@@ -86,7 +89,11 @@ export function MediaCard({
           />
         </label>
       )}
-      <button className="card-title" onClick={(e) => (selecting ? onSelect?.(e.shiftKey) : onOpen())}>
+      <button
+        onContextMenu={onContextMenu}
+        className="card-title"
+        onClick={(e) => (selecting ? onSelect?.(e.shiftKey) : onOpen())}
+      >
         {media.title}
       </button>
       <div className="card-meta">

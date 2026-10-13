@@ -2,7 +2,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from urllib.parse import quote
 
-from app.analysis.processing import ProcessingError, ffmpeg, probe, run_command
+from app.analysis.processing import ProcessingError, ffmpeg, probe, run_command, video_encoding
 from app.auth.service import Principal, audit, owned, rate_limit, require_user
 from app.cells.routes import validate_range
 from app.db import get_db
@@ -54,12 +54,7 @@ def export_clip(cell_id: str, p: Principal = Depends(require_user), db: Session 
                     "-dn",
                     "-map_metadata",
                     "-1",
-                    "-c:v",
-                    "libx264",
-                    "-preset",
-                    "veryfast",
-                    "-crf",
-                    "23",
+                    *video_encoding(23),
                     "-threads",
                     "1",
                     "-c:a",

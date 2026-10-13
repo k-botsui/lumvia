@@ -16,6 +16,8 @@ import certifi
 
 HOSTS = {
     "www.youtube.com",
+    "x.com",
+    "www.instagram.com",
     "publish.x.com",
     "www.tiktok.com",
     "tiktok.com",
@@ -76,7 +78,7 @@ def valid_image_url(url):
         return False
 
 
-def request(url: str, method="GET", image=False):
+def request(url: str, method="GET", image=False, status_only=False):
     parts = urlsplit(url)
     if (
         parts.scheme != "https"
@@ -104,7 +106,7 @@ def request(url: str, method="GET", image=False):
         )
         response = connection.getresponse()
         headers = dict((key.lower(), value) for key, value in response.getheaders())
-        if method == "HEAD":
+        if method == "HEAD" or status_only:
             return response.status, headers, b""
         maximum = 2 * 1024 * 1024 if image else MAX_BYTES
         if int(headers.get("content-length", "0")) > maximum:

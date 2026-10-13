@@ -1,4 +1,5 @@
 'use client';
+import { useUploadLimits } from '@/lib/upload-limits';
 import { useRef, useState } from 'react';
 import { UploadCloud, FileVideo, CheckCircle2, XCircle, X, Play, Loader2 } from 'lucide-react';
 import { api, upload, bytes } from '@/lib/api';
@@ -19,6 +20,7 @@ export function Uploader({
   destination?: string;
   onBusyChange?: (busy: boolean) => void;
 }) {
+  const uploadLimits = useUploadLimits();
   const input = useRef<HTMLInputElement>(null);
   const abort = useRef<AbortController | null>(null);
   const [items, setItems] = useState<UploadItem[]>([]);
@@ -48,8 +50,11 @@ export function Uploader({
         if (abort.current.signal.aborted) break;
         const update = (patch: Partial<UploadItem>) =>
           setItems((all) => all.map((i) => (i.id === item.id ? { ...i, ...patch } : i)));
-        if (item.file.size > 256 * 1024 ** 2) {
-          update({ state: 'failed', error: '256 MB以下の動画を選んでください。' });
+        if (item.file.size > uploadLimits.max_upload_bytes) {
+          update({
+            state: 'failed',
+            error: `${bytes(uploadLimits.max_upload_bytes)}以下の動画を選んでください。`,
+          });
           continue;
         }
         if (!/\.(mp4|mov|m4v|webm|mkv|avi)$/i.test(item.file.name)) {
@@ -123,7 +128,7 @@ export function Uploader({
         <div className="upload-symbol">
           <UploadCloud size={32} />
         </div>
-        <h2>動画を、ここに。</h2>
+        <h2>動画ファイルを追加</h2>
         <p>ファイルをドラッグ＆ドロップして追加</p>
         <button className="button primary" disabled={busy} onClick={() => input.current?.click()}>
           <UploadCloud size={17} />
@@ -141,7 +146,10 @@ export function Uploader({
             e.target.value = '';
           }}
         />
-        <small>MP4・MOV・WebM・MKV・AVI / 1本256 MB・60分まで</small>
+        <small>
+          MP4・MOV・WebM・MKV・AVI / 1本{bytes(uploadLimits.max_upload_bytes)}・
+          {Math.round(uploadLimits.max_duration_ms / 60000)}分まで
+        </small>
       </div>
       <details className="photos-help">
         <summary>Macの「写真」から動画を追加するには</summary>

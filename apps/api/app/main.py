@@ -27,6 +27,7 @@ from app.context import request_id as current_request_id
 from app.db import SessionLocal, get_db
 from app.errors import problem
 from app.jobs.routes import router as jobs_router
+from app.link_checks import router as link_checks_router
 from app.link_shares import router as link_shares_router
 from app.media.batch import router as batch_router
 from app.media.covers import router as covers_router
@@ -86,7 +87,7 @@ class UploadLimitMiddleware:
                         "code": "UPLOAD_TOO_LARGE",
                         "message": "画像は2 MB以下で選んでください。"
                         if limit == 3 * 1024 * 1024
-                        else "動画は256 MB以下で追加してください。",
+                        else f"動画は{settings.max_upload_bytes // 1024**2} MB以下で追加してください。",
                     }
                 },
                 status_code=413,
@@ -104,7 +105,7 @@ class UploadLimitMiddleware:
                         "code": "UPLOAD_TOO_LARGE",
                         "message": "画像は2 MB以下で選んでください。"
                         if limit == 3 * 1024 * 1024
-                        else "動画は256 MB以下で追加してください。",
+                        else f"動画は{settings.max_upload_bytes // 1024**2} MB以下で追加してください。",
                     },
                 )
             return message
@@ -322,5 +323,6 @@ def export_library(p: Principal = Depends(require_user), db: Session = Depends(g
     )
 
 
+api.include_router(link_checks_router)
 api.include_router(link_shares_router)
 app.include_router(api)

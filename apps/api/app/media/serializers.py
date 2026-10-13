@@ -1,3 +1,5 @@
+from hashlib import sha256
+
 from app.models import (
     Asset,
     Cell,
@@ -65,7 +67,10 @@ def media_list(db, items):
         return []
     assets = {}
     for asset in db.scalars(select(Asset).where(Asset.media_id.in_(ids))):
-        assets.setdefault(asset.media_id, {})[asset.role] = "/api/v1/assets/" + asset.id
+        url = "/api/v1/assets/" + asset.id
+        if asset.role in {"thumbnail", "preview"}:
+            url += "?v=" + sha256(asset.key.encode()).hexdigest()[:16]
+        assets.setdefault(asset.media_id, {})[asset.role] = url
     counts = dict(
         db.execute(
             select(Cell.media_id, func.count()).where(Cell.media_id.in_(ids)).group_by(Cell.media_id)
@@ -108,7 +113,7 @@ def cell_list(db, items):
         return []
     media = {m.id: m for m in db.scalars(select(Media).where(Media.id.in_({c.media_id for c in items})))}
     assets = {
-        a.media_id: "/api/v1/assets/" + a.id
+        a.media_id: "/api/v1/assets/" + a.id + "?v=" + sha256(a.key.encode()).hexdigest()[:16]
         for a in db.scalars(select(Asset).where(Asset.media_id.in_(media), Asset.role == "thumbnail"))
     }
     memberships = {}

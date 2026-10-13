@@ -4,7 +4,10 @@ import hashlib
 import hmac
 import json
 import re
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from typing import Annotated, Literal
+from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import Field, ValidationError, field_validator, model_validator
@@ -17,7 +20,9 @@ from app.cells.routes import validate_range
 from app.config import settings
 from app.db import get_db
 from app.errors import problem
+from app.media.covers import automatic_cover, save_cover
 from app.models import (
+    Asset,
     Cell,
     Collection,
     Library,
@@ -31,7 +36,9 @@ from app.models import (
     shelf_media,
 )
 from app.schemas import Strict, Tags, Title
+from app.share_images import clean_image, portable_image, portable_image_data, validate_image
 from app.sources.adapters import parse_reference
+from app.storage.service import storage
 
 router = APIRouter(prefix="/link-shares", tags=["Link sharing"])
 MAX_BYTES = 2 * 1024 * 1024
@@ -45,6 +52,9 @@ class LinkEntry(Strict):
     tags: Tags = []
     note: str = Field(default="", max_length=10000)
     favorite: bool = False
+    cover_jpeg: str | None = Field(default=None, max_length=65536)
+
+    _validate_cover = field_validator("cover_jpeg")(validate_image)
 
     @field_validator("url")
     @classmethod
@@ -76,19 +86,36 @@ class GroupEntry(Strict):
     name: Annotated[str, Field(min_length=1, max_length=100)]
     description: str = Field(default="", max_length=500)
     color: str = Field(default="#4f7bff", pattern=r"^#[0-9a-fA-F]{6}$")
+    header_jpeg: str | None = Field(default=None, max_length=65536)
+    header_frame: dict[str, float] | None = None
+
+    _validate_header = field_validator("header_jpeg")(validate_image)
+
     links: list[Key] = Field(default_factory=list, max_length=2000)
     cells: list[Key] = Field(default_factory=list, max_length=2000)
 
 
 class LinkList(Strict):
     format: Literal["lumvia-link-list"]
-    version: Literal[1]
+    version: Literal[1, 2]
     links: list[LinkEntry] = Field(min_length=1, max_length=2000)
     cells: list[MomentEntry] = Field(default_factory=list, max_length=2000)
     groups: list[GroupEntry] = Field(default_factory=list, max_length=500)
 
     @model_validator(mode="after")
     def references(self):
+        if self.version == 1 and (
+            any(link.cover_jpeg for link in self.links)
+            or any(group.header_jpeg or group.header_frame for group in self.groups)
+        ):
+            raise ValueError("Images require version 2")
+        for group in self.groups:
+            if group.header_frame is not None:
+                frame = group.header_frame
+                if set(frame) != {"x", "y", "zoom"} or not (
+                    0 <= frame["x"] <= 100 and 0 <= frame["y"] <= 100 and 1 <= frame["zoom"] <= 3
+                ):
+                    raise ValueError("Invalid header frame")
         links = {entry.key for entry in self.links}
         cells = {entry.key for entry in self.cells}
         if len(links) != len(self.links) or len(cells) != len(self.cells):
@@ -116,6 +143,7 @@ class ExportSelection(Strict):
     media_ids: list[str] | None = Field(default=None, max_length=100)
     cell_ids: list[str] | None = Field(default=None, max_length=100)
     include_notes: bool = False
+    include_images: bool = False
 
 
 class ImportConfirmation(Strict):
@@ -124,7 +152,7 @@ class ImportConfirmation(Strict):
 
 
 def encoded(bundle):
-    value = bundle.model_dump() if isinstance(bundle, LinkList) else bundle
+    value = bundle.model_dump(exclude_none=True) if isinstance(bundle, LinkList) else bundle
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
 
 
@@ -219,6 +247,12 @@ def export_preview(
         cells = [c for c in cells if c.id in selected_cells or c.media_id in selected_media]
         parents = {c.media_id for c in cells}
         media = [m for m in media if m.id in selected_media or m.id in parents]
+    if data.include_images and sum(m.storage_mode == "REFERENCE" for m in media) + len(groups) > 40:
+        problem(
+            413,
+            "SHARE_TOO_LARGE",
+            "画像付き共有はリンクとShelfを合わせて40件までです。共有する項目を減らしてください。",
+        )
     excluded = []
     links, mapping = [], {}
     seen = {}
@@ -247,6 +281,16 @@ def export_preview(
                     favorite=m.favorite,
                 )
             )
+        if data.include_images:
+            asset = db.scalar(select(Asset).where(Asset.media_id == m.id, Asset.role == "thumbnail"))
+            image = portable_image(asset.key) if asset else None
+            if not image and ref.provider == "youtube":
+                fetched = automatic_cover(
+                    {"thumbnail_url": f"https://i.ytimg.com/vi/{ref.external_id}/hqdefault.jpg"}
+                )
+                image = portable_image_data(fetched) if fetched else None
+            if image:
+                next(link for link in links if link["key"] == key)["cover_jpeg"] = image
         mapping[m.id] = key
     moments, cmapping, intervals = [], {}, {}
     for c in cells:
@@ -287,9 +331,23 @@ def export_preview(
                 )
             )
     bundle = dict(format="lumvia-link-list", version=1, links=links, cells=moments, groups=portable_groups)
+    if data.include_images:
+        bundle["version"] = 2
+        for kind, group in groups:
+            target = next(
+                (
+                    entry
+                    for entry in bundle["groups"]
+                    if entry["name"] == group.name and entry["kind"] == kind
+                ),
+                None,
+            )
+            image = portable_image(group.header_key) if target else None
+            if image:
+                target.update(header_jpeg=image, header_frame=group.header_frame)
     if links:
         try:
-            bundle = LinkList.model_validate(bundle).model_dump()
+            bundle = LinkList.model_validate(bundle).model_dump(exclude_none=True)
         except ValidationError:
             problem(
                 413,
@@ -301,6 +359,7 @@ def export_preview(
         "excluded": excluded,
         "excluded_cells": sum(c.media_id not in mapping for c in cells),
         "notes_included": data.include_notes,
+        "images_included": data.include_images,
     }
 
 
@@ -370,13 +429,16 @@ def import_preview(bundle: LinkList, p: Principal = Depends(require_user), db: S
         )
     )
     if receipt_valid(db, p, receipt):
-        return {"duplicate": True, "summary": receipt.summary["counts"], "bundle": bundle.model_dump()}
+        return {
+            "duplicate": True,
+            "summary": receipt.summary["counts"],
+            "bundle": bundle.model_dump(exclude_none=True),
+        }
     _, _, summary = plan(db, p, bundle)
-    return {"duplicate": False, "summary": summary, "bundle": bundle.model_dump()}
+    return {"duplicate": False, "summary": summary, "bundle": bundle.model_dump(exclude_none=True)}
 
 
-@router.post("/import")
-def import_list(
+def _import_list(
     data: ImportConfirmation, p: Principal = Depends(require_user), db: Session = Depends(get_db)
 ):
     rate_limit(f"link-import:{p.user.id}", 20, 3600)
@@ -432,6 +494,15 @@ def import_list(
         db.add(media)
         db.flush()
         links[entry.key] = media
+    for entry in bundle.links:
+        media = links[entry.key]
+        if entry.cover_jpeg and not db.scalar(
+            select(Asset.id).where(Asset.media_id == media.id, Asset.role == "thumbnail")
+        ):
+            key = save_cover(db, media, clean_image(entry.cover_jpeg))
+            db.info.setdefault("share_image_keys", []).append(key)
+            source = db.get(Source, media.source_id)
+            source.metadata_json = {**source.metadata_json, "custom_cover": True}
     for entry in bundle.cells:
         if cells[entry.key]:
             continue
@@ -489,6 +560,15 @@ def import_list(
             )
             db.add(group)
             db.flush()
+        if entry.header_jpeg and not group.header_key:
+            header_key = f"{p.library.id}/shared-header-{uuid4()}.jpg"
+            with TemporaryDirectory(prefix="lumvia-share-image-") as directory:
+                path = Path(directory) / "header.jpg"
+                path.write_bytes(clean_image(entry.header_jpeg))
+                db.info.setdefault("share_image_keys", []).append(header_key)
+                storage.put(header_key, path, "image/jpeg")
+            group.header_key = header_key
+            group.header_frame = entry.header_frame or {"x": 50, "y": 50, "zoom": 1}
         for mid in member_ids:
             db.execute(insert(mt).values(**{key: group.id, "media_id": mid}).on_conflict_do_nothing())
         for cid in cell_ids:
@@ -512,3 +592,19 @@ def import_list(
     audit(db, p.user.id, "link_list.imported", p.library.id)
     db.commit()
     return {"duplicate": False, "summary": summary}
+
+
+@router.post("/import")
+def import_list(
+    data: ImportConfirmation, p: Principal = Depends(require_user), db: Session = Depends(get_db)
+):
+    db.info["share_image_keys"] = []
+    try:
+        return _import_list(data, p, db)
+    except Exception:
+        db.rollback()
+        for key in db.info["share_image_keys"]:
+            storage.delete(key)
+        raise
+    finally:
+        db.info.pop("share_image_keys", None)

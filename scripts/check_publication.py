@@ -18,8 +18,20 @@ PRIVATE_PARTS = {
     "__pycache__",
     ".wrangler",
 }
-PRIVATE_SUFFIXES = {".log", ".key", ".pem", ".pfx", ".p12", ".dump", ".sqlite", ".sqlite3", ".zip"}
-TEXT = {".py", ".ts", ".tsx", ".js", ".mjs", ".json", ".md", ".yaml", ".yml", ".toml", ".txt"}
+PRIVATE_SUFFIXES = {
+    ".log",
+    ".key",
+    ".pem",
+    ".pfx",
+    ".p12",
+    ".dump",
+    ".sqlite",
+    ".sqlite3",
+    ".zip",
+    ".dmg",
+    ".pkg",
+}
+TEXT = {".py", ".ts", ".tsx", ".js", ".mjs", ".json", ".md", ".yaml", ".yml", ".toml", ".txt", ".swift"}
 
 
 def git(*args):
@@ -41,6 +53,7 @@ def main():
             path.name in PRIVATE
             or (path.name.startswith(".env.") and path.name != ".env.example")
             or PRIVATE_PARTS.intersection(path.parts)
+            or any(part.endswith(".app") for part in path.parts)
             or path.suffix in PRIVATE_SUFFIXES
             or (name.startswith("docs/") and path.suffix in {".png", ".jpg"})
             or (

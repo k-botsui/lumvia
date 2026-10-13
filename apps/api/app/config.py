@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Literal
 from urllib.parse import urlsplit
 
 from pydantic import Field, model_validator
@@ -26,7 +27,7 @@ class Settings(BaseSettings):
     support_operator_delivery: bool = False
     broker_url: str = "amqp://guest:guest@127.0.0.1:5679//"
     redis_url: str = "redis://127.0.0.1:6381/0"
-    max_upload_bytes: int = 256 * 1024 * 1024
+    max_upload_bytes: int = Field(default=2 * 1024**3, ge=1024**2, le=20 * 1024**3)
     max_library_bytes: int = 10 * 1024 * 1024 * 1024
     max_duration_ms: int = 3600000
     max_concurrent_jobs: int = 20
@@ -40,6 +41,8 @@ class Settings(BaseSettings):
     session_hours: int = 24 * 7
     ffmpeg_bin: str = "ffmpeg"
     ffprobe_bin: str = "ffprobe"
+    job_executor: Literal["celery", "desktop"] = "celery"
+    video_encoder: Literal["libx264", "h264_videotoolbox"] = "libx264"
     s3_endpoint: str | None = None
     s3_bucket: str = "lumvia"
     s3_region: str = "us-east-1"

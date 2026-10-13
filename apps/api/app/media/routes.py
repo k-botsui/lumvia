@@ -37,6 +37,11 @@ def validate_header(name: str, header: bytes):
     )
 
 
+@router.get("/upload-limits")
+def upload_limits(p: Principal = Depends(require_user)):
+    return {"max_upload_bytes": settings.max_upload_bytes, "max_duration_ms": settings.max_duration_ms}
+
+
 @router.get("")
 def list_media(
     q: str = Query("", max_length=200),
@@ -110,7 +115,11 @@ def upload(
             while chunk := file.file.read(1024 * 1024):
                 size += len(chunk)
                 if size > settings.max_upload_bytes:
-                    problem(413, "UPLOAD_TOO_LARGE", "動画は256 MB以下で追加してください。")
+                    problem(
+                        413,
+                        "UPLOAD_TOO_LARGE",
+                        f"動画は{settings.max_upload_bytes // 1024**2} MB以下で追加してください。",
+                    )
                 checksum.update(chunk)
                 output.write(chunk)
         if size < 16:
@@ -204,6 +213,31 @@ def upload(
 @router.get("/{media_id}")
 def get_media(media_id: str, p: Principal = Depends(require_user), db: Session = Depends(get_db)):
     return media_list(db, [owned(db, Media, media_id, p)])[0]
+
+
+@router.post("/{media_id}/repair-preview", status_code=202)
+def repair_preview(media_id: str, p: Principal = Depends(require_user), db: Session = Depends(get_db)):
+    rate_limit(f"preview-repair:{p.user.id}", 10, 3600)
+    media = owned(db, Media, media_id, p)
+    db.scalar(select(Media).where(Media.id == media.id).with_for_update())
+    if media.storage_mode != "MANAGED":
+        problem(409, "NOT_MANAGED", "保存した動画で利用できます。")
+    existing = db.scalar(
+        select(Job).where(Job.media_id == media.id, Job.kind == "ingest", Job.state.in_(ACTIVE))
+    )
+    if not existing:
+        ensure_capacity(db, p.library.id)
+        if not db.scalar(select(Asset.id).where(Asset.media_id == media.id, Asset.role == "original")):
+            problem(409, "ORIGINAL_UNAVAILABLE", "元動画を確認できませんでした。")
+        existing = Job(library_id=p.library.id, media_id=media.id, kind="ingest", request_id=request_id.get())
+        source = db.get(Source, media.source_id)
+        source.metadata_json = {**source.metadata_json, "force_compatible_preview": True}
+        db.add(existing)
+        media.status = "PROCESSING"
+        audit(db, p.user.id, "media.preview_repair", media.id)
+        db.commit()
+        dispatch(existing.id)
+    return {"job_id": existing.id}
 
 
 @router.patch("/{media_id}")

@@ -15,5 +15,9 @@ def private_directory(platform: str, home: Path, environ: dict) -> Path:
     return Path(environ.get("XDG_DATA_HOME", home / ".local" / "share")) / "lumvia"
 
 
-STATE_ROOT = private_directory(sys.platform, Path.home(), os.environ)
+STATE_ROOT = (
+    Path(os.environ["LUMVIA_STATE_ROOT"]).expanduser().resolve()
+    if os.environ.get("LUMVIA_STATE_ROOT")
+    else private_directory(sys.platform, Path.home(), os.environ)
+)
 CONFIG_FILE = STATE_ROOT / "config.env"

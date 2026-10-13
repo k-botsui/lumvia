@@ -32,7 +32,7 @@ export function AccountMenu({
             <div className="account-info">
               <strong>{user.name}</strong>
               <span>{user.email}</span>
-              <small>あなただけのライブラリ</small>
+              <small>ライブラリ</small>
             </div>
             <Dropdown.Separator className="account-separator" />
             <Dropdown.Item onSelect={onSettings}>

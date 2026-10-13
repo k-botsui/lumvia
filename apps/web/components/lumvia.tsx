@@ -48,6 +48,7 @@ import {
 } from '@/lib/api';
 import { Modal } from './ui/dialog';
 import { Logo } from './brand';
+import { HomeSculpture } from './home-sculpture';
 import { Login } from './login';
 import { Organize } from './organize';
 import { SettingsView } from './settings-view';
@@ -63,8 +64,9 @@ import { ShelfHeaderImage } from './shelf-header-image';
 import { AccountMenu } from './account-menu';
 import { ColorPicker } from './ui/color-picker';
 import { LinkSharing } from './link-sharing';
+import { LinkCheck } from './link-check';
+import { ItemContextMenu, ContextAction } from './ui/context-menu';
 import { allShelves } from '@/lib/groups';
-import { HomeSculpture } from './home-sculpture';
 import { ContentRail } from './content-rail';
 
 export function Lumvia() {
@@ -72,7 +74,10 @@ export function Lumvia() {
     () =>
       new QueryClient({
         defaultOptions: {
+          mutations: { networkMode: 'always' },
           queries: {
+            // The local library is reachable even when macOS reports no Internet connection.
+            networkMode: 'always',
             retry: (count, error) =>
               !(error instanceof ApiError && [401, 403, 404].includes(error.status)) && count < 1,
             refetchOnWindowFocus: true,
@@ -132,6 +137,13 @@ function App() {
   const [addDestination, setAddDestination] = useState(
     shelfId ? `shelves:${shelfId}` : collectionId ? `collections:${collectionId}` : '',
   );
+  const [context, setContext] = useState<{
+    x: number;
+    y: number;
+    title: string;
+    actions: ContextAction[];
+  } | null>(null);
+  const closeContext = useCallback(() => setContext(null), []);
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedItems, setSelectedItems] = useState<Map<string, Media | Cell>>(() => new Map());
   const [batchOpen, setBatchOpen] = useState(false);
@@ -194,6 +206,76 @@ function App() {
     else next.set(key, item);
     setSelectionAnchor({ key, selected: next.has(key) });
     setSelectedItems(next);
+  }
+  function itemContext(event: React.MouseEvent, item: Media | Cell) {
+    event.preventDefault();
+    event.stopPropagation();
+    const multiple = selectedItems.has(itemKey(item)) ? [...selectedItems.values()] : [item];
+    const chooseItems = () => {
+      if (view !== 'library' || search)
+        navigate({ view: 'library', tab: 'media_id' in item ? 'cells' : 'videos' });
+      setSelectionMode(true);
+      setSelectedItems(new Map(multiple.map((value) => [itemKey(value), value])));
+    };
+    const rect = event.currentTarget.getBoundingClientRect();
+    const isCell = 'media_id' in item;
+    setContext({
+      x: event.clientX || rect.left,
+      y: event.clientY || rect.top,
+      title: multiple.length > 1 ? `${multiple.length}件を選択` : item.title,
+      actions: [
+        { label: '開く', run: () => (isCell ? openCell(item as Cell) : openMedia(item.id)) },
+        ...(!isCell && multiple.length === 1
+          ? [
+              {
+                label: (item as Media).favorite ? 'お気に入りを解除' : 'お気に入りに追加',
+                run: () =>
+                  void act(() =>
+                    api('/media/' + item.id, {
+                      method: 'PATCH',
+                      body: JSON.stringify({ favorite: !(item as Media).favorite }),
+                    }),
+                  ),
+              },
+            ]
+          : []),
+        {
+          label: multiple.length > 1 ? '選択した項目をShelfに追加' : 'Shelfに追加',
+          run: () => {
+            chooseItems();
+            setBatchOpen(true);
+          },
+        },
+        { label: '選択・複数選択を開始', run: chooseItems },
+        {
+          label: multiple.length > 1 ? '選択した項目を削除…' : '削除…',
+          danger: true,
+          run: () => {
+            chooseItems();
+            setBatchDeleteOpen(true);
+          },
+        },
+      ],
+    });
+  }
+  function shelfContext(event: React.MouseEvent, group: Group & { kind: 'shelves' | 'collections' }) {
+    event.preventDefault();
+    event.stopPropagation();
+    const rect = event.currentTarget.getBoundingClientRect();
+    setContext({
+      x: event.clientX || rect.left,
+      y: event.clientY || rect.top,
+      title: group.name,
+      actions: [
+        {
+          label: '開く',
+          run: () =>
+            navigate({ view: 'library', [group.kind === 'shelves' ? 'shelf' : 'collection']: group.id }),
+        },
+        { label: '名前・色・ヘッダーを編集', run: () => setGroupEditor({ kind: group.kind, group }) },
+        { label: 'Shelfを削除…', danger: true, run: () => setGroupDelete({ kind: group.kind, group }) },
+      ],
+    });
   }
   const me = useQuery({ queryKey: ['me'], queryFn: () => api<User>('/auth/me'), retry: false });
   const enabled = !!me.data;
@@ -385,6 +467,7 @@ function App() {
             onOpen={() => openMedia(m.id)}
             selecting={selecting}
             selected={selectedItems.has(itemKey(m))}
+            onContextMenu={(event) => itemContext(event, m)}
             onSelect={(shift) => toggleSelection(m, shift)}
             onFavorite={() =>
               act(() =>
@@ -409,7 +492,10 @@ function App() {
                 onChange={(e) => toggleSelection(m, (e.nativeEvent as MouseEvent).shiftKey)}
               />
             )}
-            <button onClick={(e) => (selecting ? toggleSelection(m, e.shiftKey) : openMedia(m.id))}>
+            <button
+              onContextMenu={(event) => itemContext(event, m)}
+              onClick={(e) => (selecting ? toggleSelection(m, e.shiftKey) : openMedia(m.id))}
+            >
               {m.assets.thumbnail || m.source.thumbnail_url ? (
                 <img
                   src={m.assets.thumbnail || m.source.thumbnail_url!}
@@ -457,6 +543,7 @@ function App() {
         )}
         <button
           className="saved-cell-main"
+          onContextMenu={(event) => itemContext(event, c)}
           aria-label={c.title + (selecting ? 'を選択' : 'を開く')}
           aria-pressed={selecting ? selectedItems.has(itemKey(c)) : undefined}
           onClick={(e) => (selecting ? toggleSelection(c, e.shiftKey) : openCell(c))}
@@ -493,7 +580,7 @@ function App() {
       )}
       <h2>
         {kind === 'cells'
-          ? '大切な瞬間を、ここに集めよう。'
+          ? 'まだCellがありません'
           : kind === 'search'
             ? '一致する項目がありません'
             : 'まだ動画がありません'}
@@ -503,7 +590,7 @@ function App() {
           ? '動画を開いて「Cellを作成」から、好きな区間を保存できます。'
           : kind === 'search'
             ? '別の言葉やタグで検索してみてください。'
-            : '動画を追加すると、あなたのライブラリが育っていきます。'}
+            : '動画ファイルやリンクを追加できます。'}
       </p>
       {kind !== 'search' && (
         <button
@@ -598,6 +685,7 @@ function App() {
           {groups.map((g) => (
             <button
               key={g.id}
+              onContextMenu={(event) => shelfContext(event, g)}
               className={`nav-item ${(shelfId || collectionId) === g.id ? 'active' : ''}`}
               onClick={() =>
                 navigate({ view: 'library', [g.kind === 'shelves' ? 'shelf' : 'collection']: g.id })
@@ -702,20 +790,12 @@ function App() {
           <div className={`page-heading ${view === 'home' && !search ? 'home-page-heading' : ''}`}>
             <div>
               <h1>{title}</h1>
-              <p>
-                {search
-                  ? '動画の名前だけでなく、メモや保存した瞬間からも。'
-                  : (focusedGroup?.description ??
-                    {
-                      home: '動画を、もっと身近に。',
-                      add: '集めた動画から、まだ見ぬ瞬間を見つけよう。',
-                      library: 'あなたが集めた動画と、大切な瞬間。',
-                      collections: '動画もCellも、自分のShelfへ。',
-                      settings: '自分のデータを、自分の手で。',
-                    }[view])}
-              </p>
+              {focusedGroup?.description && !search && <p>{focusedGroup.description}</p>}
             </div>
             <div className="heading-actions">
+              {(view === 'library' || view === 'collections') && !search && (
+                <LinkCheck onChanged={refresh} notify={setToast} />
+              )}
               {(view === 'library' || view === 'collections') && !search && (
                 <LinkSharing
                   scope={{
@@ -796,14 +876,23 @@ function App() {
             <>
               <section className="home-intro">
                 <div className="home-intro-copy">
-                  <span className="privacy-caption">
-                    <ShieldCheck size={15} /> あなただけのライブラリ
-                  </span>
-                  <h1>
-                    <span>思い出を、</span>
-                    <span>あなただけに。</span>
+                  <h1 className="home-wordmark" aria-label="Lumvia">
+                    Lumvia
                   </h1>
-                  <p>好きな動画も、大切な瞬間も。</p>
+                  <div className="home-library-counts" aria-label="ライブラリの件数">
+                    <button onClick={() => navigate({ view: 'library', tab: 'videos' })}>
+                      <strong>{stats.data?.media_count ?? '—'}</strong>
+                      <span>動画</span>
+                    </button>
+                    <button onClick={() => navigate({ view: 'library', tab: 'cells' })}>
+                      <strong>{stats.data?.cell_count ?? '—'}</strong>
+                      <span>Cells</span>
+                    </button>
+                    <button onClick={() => navigate({ view: 'collections' })}>
+                      <strong>{stats.data?.shelf_count ?? '—'}</strong>
+                      <span>Shelf</span>
+                    </button>
+                  </div>
                   <div className="home-intro-actions">
                     <button className="button primary" onClick={() => navigate({ view: 'add' })}>
                       <Plus size={16} /> 動画を追加
@@ -834,6 +923,7 @@ function App() {
                     <MediaCard
                       key={m.id}
                       media={m}
+                      onContextMenu={(event) => itemContext(event, m)}
                       onOpen={() => openMedia(m.id)}
                       onFavorite={() =>
                         act(() =>
@@ -849,7 +939,7 @@ function App() {
                   <div className="welcome-empty">
                     <Film size={27} />
                     <div>
-                      <h3>最初の動画を、ここに。</h3>
+                      <h3>動画を追加</h3>
                       <p>リンクや動画ファイルを追加できます。</p>
                     </div>
                     <button className="text-button" onClick={() => navigate({ view: 'add' })}>
@@ -859,7 +949,7 @@ function App() {
                 )}
               </ContentRail>
               <ContentRail
-                title="保存した瞬間"
+                title="保存したCells"
                 kind="cells"
                 more={
                   <button className="text-button" onClick={() => navigate({ view: 'library', tab: 'cells' })}>
@@ -873,8 +963,8 @@ function App() {
                   <div className="moment-tip">
                     <BookmarkPlus size={24} />
                     <div>
-                      <h3>好きな場面を、Cellに。</h3>
-                      <p>動画の中から、残したい区間を選べます。</p>
+                      <h3>区間を保存</h3>
+                      <p>動画を開き、開始と終了を指定してCellを作成できます。</p>
                     </div>
                   </div>
                 )}
@@ -892,6 +982,7 @@ function App() {
                   groups.slice(0, 12).map((group) => (
                     <button
                       className="home-shelf"
+                      onContextMenu={(event) => shelfContext(event, group)}
                       key={group.id}
                       onClick={() =>
                         navigate({
@@ -1122,6 +1213,7 @@ function App() {
               {groups.map((g) => (
                 <article key={g.id} className="collection-card">
                   <button
+                    onContextMenu={(event) => shelfContext(event, g)}
                     onClick={() =>
                       navigate({ view: 'library', [g.kind === 'shelves' ? 'shelf' : 'collection']: g.id })
                     }
@@ -1233,7 +1325,6 @@ function App() {
           )}
           <footer className="page-footer">
             <span>Lumvia</span>
-            <small>動画を、もっと身近に。</small>
             <span className="private-label">
               <ShieldCheck size={13} />
               所有者だけが利用できます
@@ -1250,6 +1341,7 @@ function App() {
           </button>
         </div>
       )}
+      {context && <ItemContextMenu {...context} onClose={closeContext} />}
       {mediaId && !cellId && (
         <MediaDetail
           key={mediaId}

@@ -13,8 +13,16 @@ type Scope = {
 };
 type Bundle = {
   format: 'lumvia-link-list';
-  version: 1;
-  links: { key: string; url: string; title: string; tags: string[]; note: string; favorite: boolean }[];
+  version: 1 | 2;
+  links: {
+    key: string;
+    url: string;
+    title: string;
+    tags: string[];
+    note: string;
+    favorite: boolean;
+    cover_jpeg?: string;
+  }[];
   cells: {
     key: string;
     link: string;
@@ -24,7 +32,14 @@ type Bundle = {
     tags: string[];
     note: string;
   }[];
-  groups: { key: string; name: string; description: string; links: string[]; cells: string[] }[];
+  groups: {
+    key: string;
+    name: string;
+    description: string;
+    header_jpeg?: string;
+    links: string[];
+    cells: string[];
+  }[];
 };
 type Summary = { new_links: number; existing_links: number; new_cells: number; groups: number };
 type ExportPreview = {
@@ -52,6 +67,7 @@ export function LinkSharing({
   const [incoming, setIncoming] = useState<ImportPreview | null>(null);
   const [text, setText] = useState('');
   const [notes, setNotes] = useState(false);
+  const [images, setImages] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -63,7 +79,7 @@ export function LinkSharing({
     generation.current++;
     setMode(null);
   }
-  async function prepare(includeNotes = false) {
+  async function prepare(includeNotes = false, includeImages = false) {
     const current = ++generation.current;
     setMode('export');
     setPreview(null);
@@ -71,12 +87,13 @@ export function LinkSharing({
     setError('');
     setResult('');
     setNotes(includeNotes);
+    setImages(includeImages);
     setAgreed(false);
     setBusy(true);
     try {
       const data = await api<ExportPreview>('/link-shares/export-preview', {
         method: 'POST',
-        body: JSON.stringify({ ...scope, include_notes: includeNotes }),
+        body: JSON.stringify({ ...scope, include_notes: includeNotes, include_images: includeImages }),
       });
       if (generation.current === current) setPreview(data);
     } catch (failure) {
@@ -138,20 +155,6 @@ export function LinkSharing({
     anchor.click();
     window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     setResult('共有ファイルを保存しました。受け取った人はLumviaの「リンク集を読み込む」で追加できます。');
-  }
-  async function share() {
-    if (!agreed || !preview?.bundle.links.length) return;
-    const files = [file()];
-    if (!navigator.canShare?.({ files })) {
-      download();
-      return;
-    }
-    try {
-      await navigator.share({ files, title: 'Lumviaリンク集' });
-    } catch (failure) {
-      if (!(failure instanceof DOMException && failure.name === 'AbortError'))
-        setError('この送信先ではファイルを共有できません。「ファイルを保存」から添付してください。');
-    }
   }
   async function copy() {
     if (!agreed || !preview?.bundle.links.length) return;
@@ -239,16 +242,25 @@ export function LinkSharing({
           {mode === 'export' ? (
             <>
               <p>
-                外部リンクと、そのCell・Shelf構成だけを共有します。動画本体・画像・アカウント情報・ログ・保存場所は含めません。
+                外部リンクと、そのCell・Shelf構成を共有します。動画本体・アカウント情報・ログ・保存場所は含めません。画像は下の項目で追加できます。
               </p>
               <label className="share-check">
                 <input
                   type="checkbox"
                   checked={notes}
                   disabled={busy}
-                  onChange={(e) => prepare(e.target.checked)}
+                  onChange={(e) => prepare(e.target.checked, images)}
                 />
                 メモとShelfの説明も含める（個人情報に注意）
+              </label>
+              <label className="share-check">
+                <input
+                  type="checkbox"
+                  checked={images}
+                  disabled={busy}
+                  onChange={(event) => prepare(notes, event.target.checked)}
+                />
+                カバー画像とShelfヘッダーも含める（共有する権利・個人情報を確認）
               </label>
             </>
           ) : (
@@ -315,7 +327,10 @@ export function LinkSharing({
                 <>
                   <p>
                     共有しない項目：{preview.excluded.length}件、対象外のCell {preview.excluded_cells}
-                    件。カバー画像とShelfのヘッダー画像も除外します。
+                    件。
+                    {images
+                      ? '保存済みのカバーとShelfヘッダーを小さなJPEGとして含めます。既存の画像は上書きしません。'
+                      : 'カバー画像とShelfのヘッダー画像も除外します。'}
                   </p>
                   {!!preview.excluded.length && (
                     <details>
@@ -342,6 +357,13 @@ export function LinkSharing({
                 <ul>
                   {bundle.links.map((entry) => (
                     <li key={entry.key}>
+                      {entry.cover_jpeg && (
+                        <img
+                          src={`data:image/jpeg;base64,${entry.cover_jpeg}`}
+                          alt={`${entry.title}の共有カバー`}
+                          style={{ maxWidth: 160, maxHeight: 100 }}
+                        />
+                      )}
                       <strong>{entry.title}</strong>
                       <span>{entry.url}</span>
                       {entry.favorite && <span>お気に入り</span>}
@@ -369,6 +391,13 @@ export function LinkSharing({
                     <ul>
                       {bundle.groups.map((entry) => (
                         <li key={entry.key}>
+                          {entry.header_jpeg && (
+                            <img
+                              src={`data:image/jpeg;base64,${entry.header_jpeg}`}
+                              alt={`${entry.name}の共有ヘッダー`}
+                              style={{ maxWidth: 160, maxHeight: 100 }}
+                            />
+                          )}
                           {entry.name}（リンク{entry.links.length}件・Cell{entry.cells.length}件）
                           {entry.description && <p>{entry.description}</p>}
                         </li>
@@ -398,14 +427,7 @@ export function LinkSharing({
                       <Download size={16} />
                       ファイルを保存
                     </button>
-                    <button
-                      className="button secondary"
-                      disabled={!agreed || !bundle.links.length}
-                      onClick={share}
-                    >
-                      <Share2 size={16} />
-                      送信先を選ぶ
-                    </button>
+
                     <button
                       className="button secondary"
                       disabled={!agreed || !bundle.links.length}

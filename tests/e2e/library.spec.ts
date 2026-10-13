@@ -20,6 +20,14 @@ test("add → save Cell → organize → search → reopen range", async ({
       .getByLabel("パスワード", { exact: true })
       .fill(process.env.LUMVIA_E2E_PASSWORD!);
     await page.getByRole("button", { name: "ログイン", exact: true }).click();
+    await expect(
+      page.getByRole("button", { name: "追加する", exact: true }),
+    ).toBeVisible();
+    // A local library must not pause requests when WebKit reports no Internet.
+    await page.addInitScript(() =>
+      Object.defineProperty(navigator, "onLine", { get: () => false }),
+    );
+    await page.reload();
     await page.getByRole("button", { name: "追加する", exact: true }).click();
     await page
       .getByRole("tab", { name: "ファイルを追加", exact: true })
@@ -37,11 +45,48 @@ test("add → save Cell → organize → search → reopen range", async ({
         exact: true,
       })
       .first()
+      .click({ button: "right" });
+    await expect(
+      page.getByRole("menuitem", { name: "Shelfに追加", exact: true }),
+    ).toBeVisible();
+    await page.getByRole("menu").press("Escape");
+    await page
+      .getByRole("button", {
+        name: "Lumvia サンプル — 3つのシーンを開く",
+        exact: true,
+      })
+      .first()
       .click();
     await expect(
       page.getByRole("button", { name: "Cellを作成", exact: true }),
     ).toBeEnabled({ timeout: 30000 });
     mediaId = new URL(page.url()).searchParams.get("media");
+    await page
+      .getByRole("button", { name: "動画から選ぶ", exact: true })
+      .click();
+    const coverDialog = page.getByRole("dialog", {
+      name: "動画からカバーを選ぶ",
+      exact: true,
+    });
+    await expect(
+      coverDialog.getByRole("button", { name: "この場面をカバーにする" }),
+    ).toBeEnabled();
+    await coverDialog
+      .getByRole("slider", { name: "カバーに使う場面" })
+      .press("End");
+    await expect(
+      coverDialog.getByRole("button", { name: "この場面をカバーにする" }),
+    ).toBeEnabled();
+    const coverResponse = page.waitForResponse(
+      (response) =>
+        response.url().includes(`/media/${mediaId}/frame-cover`) &&
+        response.request().method() === "POST",
+    );
+    await coverDialog
+      .getByRole("button", { name: "この場面をカバーにする" })
+      .click();
+    expect((await coverResponse).status()).toBe(200);
+    await expect(coverDialog).not.toBeVisible();
     await page.getByRole("button", { name: "Cellを作成", exact: true }).click();
     await page.getByLabel("タイトル", { exact: true }).fill(cellName);
     await page.getByText("時刻を細かく指定", { exact: true }).click();
@@ -59,6 +104,7 @@ test("add → save Cell → organize → search → reopen range", async ({
     await page.getByRole("button", { name: "Shelf", exact: true }).click();
     await page
       .getByRole("button", { name: "Shelfを作成", exact: true })
+      .filter({ hasText: "Shelfを作成" })
       .click();
     await page
       .getByRole("textbox", { name: "名前", exact: true })
@@ -79,7 +125,7 @@ test("add → save Cell → organize → search → reopen range", async ({
     await page
       .getByRole("button", { name: cellName + "を整理", exact: true })
       .click();
-    await page.getByRole("checkbox", { name: shelfName, exact: true }).check();
+    await page.getByRole("checkbox", { name: shelfName, exact: true }).click();
     await expect(
       page.getByRole("checkbox", { name: shelfName, exact: true }),
     ).toBeChecked();

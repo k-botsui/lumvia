@@ -21,6 +21,24 @@ class Cancelled(Exception):
     pass
 
 
+def video_encoding(quality=24):
+    if settings.video_encoder == "h264_videotoolbox":
+        # Apple's encoder permits an LGPL-only FFmpeg build, including older Intel Macs.
+        return [
+            "-c:v",
+            "h264_videotoolbox",
+            "-require_sw",
+            "1",
+            "-profile:v",
+            "baseline",
+            "-coder",
+            "cavlc",
+            "-b:v",
+            "2500k",
+        ]
+    return ["-c:v", "libx264", "-preset", "veryfast", "-crf", str(quality)]
+
+
 def run_command(arguments, cancelled=lambda: False, timeout=None):
     """Bound CPU time, output size, memory (Linux), elapsed time, and process descendants."""
     timeout = timeout or settings.processing_timeout_seconds
@@ -35,7 +53,22 @@ def run_command(arguments, cancelled=lambda: False, timeout=None):
                 stderr=stderr,
                 start_new_session=True,
                 cwd=directory,
-                env={k: v for k, v in os.environ.items() if k in {"PATH", "LANG", "LC_ALL", "SYSTEMROOT"}},
+                env={
+                    "LUMVIA_PROCESS_MAX_BYTES": str(settings.max_upload_bytes * 2),
+                    **{
+                        k: v
+                        for k, v in os.environ.items()
+                        if k
+                        in {
+                            "PATH",
+                            "LANG",
+                            "LC_ALL",
+                            "SYSTEMROOT",
+                            "PYTHONDONTWRITEBYTECODE",
+                            "PYTHONNOUSERSITE",
+                        }
+                    },
+                },
             )
             start = time.monotonic()
             try:
@@ -133,7 +166,7 @@ def can_remux(path, cancelled):
             "-format_whitelist",
             "mov,matroska,webm,avi",
             "-show_entries",
-            "stream=codec_type,codec_name,pix_fmt,width,height",
+            "stream=codec_type,codec_name,pix_fmt,width,height,profile,level",
             "-of",
             "json",
             path,
@@ -148,6 +181,8 @@ def can_remux(path, cancelled):
         len(video) == 1
         and video[0].get("codec_name") == "h264"
         and video[0].get("pix_fmt") == "yuv420p"
+        and video[0].get("profile") in {"Baseline", "Constrained Baseline"}
+        and video[0].get("level", 999) <= 31
         and video[0].get("width", 99999) <= 1280
         and video[0].get("height", 99999) <= 1920
         and all(s.get("codec_name") == "aac" for s in audio)

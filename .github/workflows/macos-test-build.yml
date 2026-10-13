@@ -1,0 +1,45 @@
+name: Mac app test builds
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'packaging/macos/**'
+      - 'apps/api/**'
+      - 'apps/web/**'
+      - 'packages/**'
+      - '.github/workflows/macos-test-build.yml'
+permissions:
+  contents: read
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            arch: arm64
+            name: AppleSilicon
+          - runner: macos-15-intel
+            arch: x86_64
+            name: Intel
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Build self-contained test application
+        run: python3 packaging/macos/build.py --arch '${{ matrix.arch }}'
+      - name: Exercise bundled services with an isolated library
+        run: python3 packaging/macos/smoke.py 'build/macos-${{ matrix.arch }}/Lumvia.app'
+      - name: Verify app signature remains intact after execution
+        run: codesign --verify --deep --strict 'build/macos-${{ matrix.arch }}/Lumvia.app'
+      - name: Record test build checksums
+        run: shasum -a 256 dist/*.zip >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Lumvia-Mac-${{ matrix.name }}-TEST
+          path: dist/*.zip
+          retention-days: 1
+          compression-level: 0

@@ -1,4 +1,5 @@
 'use client';
+import { useUploadLimits } from '@/lib/upload-limits';
 import { useEffect, useRef, useState } from 'react';
 import { ExternalLink, Play, Heart, Pencil, FolderPlus, Trash2, Link2, UploadCloud } from 'lucide-react';
 import { api, Cell, Media } from '@/lib/api';
@@ -47,6 +48,7 @@ export function ReferenceDetail({
   onOrganize: (m: Media | Cell) => void;
   onOpenCell: (cell: Cell) => void;
 }) {
+  const uploadLimits = useUploadLimits();
   const [showPlayer, setShowPlayer] = useState(false),
     [editing, setEditing] = useState(false),
     [deleting, setDeleting] = useState(false),
@@ -83,8 +85,10 @@ export function ReferenceDetail({
   }, [trimming]);
   async function attach(file?: File) {
     if (!file || busy) return;
-    if (file.size > 256 * 1024 ** 2 || !/\.(mp4|mov|m4v|webm|mkv|avi)$/i.test(file.name)) {
-      setError('256 MB以下のMOV・MP4などの動画ファイルを選んでください。');
+    if (file.size > uploadLimits.max_upload_bytes || !/\.(mp4|mov|m4v|webm|mkv|avi)$/i.test(file.name)) {
+      setError(
+        `${Math.round(uploadLimits.max_upload_bytes / 1024 ** 2)} MB以下のMOV・MP4などの動画ファイルを選んでください。`,
+      );
       return;
     }
     const body = new FormData();
