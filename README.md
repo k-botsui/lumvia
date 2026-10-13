@@ -2,7 +2,7 @@
 
 ## Demo
 
-https://github.com/user-attachments/assets/2b9f4993-6cd7-4633-8270-f13d134ee5a6
+https://github.com/user-attachments/assets/170dd366-b2b7-41fc-bb91-84974787f355
 
 [Demoの素材クレジット](demo/README.md)
 
@@ -16,8 +16,8 @@ https://github.com/user-attachments/assets/2b9f4993-6cd7-4633-8270-f13d134ee5a6
 
 | Mac | ダウンロードするファイル |
 | --- | --- |
-| Intel（古いMac、Monterey検証機など） | `Lumvia-Mac-Intel-TEST.dmg` |
-| Apple Silicon（M1・M2・M3・M4など） | `Lumvia-Mac-AppleSilicon-TEST.dmg` |
+| Intel（古いMac、Monterey検証機など） | [Intel TEST 6 DMG](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.6/Lumvia-Mac-Intel-TEST.dmg) |
+| Apple Silicon（M1・M2・M3・M4など） | [Apple Silicon TEST 6 DMG](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.6/Lumvia-Mac-AppleSilicon-TEST.dmg) |
 
 DMGを開き、LumviaをApplicationsへドラッグして、アプリケーションのLumviaを開きます。Python・Node・Homebrew・Dockerのインストール、URLの入力、初回アカウントの登録は不要です。ZIP版も用意します。対応する版は →「このMacについて」のチップ／プロセッサで確認できます。
 
@@ -25,6 +25,7 @@ DMGを開き、LumviaをApplicationsへドラッグして、アプリケーシ�
 
 ## 主な機能
 
+- オンライン時の保存リンク一斉点検。切れたリンクと関連Cells・Shelfへの登録を確認してまとめて削除。通信失敗・ログイン制限・オフライン時は削除しません。
 - MP4/MOVなどの複数動画追加、FFmpegによるプレビュー・サムネイル生成、認証付き再生。
 - 残したい区間のCell保存・編集・再生、5分以内のMP4書き出し。
 - 動画・CellのShelf整理、名前・色・ヘッダー画像、一括追加・削除、お気に入り・タグ・メモ検索。
