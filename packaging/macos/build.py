@@ -182,6 +182,41 @@ def normalize_wheel_build_paths(runtime):
                 path.write_bytes(after)
 
 
+def write_guides(directory, arch):
+    label = {"arm64": "macOS — Apple Silicon (Apple chips)", "x86_64": "macOS — Intel"}[arch]
+    template = (ROOT / "00_START_HERE.html").read_text(encoding="utf-8")
+    guide = template.replace('<body data-package="source">', f'<body data-package="macos-{arch}">')
+    guide = guide.replace("ソースコード / Source code", label)
+    (directory / "00_はじめに_READ_ME_FIRST.html").write_text(guide, encoding="utf-8")
+    (directory / "00_はじめに_READ_ME_FIRST.txt").write_text(
+        f"Lumvia — {label}\n\n"
+        "【日本語】\n"
+        "この配布ファイルはMac用です。Windows版は準備中です。\n"
+        "1. 同じフォルダーのLumvia（Lumvia.app）を確認します。\n"
+        "2. 普段使う場合はFinderの「アプリケーション」へ移します。\n"
+        "3. アプリケーションのLumviaをダブルクリックします。\n"
+        "現在はDeveloper ID署名・公証のないTEST版です。macOSが拒否した場合、\n"
+        "保護設定を変更せずGitHub Releasesで配布状況を確認してください。\n"
+        "Python・Node・Dockerの追加導入、コマンド・URL入力は不要です。\n"
+        "データは ~/Library/Application Support/Lumvia Desktop/ に保存します。\n"
+        "アプリを終了して交換しても、この保存先は削除しません。\n\n"
+        "[English]\n"
+        "This is a Mac package. The Windows desktop package is in preparation.\n"
+        "1. Find Lumvia (Lumvia.app) in the same folder.\n"
+        "2. For regular use, move Lumvia into Applications in Finder.\n"
+        "3. Double-click Lumvia in Applications.\n"
+        "This TEST build has no Developer ID signing or notarization. macOS may block it.\n"
+        "Keep security settings enabled and check GitHub Releases if it is blocked.\n"
+        "No separate Python, Node, or Docker setup, commands, or server URL is required.\n"
+        "Data is stored separately in ~/Library/Application Support/Lumvia Desktop/.\n"
+        "Quit Lumvia before replacing it; replacing the app preserves this data folder.\n\n"
+        "Official downloads: https://github.com/k-botsui/lumvia/releases\n"
+        "日本語: https://github.com/k-botsui/lumvia/blob/main/README.md\n"
+        "English: https://github.com/k-botsui/lumvia/blob/main/README.en.md\n",
+        encoding="utf-8",
+    )
+
+
 def build(arch, resume=False):
     if platform.system() != "Darwin":
         raise RuntimeError("Build on macOS")
@@ -523,8 +558,16 @@ def build(arch, resume=False):
     output = ROOT / "dist"
     output.mkdir(exist_ok=True)
     label = "Intel" if arch == "x86_64" else "AppleSilicon"
+    zip_folder = work / f"Lumvia-Mac-{label}-TEST"
+    zip_folder.mkdir(exist_ok=True)
+    write_guides(zip_folder, arch)
+    zipped_app = zip_folder / "Lumvia.app"
+    if zipped_app.exists():
+        shutil.rmtree(zipped_app)
+    command(["ditto", str(app), str(zipped_app)], ROOT)
     command(
-        ["ditto", "-c", "-k", "--keepParent", str(app), str(output / f"Lumvia-Mac-{label}-TEST.zip")], ROOT
+        ["ditto", "-c", "-k", "--keepParent", str(zip_folder), str(output / f"Lumvia-Mac-{label}-TEST.zip")],
+        ROOT,
     )
     installer = work / "installer"
     installer.mkdir(exist_ok=True)
@@ -535,15 +578,8 @@ def build(arch, resume=False):
     applications = installer / "Applications"
     if not applications.is_symlink():
         applications.symlink_to("/Applications", target_is_directory=True)
-    (installer / "最初にお読みください.txt").write_text(
-        "Lumvia TEST版\n\nLumviaをApplicationsへドラッグしてから、アプリケーションのLumviaを開いてください。\n"
-        "Python等の追加インストール、URLの入力、新規登録は不要です。\n"
-        "現在はAppleの署名・公証が未完了の検証版です。macOSが起動を拒否することがあります。\n"
-        "一般向けの完成版ではありません。\n\n"
-        "データはアプリとは別に保存されます。アプリを交換しても削除されません。\n"
-        "https://github.com/k-botsui/lumvia/releases\n",
-        encoding="utf-8",
-    )
+    (installer / "最初にお読みください.txt").unlink(missing_ok=True)
+    write_guides(installer, arch)
     command(
         [
             "hdiutil",

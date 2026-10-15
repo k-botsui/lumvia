@@ -1,0 +1,36 @@
+Lumvia — ソースコード / Source code
+
+【日本語】
+このZIPはプログラムのソースコードです。
+解凍しただけで起動するLumvia.appやLumvia.exeは含まれていません。
+通常利用するアプリは、GitHub ReleasesからOS別の配布ファイルを選んでください。
+
+Mac:
+ →「このMacについて」のチップ／プロセッサを確認します。
+Apple SiliconとIntelでは配布ファイルが異なります。
+現在はDeveloper ID署名・公証のないTEST版で、macOSが起動を拒否する場合があります。
+保護設定を変更せず、GitHub Releasesで配布状況を確認してください。
+
+Windows:
+デスクトップ配布版は準備中です。Mac用.appは起動できません。
+このソース内の.cmdは開発者向けで、通常利用の起動アプリではありません。
+
+[English]
+This ZIP contains source code, not a ready-to-run desktop application.
+It does not contain Lumvia.app or Lumvia.exe.
+Choose a package for your operating system from GitHub Releases.
+
+Mac:
+Check Apple menu → About This Mac → Chip / Processor.
+Apple Silicon and Intel use different downloads.
+The current TEST build has no Developer ID signing or notarization; macOS may block it.
+Keep security settings enabled and check GitHub Releases for availability.
+
+Windows:
+The desktop package is in preparation. Mac .app files do not run on Windows.
+The .cmd files in this source archive are developer tools, not standalone desktop apps.
+
+Official downloads: https://github.com/k-botsui/lumvia/releases
+日本語: https://github.com/k-botsui/lumvia/blob/main/README.md
+English: https://github.com/k-botsui/lumvia/blob/main/README.en.md
+License: https://github.com/k-botsui/lumvia/blob/main/LICENSE

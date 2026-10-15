@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lumvia — はじめに / Read me first</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #202735;
+        background: #fafbfe;
+      }
+      body {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 56px 26px 64px;
+        line-height: 1.75;
+      }
+      header {
+        padding-bottom: 26px;
+        border-bottom: 1px solid #e3e6ed;
+      }
+      .brand {
+        font-family: ui-rounded, "Arial Rounded MT Bold", sans-serif;
+        font-size: 42px;
+        font-weight: 400;
+        letter-spacing: -0.045em;
+      }
+      .label {
+        margin: 12px 0 0;
+        color: #5064ce;
+        font-size: 15px;
+        font-weight: 600;
+      }
+      h1 {
+        font-size: 25px;
+        margin: 30px 0 12px;
+        line-height: 1.4;
+      }
+      h2 {
+        font-size: 19px;
+        margin: 0 0 12px;
+        line-height: 1.4;
+      }
+      p {
+        margin: 0 0 14px;
+      }
+      a {
+        color: #4056bf;
+        text-underline-offset: 4px;
+      }
+      section {
+        margin-top: 34px;
+      }
+      .columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 36px;
+      }
+      .en {
+        color: #586174;
+      }
+      .note {
+        padding-left: 16px;
+        border-left: 3px solid #8093ed;
+      }
+      code {
+        font-family: ui-monospace, monospace;
+        font-size: 0.9em;
+        overflow-wrap: anywhere;
+      }
+      ol {
+        padding-left: 23px;
+        margin: 0;
+      }
+      li {
+        margin-bottom: 12px;
+      }
+      .status {
+        color: #5064ce;
+        font-weight: 600;
+      }
+      footer {
+        margin-top: 44px;
+        padding-top: 20px;
+        border-top: 1px solid #e3e6ed;
+        font-size: 13px;
+        color: #687285;
+      }
+      [hidden],
+      body[data-package="source"] .mac-only,
+      body:not([data-package="source"]) .source-only {
+        display: none !important;
+      }
+      @media (max-width: 650px) {
+        body {
+          padding-top: 30px;
+        }
+        .columns {
+          grid-template-columns: 1fr;
+          gap: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body data-package="source">
+    <header>
+      <div class="brand">Lumvia</div>
+      <p class="label">ソースコード / Source code</p>
+    </header>
+    <h1>はじめに <span class="en">/ Read me first</span></h1>
+    <section class="source-only note">
+      <p>
+        <strong>このZIPはソースコードです。</strong>
+        通常利用するアプリは、下のGitHub
+        Releasesから、お使いのOSに合うファイルを選んでください。ソースを解凍してもLumvia.appやLumvia.exeは含まれていません。
+      </p>
+      <p class="en" lang="en">
+        <strong>This ZIP contains source code.</strong> To use the desktop app,
+        choose the file for your operating system from GitHub Releases below.
+        The source archive does not contain Lumvia.app or Lumvia.exe.
+      </p>
+    </section>
+    <section id="wrong-os" class="note" hidden>
+      <p>
+        <strong>Windowsをご利用の方へ：この配布ファイルはMac用です。</strong>
+        Windows版は準備中です。GitHub Releasesで配布状況を確認してください。
+      </p>
+      <p class="en" lang="en">
+        <strong>Windows users: this is a Mac package.</strong> The Windows
+        desktop package is in preparation. Check GitHub Releases for
+        availability.
+      </p>
+    </section>
+    <section class="mac-only columns">
+      <div>
+        <h2>Macで開く</h2>
+        <ol>
+          <li>
+            この案内を閉じ、同じフォルダーにある
+            <strong>Lumvia（Lumvia.app）</strong> を確認します。
+          </li>
+          <li>
+            普段使う場合は、LumviaをFinderの「アプリケーション」へ移します。
+          </li>
+          <li>
+            アプリケーションのLumviaをダブルクリックします。準備が終わると画面が開きます。
+          </li>
+        </ol>
+      </div>
+      <div class="en" lang="en">
+        <h2>Open on a Mac</h2>
+        <ol>
+          <li>
+            Close this guide and find <strong>Lumvia (Lumvia.app)</strong> in
+            the same folder.
+          </li>
+          <li>For regular use, move Lumvia into Applications in Finder.</li>
+          <li>
+            Double-click Lumvia in Applications. The interface opens after
+            startup finishes.
+          </li>
+        </ol>
+      </div>
+    </section>
+    <section class="mac-only note">
+      <p>
+        <strong>現在は未公証のTEST版です。</strong>
+        macOSが起動を拒否する場合があります。その場合は保護設定を変更せず、GitHub
+        Releasesで配布状況を確認してください。一般向け正式版の通常起動は、まだ検証を完了していません。
+      </p>
+      <p class="en" lang="en">
+        <strong
+          >This is a TEST build without Developer ID signing or
+          notarization.</strong
+        >
+        macOS may block it. Keep security settings enabled and check GitHub
+        Releases. Normal first launch of a public release has not completed
+        acceptance testing.
+      </p>
+    </section>
+    <section class="source-only columns">
+      <div>
+        <h2>Mac</h2>
+        <p class="status">TEST版を配布中</p>
+        <p>
+           →「このMacについて」のチップ／プロセッサで、Apple
+          SiliconとIntelを確認してください。名前にMacと記されたZIPまたはDMGを選びます。現在は未公証のため、起動を拒否されることがあります。
+        </p>
+      </div>
+      <div>
+        <h2>Windows</h2>
+        <p class="status">デスクトップ配布版は準備中</p>
+        <p>
+          Windows用の起動アプリはまだ配布していません。Mac用の.appや、開発者向けの.cmdからの通常利用は案内していません。
+        </p>
+      </div>
+    </section>
+    <section class="source-only en columns" lang="en">
+      <div>
+        <h2>Mac</h2>
+        <p>
+          TEST packages are available. Check Apple menu → About This Mac for
+          Apple Silicon or Intel, then choose the matching Mac ZIP or DMG.
+          Current packages are not notarized and may be blocked.
+        </p>
+      </div>
+      <div>
+        <h2>Windows</h2>
+        <p>
+          The desktop package is in preparation. A ready-to-run Windows app is
+          not available yet. The Mac .app and development .cmd scripts are not
+          Windows desktop downloads.
+        </p>
+      </div>
+    </section>
+    <section class="mac-only columns">
+      <div>
+        <h2>追加のセットアップ</h2>
+        <p>
+          Mac版には必要な実行環境を同梱しています。Python・Node・Dockerの導入、コマンドやサーバーURLの入力は不要です。
+        </p>
+        <h2>データの場所</h2>
+        <p>
+          データはアプリと別の場所に保存します。アプリを終了して交換しても、この保存先は残ります。
+        </p>
+      </div>
+      <div class="en" lang="en">
+        <h2>Setup</h2>
+        <p>
+          The Mac package includes its runtimes. No separate Python, Node, or
+          Docker installation, commands, or server URL is required.
+        </p>
+        <h2>Your data</h2>
+        <p>
+          Data is stored separately from the app. Quit Lumvia before replacing
+          it; replacing the app preserves this data folder.
+        </p>
+      </div>
+    </section>
+    <p class="mac-only">
+      <code>~/Library/Application Support/Lumvia Desktop/</code>
+    </p>
+    <section>
+      <h2>公式ダウンロード <span class="en">/ Official downloads</span></h2>
+      <p>
+        <a href="https://github.com/k-botsui/lumvia/releases"
+          >GitHub Releases →</a
+        >
+      </p>
+      <p>
+        <a href="https://github.com/k-botsui/lumvia/blob/main/README.md"
+          >日本語の説明</a
+        >
+        ·
+        <a href="https://github.com/k-botsui/lumvia/blob/main/README.en.md"
+          >English instructions</a
+        >
+      </p>
+    </section>
+    <footer>
+      <p>
+        この案内はオフラインで読めます。外部サイトへの通信はリンクを開いた時だけです。<br /><span
+          lang="en"
+          >This guide works offline. It connects to external websites only when
+          you open a link.</span
+        >
+      </p>
+      <p>
+        <a href="https://github.com/k-botsui/lumvia/blob/main/LICENSE"
+          >利用条件 / License</a
+        >
+        ·
+        <a href="https://github.com/k-botsui/lumvia/issues"
+          >お問い合わせ / Issues</a
+        >
+      </p>
+    </footer>
+    <script>
+      const platform = (
+        navigator.userAgentData?.platform ||
+        navigator.platform ||
+        navigator.userAgent
+      ).toLowerCase();
+      if (
+        document.body.dataset.package.startsWith("macos-") &&
+        platform.includes("win")
+      ) {
+        document.getElementById("wrong-os").hidden = false;
+      }
+    </script>
+  </body>
+</html>
