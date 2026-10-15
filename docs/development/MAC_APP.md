@@ -5,8 +5,10 @@ Mac版は開発用ソフトを導入していない利用者向けです。Intel
 ## 利用者の操作
 
 1. GitHubのReleasesで、自分のMac用のLumviaをダウンロードします。
-2. ZIPを開き、Lumvia.appを「アプリケーション」に移動します。
-3. Lumvia.appを開きます。初回の準備とローカルのログインはアプリが行います。
+2. ZIPを解凍し、Lumvia（Lumvia.app）を確認します。次回配布用の構成では、OS・CPU名の付いたフォルダーに `00_はじめに_READ_ME_FIRST.html` とTXTを同梱します。公開済みTEST 6には、この新しい案内はまだ含まれません。
+3. Lumvia（Lumvia.app）を「アプリケーション」に移し、開きます。初回の準備とローカルのログインはアプリが行います。
+
+Windows向けのデスクトップ配布物は準備中です。Mac用ZIPはWindowsでは起動できません。GitHubの `Source code (zip)` は開発用ソースで、[通常利用のダウンロード](../../README.md#ダウンロード)とは異なります。
 
 Python・Node.js・Homebrew・Docker・データベースの個別インストール、ターミナル操作、GitHubアカウントは不要です。公開済みリリースがない場合は、まだこの配布方法では入手できません。Code → Download ZIPは開発用のソースで、完成したMacアプリとは異なります。
 

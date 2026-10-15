@@ -1,172 +1,78 @@
 # Lumvia
 
-## Demo
+**動画とリンクを、ひとつのローカルライブラリに。**
+
+日本語 · [English](README.en.md) · [ダウンロード](https://github.com/k-botsui/lumvia/releases) · [使い方](#使い方)
+
+Lumviaは、自分の動画とYouTube・X・Instagram・TikTokなどのリンクを整理するデスクトップアプリです。動画の好きな区間を **Cell** として保存し、動画やCellを **Shelf** にまとめて、あとから見返せます。
+
+## トレーラー
 
 https://github.com/user-attachments/assets/170dd366-b2b7-41fc-bb91-84974787f355
 
-[Demoの素材クレジット](demo/README.md)
+[映像・音楽のクレジット](demo/README.md)
 
-動画ファイルと外部リンクを管理するローカルライブラリです。動画の区間を **Cell** として保存し、再生できます。動画・Cellは **Shelf** へまとめられます。
+## ダウンロード
 
-このリポジトリは **個人の私的・非商用利用を無料で許可**しています。オープンソースではありません。自分が所有・管理する端末へのダウンロード、インストール、未改変ソースのビルド・実行、私的バックアップができます。設定変更や初期認証情報の生成も可能です。**プログラムの改変・再配布、商用利用、勤務先・組織での利用、他者へのサービス提供には別途許可が必要**です。[LICENSE](LICENSE)と[第三者の依存・素材](THIRD_PARTY_NOTICES.md)を確認してください。自分の動画・写真・メモや、それらから作成した出力の権利は、このライセンスでは制限しません。
+アプリは **GitHub Releasesだけで配布**します。別サイトでの登録やGitHubへのログインは不要です。
 
-## ダウンロードして使う（Mac）
+**現在のMac版は未公証のTEST版です。macOSが起動を拒否する場合があります。「誰でも解凍して開くだけ」で使える正式版は、まだ完成していません。Windows版も準備中です。**
 
-**アプリは[Releasesのダウンロード画面](https://github.com/k-botsui/lumvia/releases)から入手します。** Code → Download ZIPは開発用ソースです。
+| お使いのパソコン                     | 配布状況・ダウンロード                                                                                                                                                                                                                |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mac — Apple Silicon（Apple製チップ） | [TEST版ZIP](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.6/Lumvia-Mac-AppleSilicon-TEST.zip) · [DMG](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.6/Lumvia-Mac-AppleSilicon-TEST.dmg) |
+| Mac — Intel                          | [TEST版ZIP](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.6/Lumvia-Mac-Intel-TEST.zip) · [DMG](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.6/Lumvia-Mac-Intel-TEST.dmg)               |
+| Windows                              | デスクトップ配布版は準備中です。Mac用ZIPでは起動できません。                                                                                                                                                                          |
 
-| Mac | ダウンロードするファイル |
-| --- | --- |
-| Intel（古いMac、Monterey検証機など） | [Intel TEST 6 DMG](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.6/Lumvia-Mac-Intel-TEST.dmg) |
-| Apple Silicon（M1・M2・M3・M4など） | [Apple Silicon TEST 6 DMG](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.6/Lumvia-Mac-AppleSilicon-TEST.dmg) |
+Macの種類は ** → このMacについて → チップ／プロセッサ** で確認できます。`Source code (zip)` と `Code → Download ZIP` はプログラムのソースコードで、完成したアプリではありません。通常利用では上のOS別ファイルを選んでください。
 
-DMGを開き、LumviaをApplicationsへドラッグして、アプリケーションのLumviaを開きます。Python・Node・Homebrew・Dockerのインストール、URLの入力、初回アカウントの登録は不要です。ZIP版も用意します。対応する版は →「このMacについて」のチップ／プロセッサで確認できます。
+### ZIPを解凍したら
 
-**現在はTEST版です。AppleのDeveloper ID署名・公証は未完了で、ダウンロード後にmacOSが起動を拒否することがあります。一般向けの完成版ではありません。** macOS 12以降をビルド対象にしています。Monterey 12.7.6のIntel実機では、ブラウザー経由で動画追加・再生、Cell、Shelf、再起動後のデータ保持を確認しました。アプリ内画面の修正は再検証が必要です。配布と保存先は[Macアプリの説明](docs/development/MAC_APP.md)を参照してください。
+1. 解凍した中の **Lumvia（`Lumvia.app`）** を確認します。
+2. 普段使う場合は「アプリケーション」へ移してから開きます。DMGの場合も、Lumviaを「アプリケーション」へドラッグします。
+3. 開き方に迷った場合は、このページとリリースの説明を確認してください。
 
-## 主な機能
+**案内の追加について：** 次回配布するMac用ZIPはOS・CPU名の付いたフォルダーにまとめ、最初に **`00_はじめに_READ_ME_FIRST.html`** とTXTで日本語・英語の起動手順を読める構成にします。上の公開済みTEST 6のファイルには、この新しい案内はまだ入っていません。ソースコードZIPには [`00_START_HERE.html`](00_START_HERE.html) とTXTを追加しています。
 
-- オンライン時の保存リンク一斉点検。切れたリンクと関連Cells・Shelfへの登録を確認してまとめて削除。通信失敗・ログイン制限・オフライン時は削除しません。
-- MP4/MOVなどの複数動画追加、FFmpegによるプレビュー・サムネイル生成、認証付き再生。
-- 残したい区間のCell保存・編集・再生、5分以内のMP4書き出し。
-- 動画・CellのShelf整理、名前・色・ヘッダー画像、一括追加・削除、お気に入り・タグ・メモ検索。
-- ローカルのシーン切り替わり検出、ジョブ進捗・再試行。
-- YouTube・X・Instagram・TikTokの共有URL整理、公式プレーヤー、取得可能な公開動画の期限付き場面プレビュー。
-- ローカルパスワード認証、所有者単位の認可、CSRFとOrigin検査、処理・容量・アクセス頻度の上限。
+Mac版にはPython・Node.js・データベース・FFmpegを同梱しています。利用者が開発ツールを入れたり、コマンドやURLを入力したりする必要はありません。現在のTEST版がmacOSに拒否された場合は、保護設定を変更せず、[リリースの説明](https://github.com/k-botsui/lumvia/releases/tag/v0.2.0-mac-test.6)を確認してください。
 
-クラウド同期・動画本体の他者共有・共同利用・人物探索・文字起こしは現行版の対象外です。外部リンクのリンク集は、内容を確認してテキストファイルで共有・読み込みできます。リンク追加だけでは動画本体を永続保存しません。外部プレーヤー・メタデータ・一時プレビューには配信元への通信が発生します。アップロードした動画の解析はローカルで行います。
+### 検証範囲
 
-## 技術スタックと対応環境
+Mac両版の同梱サービスと基本操作はテストしています。ローカルのIntel版実行はRosettaでの検証です。macOS 12以降はビルド対象で、全OSの動作保証ではありません。クリーンなMacで実ダウンロードした後の通常起動、Windowsの導入・動作は未確認です。[Mac版の詳細](docs/development/MAC_APP.md)
 
-| 層 | 使用技術 |
-| --- | --- |
-| Web | Next.js 16 / React 19 / TypeScript / TanStack Query / Three.js |
-| API | Python 3.13 / FastAPI / SQLAlchemy / Alembic |
-| 非同期処理 | Celery / RabbitMQ 4 |
-| 保存・制限 | PostgreSQL 17 / ローカルファイル / Redis |
-| 映像処理 | FFmpeg / FFprobe |
-| 検証 | pytest / Playwright / Ruff / Oxlint / Prettier / Gitleaks |
+## できること
 
-Node.js 24、pnpm 11.25.0、Python 3.13を使用します。macOSネイティブ起動はApple SiliconとHomebrewを前提とします。Windows 11・Linux・他のMacではDocker Compose方式を使用してください。Dockerの実起動とスマホ実機の検証範囲は[検証記録](docs/development/VERIFICATION.md)に記載しています。
+- **動画・リンクを保存** — 自分の動画と外部リンクを一覧で管理。
+- **Cellを作成** — 好きな区間を保存・編集・再生し、5分以内のMP4に書き出し。
+- **Shelfで整理** — 動画・Cellをまとめ、カバー・色・タグ・メモ・お気に入りで探す。
+- **リンク集を共有** — 内容を確認してTXTに書き出し、別のLumviaへ読み込み。
+- **リンクを一斉点検** — オンライン時に到達状態を確認。切れたと再確認できたリンクは、関連CellとShelfへの登録を確認してまとめて削除。
 
-## セットアップと起動
-
-リポジトリを取得したあと、プロジェクト直下で実行します。Homebrewを用意したApple Silicon Mac向けです。
-
-```sh
-brew install node pnpm python@3.13 postgresql@17 rabbitmq redis ffmpeg
-python3.13 -m venv .venv
-.venv/bin/python -m pip install --upgrade pip
-.venv/bin/pip install -r apps/api/requirements.txt
-pnpm --dir apps/web install --frozen-lockfile
-pnpm --dir apps/web build
-python3 scripts/run_local.py start
-```
-
-初回起動は私的データディレクトリに設定・ランダムな秘密鍵・初期パスワードを生成し、DB migrationと初期アカウント作成を行います。ブラウザーで `http://127.0.0.1:3000` を開き、`ログイン情報を開く.command` で初期アカウントを確認します。初回ログイン後は設定からパスワードを変更してください。
-
-- 起動: `python3 scripts/run_local.py start` または `Lumviaを起動.command`
-- 開発モード: 通常版を停止して `python3 scripts/run_local.py start --dev`
-- 停止: `python3 scripts/run_local.py stop` または `Lumviaを停止.command`
-- 画面変更後: `pnpm --dir apps/web build` を実行して通常版を再起動
-
-Nodeを検出できない場合は `LUMVIA_NODE` に実行ファイルのパスを指定します。停止しても動画・DBは残ります。自動起動サービスは登録しません。
-
-WindowsではPython 3.13とDocker Desktopを用意して `Lumvia-start.cmd`、ログイン情報は `Lumvia-login.cmd`、停止は `Lumvia-stop.cmd` を使用します。Docker Compose v2.20以上向けの[導入・保存先](docs/development/DOCKER.md)を参照してください。
-
-任意の[スマホ用HTTPS構成](docs/development/MOBILE.md)は、同じ私的Wi-Fiから自分のPCを利用します。通常起動でLAN公開は行いません。HTTPS構成でもローカルパスワードで認証し、Secure cookie・CSRF・Origin検査を維持します。スマホ単体のバックエンド・オフライン保存には対応しません。
+通信エラー・ログイン制限などは、削除できる「リンク切れ」として扱いません。オフライン時は点検と、この点検結果からの削除を実行しません。外部動画の一時プレビューは配信元・取得形式・同梱codecの対応範囲に依存します。
 
 ## 使い方
 
-1. 「追加する」で動画を選ぶか、自作の12秒サンプルを取り込みます。
-2. 動画を開き、「Cellを作成」で開始・終了を選び、試聴して保存します。
-3. 動画・CellをShelfへまとめ、名前・タグ・メモで探します。
-4. 共有リンクは「リンクを貼る」に1行1件、最大20件入力します。
+1. 「追加する」から動画を選ぶか、共有リンクを貼り付けます。
+2. 動画を開き、「Cellを作成」で保存したい区間を選びます。
+3. 動画・CellをShelfへ追加し、名前・タグ・メモで探します。
+4. リンク集を渡す場合は「リンク集を共有」で内容を確認し、受け取った側は「リンク集を読み込む」を選びます。
 
-Macの「写真」からJPEGだけが渡る場合は、未編集のオリジナルをMOV/MP4として書き出してから追加します。Live PhotosはMOV部分を使用します。iCloudの動画は本体をダウンロードしてから選んでください。
+[リンク集の形式と共有範囲](docs/development/LINK_SHARING.md) · [詳細な操作と開発者向け手順](docs/development/SETUP_JA.md)
 
-## リンク集の共有・読み込み
+## データとプライバシー
 
-ライブラリやShelfの「リンク集を共有」「このShelfを共有」で確認画面を開きます。選択モードで選んだ項目だけの共有も可能です。外部リンク・タイトル・タグ・お気に入り・Cellの区間・Shelf構成を含み、アップロードした動画本体、認証情報、ローカルパスは含めません。カバー画像とShelfヘッダーは、共有する権利・個人情報を確認して「画像も含める」を選んだ場合だけ、小さなJPEGとしてTXT内に格納します。画像のEXIF等は除去します。メモとShelfの説明は初期状態で除外します。
+追加した動画・Cell・Shelfは自分のパソコンに保存します。Mac配布アプリの保存先は `~/Library/Application Support/Lumvia Desktop/` です。アプリの交換では、このデータを削除しません。完全バックアップは、アプリを終了して保存先全体を保全してください。リンク集のTXTは動画本体を含む完全バックアップではありません。
 
-内容と除外項目を確認し、共有してよいことにチェックを入れると `lumvia-links.txt` を保存できます。UTF-8のJSONデータを格納したテキストファイルで、実行コードや圧縮ファイルではありません。メール・LINE等ではファイルを添付し、受け取った人は「リンク集を読み込む」でファイルを選んで確認・追加します。全文のコピー・貼り付けも可能です。短いリンク集は「SNS用URLをコピー」で、そのURLをXなどへ投稿できます。受信者は公開ページからファイルを保存します。データはURLのフラグメント内に格納され、窓口サーバーには保存しません。URLを知っている人は内容を閲覧できます。2000文字を超えるリンク集はファイルで渡すか、利用者が用意したファイルの公開URLを投稿します。送信先の添付制限・文字数制限・セキュリティ判定を回避する仕組みではありません。
+外部プレーヤー・リンクのメタデータ・一時プレビュー・リンク点検には、配信元などへの通信が必要です。リンク追加だけで動画本体を永続保存することはありません。リンク集の画像・メモ等は共有画面で確認できます。アップロードした動画本体や認証情報を、リンク集に含めません。
 
-同じ動画・投稿のリンクはURL表記違いを正規化して再利用し、同じ区間のCellも再利用します。既存のタイトル・タグ・メモは上書きしません。同じリンク集の再読み込み・同時送信でも二重登録しません。画像付きファイルは新形式v2、画像なしはv1です。v2の読み込みには対応した更新版が必要です。既存のカバー・ヘッダーは上書きせず、画像がない項目へ追加します。新しいShelfと同名の既存Shelfの内容が異なる場合は名前を分けて保存します。削除した項目は同じファイルから再追加できます。読み込み時には外部サイトへ自動接続せず、動画や画像は取得しません。
+## 利用条件
 
-リンク集のバックアップにも使えますが、アップロード動画や画像を含む完全バックアップではありません。完全バックアップは[別の手順](docs/development/BACKUP.md)を使用してください。形式・上限・復元の範囲は[リンク集の仕様](docs/development/LINK_SHARING.md)を参照してください。
+このリポジトリは **個人の私的・非商用利用を無料で許可**しています。オープンソースではありません。自分が所有・管理する端末へのダウンロード、インストール、未改変ソースのビルド・実行、私的バックアップができます。設定変更や初期認証情報の生成も可能です。**プログラムの改変・再配布、商用利用、勤務先・組織での利用、他者へのサービス提供には別途許可が必要**です。[LICENSE](LICENSE)と[第三者の依存・素材](THIRD_PARTY_NOTICES.md)を確認してください。自分の動画・写真・メモや、それらから作成した出力の権利は、このライセンスでは制限しません。
 
-## 設定と必要な環境変数
+## 開発・技術資料
 
-`.env.example` は説明用です。通常の起動スクリプトは設定を生成するので、リポジトリ内に `.env` を作る必要はありません。APIは私的保存先の `config.env`、Dockerは `compose.env` を読みます。環境変数はファイルの値を上書きします。
-
-| 変数 | 必須・既定値・用途 |
-| --- | --- |
-| `DATABASE_URL` | API必須。ローカルPostgreSQL接続。起動時に生成 |
-| `SECRET_KEY` | API必須、32文字以上。起動時にランダム生成 |
-| `APP_URL` | `http://127.0.0.1:3000`。HTTPS構成では自分の私的IPと8443番 |
-| `ENVIRONMENT` | `development`。HTTPS構成は `production`、テストは `test` |
-| `LOCAL_NETWORK` | `false`。私的Wi-FiのHTTPS接続のみ明示的に有効化 |
-| `BROKER_URL` / `REDIS_URL` | ローカルのキュー・レート制限接続。通常は自動設定 |
-| `API_INTERNAL_URL` | WebからAPIへの接続。既定 `http://127.0.0.1:8000` |
-| `STORAGE_ROOT` | 私的保存先の `storage/`。永続動画の保存先 |
-| `REFERENCE_PREVIEW_ROOT` | 私的保存先の `reference-previews/`。永続保存先と重複不可 |
-| `FFMPEG_BIN` / `FFPROBE_BIN` | 既定 `ffmpeg` / `ffprobe` |
-| `POSTGRES_PASSWORD` / `RABBITMQ_PASSWORD` | Docker必須。設定スクリプトが生成 |
-| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | 初期アカウント作成時のみ必要。起動スクリプトが設定 |
-| `SUPPORT_GATEWAY_URL` | 運営側のCloudflare窓口のHTTPS URL。トークンはアプリに設定しない |
-| `SUPPORT_GITHUB_REPOSITORY` | 既定 `k-botsui/lumvia`。共通窓口からIssue投稿。明示的に空へ設定すると無効 |
-
-容量・件数・タイムアウト・セッション期間の変数は [.env.example](.env.example) と [Settings](apps/api/app/config.py) を参照してください。S3・OIDC・外部DB/キューは現行設定で拒否します。秘密値をREADME、Issue、ログ添付へ書かないでください。
-
-## データの保存と上限
-
-| OS | 私的データの基点 |
-| --- | --- |
-| macOS | `~/Library/Application Support/Lumvia/` |
-| Windows | `%LOCALAPPDATA%\Lumvia\` |
-| Linux | `$XDG_DATA_HOME/lumvia/` または `~/.local/share/lumvia/` |
-
-設定・初期認証情報、DB、動画、プレビュー、ログ、バックアップはソースと分離します。DockerのDB・動画は専用volumeに保存します。通常のWeb待ち受けはloopbackだけです。この構成をインターネットへ公開しないでください。
-
-標準上限は1本2 GiB・60分・4096px、元動画合計10 GiB・500本、Cell合計2,000件・1件5分です。一時公開動画は30分で期限切れとなり、1本32 MB・合計256 MBまでキャッシュします。バックアップは[手順と復元](docs/development/BACKUP.md)を参照してください。バックアップにはDB内の認証・個人データが含まれ得ます。
-
-## ディレクトリ構成
-
-```text
-apps/
-  api/app/          認証・動画・Cell・Shelf・解析・ジョブのAPI
-  api/migrations/   Alembic migration
-  web/              Next.jsの画面・同一Origin APIプロキシ
-packages/
-  api-client/       型付きAPIクライアント
-  shared-types/     共有型
-infrastructure/docker/  Dockerfile・任意のHTTPSゲートウェイ
-scripts/            起動・設定・バックアップ・公開検査
-tests/             単体・統合・E2Eテスト
-docs/              設計・API・運用・検証記録
-```
-
-`marketing/`、`docs/private/`、作業スクリーンショット、私的設定・動画・生成物はGit公開対象外です。詳細は[公開仕様](docs/development/PUBLICATION.md)を参照してください。
-
-## 検証
-
-```sh
-.venv/bin/ruff check apps/api scripts tests
-.venv/bin/ruff format --check apps/api scripts tests
-.venv/bin/python scripts/test.py -q
-pnpm --dir apps/web typecheck
-pnpm --dir apps/web lint
-pnpm --dir apps/web exec prettier --check app components lib proxy.ts next.config.ts .oxlintrc.json
-pnpm --dir apps/web build
-pnpm --dir apps/web audit
-.venv/bin/pip-audit --disable-pip --no-deps -r apps/api/requirements.txt
-python3 scripts/check_publication.py
-python3 scripts/scan_secrets.py
-```
-
-テストは専用の `lumvia_test` DBと `test-storage` を使用し、通常DBへの破壊的fixtureを拒否します。E2Eは明示的な使い捨てアカウントの `LUMVIA_E2E_EMAIL` / `LUMVIA_E2E_PASSWORD` を設定して `pnpm --dir apps/web test:e2e` を実行します。
-
-現在の検証結果・未検証範囲は[検証記録](docs/development/VERIFICATION.md)へ記載します。設計は[アーキテクチャ](docs/architecture/OVERVIEW.md)、[API](docs/api/README.md)、[ADR](docs/adr/)、開発手順は[CONTRIBUTING](CONTRIBUTING.md)、脆弱性報告は[SECURITY](SECURITY.md)を参照してください。
+[開発セットアップ（日本語）](docs/development/SETUP_JA.md) · [Developer setup (English)](docs/development/SETUP_EN.md) · [アーキテクチャ](docs/architecture/OVERVIEW.md) · [API](docs/api/README.md) · [セキュリティ](SECURITY.md) · [変更・協力について](CONTRIBUTING.md)
 
 ## お問い合わせ
 
-設定の「お問い合わせ」で件名と内容を入力し、「送信」でGitHub Issueを作成します。利用者のGitHubログインは不要です。送信する文章は公開され、動画・写真・ログ・ライブラリは添付しません。運営側の無料Cloudflare窓口の準備・公開が必要です。[作成・接続・保存の範囲と現在の準備状況](docs/development/SUPPORT.md)を参照してください。
+[GitHub Issues](https://github.com/k-botsui/lumvia/issues)をご利用ください。Issueやアプリ内の問い合わせから送信する文章は公開されます。個人の動画・認証情報・秘密を含むログは投稿しないでください。
