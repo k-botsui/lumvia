@@ -15,7 +15,7 @@
 | 映像処理   | FFmpeg / FFprobe                                               |
 | 検証       | pytest / Playwright / Ruff / Oxlint / Prettier / Gitleaks      |
 
-Node.js 24、pnpm 11.25.0、Python 3.13を使用します。macOSネイティブ起動はApple SiliconとHomebrewを前提とします。Windows 11・Linux・他のMacではDocker Compose方式を使用してください。Dockerの実起動とスマホ実機の検証範囲は[検証記録](../../docs/development/VERIFICATION.md)に記載しています。
+Node.js 24、pnpm 11.25.0、Python 3.13を使用します。macOSネイティブ起動はApple SiliconとHomebrewを前提とします。他のOS向けにはDocker Compose構成があります。Windowsのスタンドアロン配布・実行は未実装・未検証です。以下のWindowsコマンドはPython・Dockerを導入する開発構成の手順で、一般利用の完成アプリではありません。Dockerの実起動とスマホ実機の検証範囲は[検証記録](../../docs/development/VERIFICATION.md)に記載しています。
 
 ## セットアップと起動
 
