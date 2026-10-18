@@ -8,7 +8,7 @@ Lumviaは、自分の動画とYouTube・X・Instagram・TikTokなどのリンク
 
 ## トレーラー
 
-<video src="https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.7/Lumvia-Trailer-V7.mp4" controls width="960" poster="https://raw.githubusercontent.com/k-botsui/lumvia/main/demo/lumvia-trailer-v7-poster.jpg"></video>
+https://github.com/user-attachments/assets/2d9ee76a-45fb-4727-9154-480e4642e751
 
 [トレーラーを開く（28秒・60fps）](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.7/Lumvia-Trailer-V7.mp4)
 
