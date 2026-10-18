@@ -519,7 +519,7 @@ def build(arch, resume=False):
         "CFBundleIconFile": "Lumvia.icns",
         "CFBundlePackageType": "APPL",
         "CFBundleShortVersionString": "0.2.0",
-        "CFBundleVersion": "6",
+        "CFBundleVersion": "7",
         "LSMinimumSystemVersion": "12.0",
         "NSHighResolutionCapable": True,
         "NSAppTransportSecurity": {"NSAllowsArbitraryLoads": True},

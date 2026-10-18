@@ -1,4 +1,6 @@
 'use client';
+import { motion } from 'motion/react';
+import { useEffect, useState } from 'react';
 import { Heart, Play, Layers, Film, Loader2, AlertCircle } from 'lucide-react';
 import { Media, time, date } from '@/lib/api';
 export function MediaCard({
@@ -18,9 +20,34 @@ export function MediaCard({
   onSelect?: (shift?: boolean) => void;
   onContextMenu?: (event: React.MouseEvent) => void;
 }) {
+  const [hovered, setHovered] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(true);
+  useEffect(() => {
+    const query = matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setReduceMotion(query.matches);
+    update();
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, []);
   return (
-    <article className={`media-card ${selected && selecting ? 'item-selected' : ''}`}>
-      <div className="thumbnail">
+    <motion.article
+      data-media-surface={media.id}
+      className={`media-card ${selected && selecting ? 'item-selected' : ''}`}
+      whileHover={{ y: -5 }}
+      whileTap={{ scale: 0.985 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+    >
+      <div
+        className="thumbnail"
+        onPointerEnter={(event) => {
+          if (event.pointerType === 'mouse' && !reduceMotion && !selecting) setHovered(true);
+        }}
+        onPointerLeave={() => {
+          setHovered(false);
+          setPlaying(false);
+        }}
+      >
         <button
           className="thumbnail-open"
           onContextMenu={onContextMenu}
@@ -54,6 +81,20 @@ export function MediaCard({
                 <Film size={32} />
               )}
             </div>
+          )}
+          {hovered && !reduceMotion && media.assets.preview && (
+            <video
+              className={`card-motion-preview ${playing ? 'is-playing' : ''}`}
+              src={media.assets.preview}
+              muted
+              loop
+              playsInline
+              autoPlay
+              preload="none"
+              aria-hidden="true"
+              onPlaying={() => setPlaying(true)}
+              onError={() => setPlaying(false)}
+            />
           )}
           {!selecting && (
             <span className="play-overlay">
@@ -116,6 +157,6 @@ export function MediaCard({
           ))}
         </div>
       )}
-    </article>
+    </motion.article>
   );
 }

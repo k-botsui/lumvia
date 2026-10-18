@@ -227,7 +227,13 @@ export function MediaDetail({
       />
     );
   return (
-    <Modal open onClose={onClose} title={m?.title ?? '動画を読み込み中…'} wide>
+    <Modal
+      open
+      onClose={onClose}
+      title={m?.title ?? '動画を読み込み中…'}
+      wide
+      transitionId={`media-surface-${id}`}
+    >
       {media.isError ? (
         <div className="error-message" role="alert">
           {media.error.message}

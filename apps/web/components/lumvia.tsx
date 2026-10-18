@@ -1,4 +1,5 @@
 'use client';
+import { AnimatePresence, LayoutGroup, MotionConfig, motion } from 'motion/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { QueryClient, QueryClientProvider, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -48,7 +49,9 @@ import {
 } from '@/lib/api';
 import { Modal } from './ui/dialog';
 import { Logo } from './brand';
-import { HomeSculpture } from './home-sculpture';
+import { LibraryWelcome } from './library-welcome';
+import { InterfaceMotion } from './interface-motion';
+import { captureDialogOrigin } from '@/lib/dialog-origin';
 import { Login } from './login';
 import { Organize } from './organize';
 import { SettingsView } from './settings-view';
@@ -88,7 +91,11 @@ export function Lumvia() {
   );
   return (
     <QueryClientProvider client={client}>
-      <App />
+      <MotionConfig reducedMotion="user">
+        <LayoutGroup id="lumvia">
+          <App />
+        </LayoutGroup>
+      </MotionConfig>
     </QueryClientProvider>
   );
 }
@@ -345,6 +352,10 @@ function App() {
     setSearchInput(values.q || '');
   }
   function openMedia(id: string, start = 0, end?: number) {
+    captureDialogOrigin(id);
+    const summary =
+      media.data?.items.find((item) => item.id === id) ?? results.data?.media.find((item) => item.id === id);
+    if (summary) query.setQueryData(['media-detail', id], summary);
     const p = new URLSearchParams(params);
     p.delete('cell');
     p.set('media', id);
@@ -604,6 +615,7 @@ function App() {
   );
   return (
     <div className="app-shell">
+      <InterfaceMotion location={`${view}:${mode}:${shelfId}:${collectionId}:${search}`} />
       <a className="skip-link" href="#main-content">
         本文へ移動
       </a>
@@ -662,9 +674,17 @@ function App() {
           ].map((n) => (
             <button
               key={n.id}
+              aria-current={view === n.id && !shelfId && !collectionId && !search ? 'page' : undefined}
               className={`nav-item ${view === n.id && !shelfId && !collectionId && !search ? 'active' : ''} ${n.id === 'add' ? 'nav-add' : ''}`}
               onClick={() => navigate({ view: n.id })}
             >
+              {view === n.id && !shelfId && !collectionId && !search && (
+                <motion.span
+                  className="navigation-highlight"
+                  layoutId="primary-navigation"
+                  transition={{ type: 'spring', stiffness: 400, damping: 36 }}
+                />
+              )}
               <n.icon size={19} />
               <span>{n.label}</span>
               {n.id === 'library' && <small>{stats.data?.media_count ?? 0}</small>}
@@ -672,7 +692,7 @@ function App() {
           ))}
         </nav>
         <div className="shelf-heading">
-          <span>自分のShelf</span>
+          <span>Shelf</span>
           <button
             className="icon-button"
             aria-label="Shelfを作成"
@@ -701,15 +721,11 @@ function App() {
           <div className="storage-meter">
             <div>
               <HardDrive size={15} />
-              <span>ライブラリの容量</span>
+              <span>このデバイスに保存</span>
             </div>
-            <progress
-              max={10 * 1024 ** 3}
-              value={stats.data?.size_bytes ?? 0}
-              aria-label="元動画の保存容量"
-            />
+
             <small>
-              {bytes(stats.data?.size_bytes ?? 0)} / 10 GB<span>元動画</span>
+              {bytes(stats.data?.size_bytes ?? 0)} 使用中<span>元動画</span>
             </small>
           </div>
         </div>
@@ -779,7 +795,14 @@ function App() {
             />
           </div>
         </header>
-        <main id="main-content" className="main-content">
+        <motion.main
+          key={`${view}:${mode}:${shelfId}:${collectionId}:${search}`}
+          id="main-content"
+          className="main-content"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: 'spring', stiffness: 260, damping: 28 }}
+        >
           {focusedGroup?.header_url && (
             <ShelfHeaderImage
               className="shelf-page-header"
@@ -874,80 +897,22 @@ function App() {
           )}
           {view === 'home' && !search && (
             <>
-              <section className="home-intro">
-                <div className="home-intro-copy">
-                  <h1 className="home-wordmark" aria-label="Lumvia">
-                    Lumvia
-                  </h1>
-                  <div className="home-library-counts" aria-label="ライブラリの件数">
-                    <button onClick={() => navigate({ view: 'library', tab: 'videos' })}>
-                      <strong>{stats.data?.media_count ?? '—'}</strong>
-                      <span>動画</span>
-                    </button>
-                    <button onClick={() => navigate({ view: 'library', tab: 'cells' })}>
-                      <strong>{stats.data?.cell_count ?? '—'}</strong>
-                      <span>Cells</span>
-                    </button>
-                    <button onClick={() => navigate({ view: 'collections' })}>
-                      <strong>{stats.data?.shelf_count ?? '—'}</strong>
-                      <span>Shelf</span>
-                    </button>
-                  </div>
-                  <div className="home-intro-actions">
-                    <button className="button primary" onClick={() => navigate({ view: 'add' })}>
-                      <Plus size={16} /> 動画を追加
-                    </button>
-                    {!!stats.data?.media_count && (
-                      <button className="text-button" onClick={() => navigate({ view: 'library' })}>
-                        ライブラリを開く <ChevronRight size={15} />
-                      </button>
-                    )}
-                  </div>
-                </div>
-                <HomeSculpture />
-              </section>
-              <ContentRail
-                title="最近追加した動画"
-                more={
-                  <button className="text-button" onClick={() => navigate({ view: 'library' })}>
-                    すべて見る <ChevronRight size={15} />
-                  </button>
-                }
-              >
-                {media.isPending ? (
-                  <SkeletonCards />
-                ) : media.isError ? (
-                  <LoadError message={media.error.message} retry={() => media.refetch()} />
-                ) : media.data?.items.length ? (
-                  media.data.items.map((m) => (
-                    <MediaCard
-                      key={m.id}
-                      media={m}
-                      onContextMenu={(event) => itemContext(event, m)}
-                      onOpen={() => openMedia(m.id)}
-                      onFavorite={() =>
-                        act(() =>
-                          api('/media/' + m.id, {
-                            method: 'PATCH',
-                            body: JSON.stringify({ favorite: !m.favorite }),
-                          }),
-                        )
-                      }
-                    />
-                  ))
-                ) : (
-                  <div className="welcome-empty">
-                    <Film size={27} />
-                    <div>
-                      <h3>動画を追加</h3>
-                      <p>リンクや動画ファイルを追加できます。</p>
-                    </div>
-                    <button className="text-button" onClick={() => navigate({ view: 'add' })}>
-                      動画を追加 <Plus size={16} />
-                    </button>
-                  </div>
-                )}
-              </ContentRail>
+              <LibraryWelcome
+                items={media.data?.items ?? []}
+                previewActive={!mediaId && !cellId}
+                loading={media.isPending}
+                error={media.isError ? media.error.message : undefined}
+                onRetry={() => {
+                  void media.refetch();
+                }}
+                counts={{
+                  videos: stats.data?.media_count,
+                  cells: stats.data?.cell_count,
+                  shelves: stats.data?.shelf_count,
+                }}
+                onOpen={openMedia}
+                onNavigate={navigate}
+              />
               <ContentRail
                 title="保存したCells"
                 kind="cells"
@@ -1330,7 +1295,7 @@ function App() {
               所有者だけが利用できます
             </span>
           </footer>
-        </main>
+        </motion.main>
       </div>
       {toast && (
         <div className="toast" role="status">
@@ -1342,30 +1307,32 @@ function App() {
         </div>
       )}
       {context && <ItemContextMenu {...context} onClose={closeContext} />}
-      {mediaId && !cellId && (
-        <MediaDetail
-          key={mediaId}
-          id={mediaId}
-          initialTime={Number(params.get('t') || 0)}
-          initialEnd={params.has('end') ? Number(params.get('end')) : undefined}
-          onClose={closeMedia}
-          onChanged={refresh}
-          notify={setToast}
-          onOrganize={setOrganize}
-          onOpenCell={openCell}
-        />
-      )}
-      {cellId && (
-        <CellDetail
-          key={cellId}
-          id={cellId}
-          onClose={closeMedia}
-          onChanged={refresh}
-          notify={setToast}
-          onOrganize={setOrganize}
-          onOpenMedia={openMedia}
-        />
-      )}
+      <AnimatePresence>
+        {mediaId && !cellId && (
+          <MediaDetail
+            key={mediaId}
+            id={mediaId}
+            initialTime={Number(params.get('t') || 0)}
+            initialEnd={params.has('end') ? Number(params.get('end')) : undefined}
+            onClose={closeMedia}
+            onChanged={refresh}
+            notify={setToast}
+            onOrganize={setOrganize}
+            onOpenCell={openCell}
+          />
+        )}
+        {cellId && (
+          <CellDetail
+            key={cellId}
+            id={cellId}
+            onClose={closeMedia}
+            onChanged={refresh}
+            notify={setToast}
+            onOrganize={setOrganize}
+            onOpenMedia={openMedia}
+          />
+        )}
+      </AnimatePresence>
       {batchOpen && (
         <BatchOrganize
           items={[...selectedItems.values()]}
@@ -1399,7 +1366,7 @@ function App() {
           setError('');
         }}
         title={`Shelfを${groupEditor?.group ? '編集' : '作成'}`}
-        description="動画とCellを整理する、自分だけの棚を作ります。"
+        description="名前と色を設定します。"
       >
         <form
           className="form"
