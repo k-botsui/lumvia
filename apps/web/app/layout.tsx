@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
-import './brand-refresh.css';
+import './atelier.css';
+import './studio.css';
 
 const rounded = localFont({
   src: '../public/fonts/quicksand-variable.ttf',
@@ -24,7 +25,12 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ja" className={rounded.variable}>
-      <body>{children}</body>
+      <body>
+        {process.env.LUMVIA_DESIGN_PREVIEW === '1' && (
+          <div className="design-preview-badge">DESIGN PREVIEW · サンプルデータ / 変更は一時保存</div>
+        )}
+        {children}
+      </body>
     </html>
   );
 }

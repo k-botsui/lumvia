@@ -1,4 +1,5 @@
 'use client';
+import { motion } from 'motion/react';
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -48,7 +49,14 @@ export function ContentRail({
     });
   }
   return (
-    <section className={`content-rail-section rail-${kind}`} aria-labelledby={id}>
+    <motion.section
+      className={`content-rail-section rail-${kind}`}
+      aria-labelledby={id}
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.1 }}
+      transition={{ type: 'spring', stiffness: 240, damping: 28 }}
+    >
       <div className="section-heading">
         <h2 id={id}>{title}</h2>
         <div className="rail-actions">
@@ -96,6 +104,6 @@ export function ContentRail({
       >
         {children}
       </div>
-    </section>
+    </motion.section>
   );
 }

@@ -747,6 +747,14 @@
       "homepage": "https://101arrowz.github.io/fflate"
     },
     {
+      "name": "framer-motion",
+      "versions": [
+        "14.3.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://motion.dev"
+    },
+    {
       "name": "gensync",
       "versions": [
         "1.0.0-beta.2"
@@ -857,6 +865,30 @@
       ],
       "license": "MIT",
       "homepage": "https://github.com/zeux/meshoptimizer"
+    },
+    {
+      "name": "motion",
+      "versions": [
+        "14.3.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://motion.dev"
+    },
+    {
+      "name": "motion-dom",
+      "versions": [
+        "14.3.0"
+      ],
+      "license": "MIT",
+      "homepage": "https://motion.dev"
+    },
+    {
+      "name": "motion-utils",
+      "versions": [
+        "14.1.1"
+      ],
+      "license": "MIT",
+      "homepage": "https://motion.dev"
     },
     {
       "name": "ms",
@@ -1970,5 +2002,6 @@
       "license": "MIT",
       "homepage": "https://github.com/poppinss/youch-core#readme"
     }
-  ]
+  ],
+  "webAdditionsVerified": "2026-10-18: motion, framer-motion, motion-dom, motion-utils"
 }
