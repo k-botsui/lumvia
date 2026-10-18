@@ -8,7 +8,9 @@ Lumviaは、自分の動画とYouTube・X・Instagram・TikTokなどのリンク
 
 ## トレーラー
 
-https://github.com/user-attachments/assets/170dd366-b2b7-41fc-bb91-84974787f355
+<video src="https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.7/Lumvia-Trailer-V7.mp4" controls width="960" poster="https://raw.githubusercontent.com/k-botsui/lumvia/main/demo/lumvia-trailer-v7-poster.jpg"></video>
+
+[トレーラーを開く（28秒・60fps）](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.7/Lumvia-Trailer-V7.mp4)
 
 [映像・音楽のクレジット](demo/README.md)
 
@@ -20,8 +22,8 @@ https://github.com/user-attachments/assets/170dd366-b2b7-41fc-bb91-84974787f355
 
 | お使いのパソコン                     | 配布状況・ダウンロード                                                                                                                                                                                                                |
 | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Mac — Apple Silicon（Apple製チップ） | [TEST版ZIP](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.6/Lumvia-Mac-AppleSilicon-TEST.zip) · [DMG](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.6/Lumvia-Mac-AppleSilicon-TEST.dmg) |
-| Mac — Intel                          | [TEST版ZIP](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.6/Lumvia-Mac-Intel-TEST.zip) · [DMG](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.6/Lumvia-Mac-Intel-TEST.dmg)               |
+| Mac — Apple Silicon（Apple製チップ） | [TEST版ZIP](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.7/Lumvia-Mac-AppleSilicon-TEST.zip) · [DMG](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.7/Lumvia-Mac-AppleSilicon-TEST.dmg) |
+| Mac — Intel                          | [TEST版ZIP](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.7/Lumvia-Mac-Intel-TEST.zip) · [DMG](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.7/Lumvia-Mac-Intel-TEST.dmg)               |
 | Windows                              | デスクトップ配布版は準備中です。Mac用ZIPでは起動できません。                                                                                                                                                                          |
 
 Macの種類は ** → このMacについて → チップ／プロセッサ** で確認できます。`Source code (zip)` と `Code → Download ZIP` はプログラムのソースコードで、完成したアプリではありません。通常利用では上のOS別ファイルを選んでください。
@@ -32,9 +34,9 @@ Macの種類は ** → このMacについて → チップ／プロセッサ*
 2. 普段使う場合は「アプリケーション」へ移してから開きます。DMGの場合も、Lumviaを「アプリケーション」へドラッグします。
 3. 開き方に迷った場合は、このページとリリースの説明を確認してください。
 
-**案内の追加について：** 次回配布するMac用ZIPはOS・CPU名の付いたフォルダーにまとめ、最初に **`00_はじめに_READ_ME_FIRST.html`** とTXTで日本語・英語の起動手順を読める構成にします。上の公開済みTEST 6のファイルには、この新しい案内はまだ入っていません。ソースコードZIPには [`00_START_HERE.html`](00_START_HERE.html) とTXTを追加しています。
+**同梱案内：** Mac TEST 7のZIPはOS・CPU名の付いたフォルダーにまとめ、**`00_はじめに_READ_ME_FIRST.html`** とTXTで日本語・英語の起動手順を読めます。ソースコードZIPには [`00_START_HERE.html`](00_START_HERE.html) とTXTを同梱しています。
 
-Mac版にはPython・Node.js・データベース・FFmpegを同梱しています。利用者が開発ツールを入れたり、コマンドやURLを入力したりする必要はありません。現在のTEST版がmacOSに拒否された場合は、保護設定を変更せず、[リリースの説明](https://github.com/k-botsui/lumvia/releases/tag/v0.2.0-mac-test.6)を確認してください。
+Mac版にはPython・Node.js・データベース・FFmpegを同梱しています。利用者が開発ツールを入れたり、コマンドやURLを入力したりする必要はありません。現在のTEST版がmacOSに拒否された場合は、保護設定を変更せず、[リリースの説明](https://github.com/k-botsui/lumvia/releases/tag/v0.2.0-mac-test.7)を確認してください。
 
 ### 検証範囲
 

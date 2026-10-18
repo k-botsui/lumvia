@@ -1,0 +1,65 @@
+{
+  "durationSeconds": 28,
+  "audioPacketsIdentical": true,
+  "files": {
+    "lumvia-trailer-v7-1080p.mp4": {
+      "sha256": "b80e30edac0ee2caa455dbbcdfd4b9595a8ff5be5d5d48527bdb6587010a2057",
+      "frames": 1680,
+      "fps": 60,
+      "fullDecode": true
+    },
+    "lumvia-trailer-v7-preview.mp4": {
+      "sha256": "785850806a200b51ab41625b47a781cc729f7cc3ada50eb79afcac3bdb752b25",
+      "frames": 1680,
+      "fps": 60,
+      "fullDecode": true
+    }
+  },
+  "cadence": {
+    "cafe_into_card": {
+      "frames": 48,
+      "meanFrameDifference": 7.011609781323876,
+      "longestNearStillRun": 0
+    },
+    "library_into_video": {
+      "frames": 78,
+      "meanFrameDifference": 3.8072898629148626,
+      "longestNearStillRun": 0
+    },
+    "video_into_player": {
+      "frames": 42,
+      "meanFrameDifference": 2.5125643631436314,
+      "longestNearStillRun": 0
+    },
+    "editor_zoom": {
+      "frames": 66,
+      "meanFrameDifference": 1.6622230235042736,
+      "longestNearStillRun": 0
+    },
+    "cell_into_shelf": {
+      "frames": 48,
+      "meanFrameDifference": 1.2297170508274233,
+      "longestNearStillRun": 0
+    },
+    "shelf_camera": {
+      "frames": 78,
+      "meanFrameDifference": 0.22798430735930736,
+      "longestNearStillRun": 1
+    },
+    "coast": {
+      "frames": 120,
+      "meanFrameDifference": 1.5393808356676002,
+      "longestNearStillRun": 0
+    },
+    "lake": {
+      "frames": 228,
+      "meanFrameDifference": 0.46801601505139495,
+      "longestNearStillRun": 0
+    }
+  },
+  "unchangedPicturePSNR": {
+    "logo": 63.064680771837416,
+    "realFootage": 53.53546537429686,
+    "lakeAndEnd": 54.42869232733335
+  }
+}

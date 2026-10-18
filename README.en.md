@@ -8,7 +8,9 @@ Lumvia is a desktop application for organizing your own videos and links from Yo
 
 ## Trailer
 
-https://github.com/user-attachments/assets/170dd366-b2b7-41fc-bb91-84974787f355
+<video src="https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.7/Lumvia-Trailer-V7.mp4" controls width="960" poster="https://raw.githubusercontent.com/k-botsui/lumvia/main/demo/lumvia-trailer-v7-poster.jpg"></video>
+
+[Open trailer (28 seconds, 60 fps)](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.7/Lumvia-Trailer-V7.mp4)
 
 [Video and music credits](demo/README.md)
 
@@ -20,8 +22,8 @@ The application is distributed **exclusively through GitHub Releases**. You do n
 
 | Your computer                     | Availability and downloads                                                                                                                                                                                                           |
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Mac — Apple Silicon (Apple chips) | [TEST ZIP](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.6/Lumvia-Mac-AppleSilicon-TEST.zip) · [DMG](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.6/Lumvia-Mac-AppleSilicon-TEST.dmg) |
-| Mac — Intel                       | [TEST ZIP](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.6/Lumvia-Mac-Intel-TEST.zip) · [DMG](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.6/Lumvia-Mac-Intel-TEST.dmg)               |
+| Mac — Apple Silicon (Apple chips) | [TEST ZIP](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.7/Lumvia-Mac-AppleSilicon-TEST.zip) · [DMG](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.7/Lumvia-Mac-AppleSilicon-TEST.dmg) |
+| Mac — Intel                       | [TEST ZIP](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.7/Lumvia-Mac-Intel-TEST.zip) · [DMG](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.7/Lumvia-Mac-Intel-TEST.dmg)               |
 | Windows                           | The desktop package is in preparation. The Mac ZIP does not run on Windows.                                                                                                                                                          |
 
 On a Mac, check **Apple menu → About This Mac → Chip / Processor** to choose the correct download. `Source code (zip)` and `Code → Download ZIP` contain source code, not a ready-to-run application. Use the platform-specific files above for the desktop app.
@@ -32,9 +34,9 @@ On a Mac, check **Apple menu → About This Mac → Chip / Processor** to choose
 2. For regular use, move it to Applications before opening it. If you chose the DMG, drag Lumvia into Applications.
 3. If you need help, check this page and the release notes.
 
-**Updated package guidance:** The next Mac packages will use a folder labeled with the OS and CPU, with **`00_はじめに_READ_ME_FIRST.html`** and a plain-text copy containing Japanese and English startup instructions. The published TEST 6 files above do not yet contain this new guide. The source-code ZIP now includes [`00_START_HERE.html`](00_START_HERE.html) and a plain-text copy.
+**Included guidance:** Mac TEST 7 ZIPs use a folder labeled with the OS and CPU, with **`00_はじめに_READ_ME_FIRST.html`** and a plain-text copy containing Japanese and English startup instructions. Source-code ZIPs include [`00_START_HERE.html`](00_START_HERE.html) and a plain-text copy.
 
-The Mac package includes Python, Node.js, the database, and FFmpeg. Users do not need to install development tools or enter commands or a server URL. If macOS blocks the current TEST build, keep its security settings enabled and check the [release notes](https://github.com/k-botsui/lumvia/releases/tag/v0.2.0-mac-test.6).
+The Mac package includes Python, Node.js, the database, and FFmpeg. Users do not need to install development tools or enter commands or a server URL. If macOS blocks the current TEST build, keep its security settings enabled and check the [release notes](https://github.com/k-botsui/lumvia/releases/tag/v0.2.0-mac-test.7).
 
 ### Verification scope
 
