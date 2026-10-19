@@ -1,0 +1,100 @@
+{
+  "durationSeconds": 28,
+  "audioPacketsIdentical": true,
+  "files": {
+    "lumvia-trailer-v7-1-1080p.mp4": {
+      "sha256": "c5958f79e3d6cd7778310ecd73dc760b029d28da5849fcec4ef5ebb84be899e2",
+      "frames": 1680,
+      "fps": 60,
+      "fullDecode": true
+    },
+    "lumvia-trailer-v7-1-preview.mp4": {
+      "sha256": "e35abacd2a00846313c6e1a4e9aac382e3078720ae0eee04b7938d4227d86bbe",
+      "frames": 1680,
+      "fps": 60,
+      "fullDecode": true
+    }
+  },
+  "cadence": {
+    "cafe_into_card": {
+      "frames": 48,
+      "meanFrameDifference": 0.6221250738770686,
+      "longestNearStillRun": 2
+    },
+    "home_preview": {
+      "frames": 78,
+      "meanFrameDifference": 0.18968208874458875,
+      "longestNearStillRun": 2
+    },
+    "video_into_player": {
+      "frames": 42,
+      "meanFrameDifference": 2.486535399728997,
+      "longestNearStillRun": 0
+    },
+    "editor_zoom": {
+      "frames": 66,
+      "meanFrameDifference": 1.627767094017094,
+      "longestNearStillRun": 0
+    },
+    "cell_into_shelf": {
+      "frames": 48,
+      "meanFrameDifference": 1.2593617021276597,
+      "longestNearStillRun": 0
+    },
+    "shelf_camera": {
+      "frames": 78,
+      "meanFrameDifference": 0.2277426046176046,
+      "longestNearStillRun": 1
+    },
+    "coast": {
+      "frames": 120,
+      "meanFrameDifference": 1.5393265639589166,
+      "longestNearStillRun": 0
+    },
+    "lake": {
+      "frames": 228,
+      "meanFrameDifference": 0.46801601505139495,
+      "longestNearStillRun": 0
+    }
+  },
+  "unchangedPicturePSNR": {
+    "logo": 63.064680771837416,
+    "realFootage": 53.465044036599664,
+    "lakeAndEnd": 54.42869232733335
+  },
+  "homeContinuity": {
+    "referenceSeconds": 3.8,
+    "regions": "Page heading, toolbar and sidebar, excluding playing video",
+    "threshold": 0.6,
+    "samples": {
+      "4.05": {
+        "meanStaticUIDifference": 0.0007246376811594203,
+        "homePreserved": true
+      },
+      "4.3": {
+        "meanStaticUIDifference": 0.001316425120772947,
+        "homePreserved": true
+      },
+      "4.8": {
+        "meanStaticUIDifference": 0.001388888888888889,
+        "homePreserved": true
+      },
+      "5.4": {
+        "meanStaticUIDifference": 0.14984148550724638,
+        "homePreserved": true
+      },
+      "5.95": {
+        "meanStaticUIDifference": 0.1499260265700483,
+        "homePreserved": true
+      }
+    }
+  },
+  "applicationNavigation": {
+    "homeCloseButton": "PASS",
+    "homeEscape": "PASS",
+    "homeBrowserBack": "PASS",
+    "homeCellClose": "PASS",
+    "homeSelectedCardPreserved": true,
+    "applicationCodeChanged": false
+  }
+}

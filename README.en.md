@@ -10,7 +10,7 @@ Lumvia is a desktop application for organizing your own videos and links from Yo
 
 https://github.com/user-attachments/assets/2d9ee76a-45fb-4727-9154-480e4642e751
 
-[Open trailer (28 seconds, 60 fps)](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.7/Lumvia-Trailer-V7.mp4)
+[Open trailer (28 seconds, 60 fps)](https://github.com/k-botsui/lumvia/releases/download/v0.2.0-mac-test.7/Lumvia-Trailer-V7.1.mp4)
 
 [Video and music credits](demo/README.md)
 
